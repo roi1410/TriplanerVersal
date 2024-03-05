@@ -11,12 +11,18 @@ export const login = async (credentials) => {
 };
 
 export const logout = async () => {
-    try {
-        await axios.get(`${import.meta.env.VITE_API_URL}/users/logout`, {
-            withCredentials: true,
-        });
-    } catch (error) {
-        console.error("Error logging out:", error);
-    }
+  try {
+    await axios.get(`${import.meta.env.VITE_API_URL}/users/logout`, {
+      withCredentials: true,
+    });
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
 };
+
+// export const authenticate = async () => {
+//   return await axios.get(`${import.meta.env.VITE_API_URL}/users/authenticate`, {
+//     withCredentials: true,
+//   });
+// };
 

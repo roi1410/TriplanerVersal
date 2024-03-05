@@ -3,19 +3,19 @@ import { createContext, useState } from "react";
 export const AppContext = createContext({
   isLoading: false,
   setIsLoading: () => {},
-  loggedIn: false,
-  setLoggedIn: () => {},
+  isGuest: false,
+  setIsGuest: () => {},
   user: {},
   setUser: () => {},
   trips: [],
   setTrips: () => {},
-  currentTrip:{},
+  currentTrip: {},
   setCurrentTrip: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [user, setUser] = useState({});
   const [trips, setTrips] = useState([]);
   const [currentTrip, setCurrentTrip] = useState({});
@@ -23,8 +23,8 @@ export const ContextProvider = ({ children }) => {
   const contextValue = {
     isLoading,
     setIsLoading,
-    loggedIn,
-    setLoggedIn,
+    isGuest,
+    setIsGuest,
     user,
     setUser,
     trips,

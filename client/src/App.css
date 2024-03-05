@@ -20,6 +20,10 @@
   z-index: 2;
 }
 
+.navbar-container>*>*{
+  display: flex;
+}
+
 .footer-container {
   background-color: var(--secondary);
   padding: 1.25rem;

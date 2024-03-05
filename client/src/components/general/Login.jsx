@@ -8,18 +8,16 @@ import { useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
-
 function Login() {
   const { handleSubmit, register } = useForm();
-  const { setLoggedIn, setUser } = useContext(AppContext);
+  const { setUser } = useContext(AppContext);
   const [passwordShown, setPasswordShown] = useState(false);
   let navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      // const response = await login(data);
-      // setUser(response.data.user);
-      // setLoggedIn(true);
+      const response = await login(data);
+      setUser(response.data.user);
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);
@@ -29,6 +27,9 @@ function Login() {
     setPasswordShown((prev) => !prev);
   };
 
+  const handleGuestLogin = () =>{
+    navigate("/dashboard/new-trip");
+  }
 
   return (
     <div className="login-container">
@@ -45,14 +46,28 @@ function Login() {
             {...register("password", { required: true, minLength: 8 })}
           />
           {passwordShown ? (
-            <AiFillEyeInvisible className="password-icon" onClick={togglePasswordVisibility} />
+            <AiFillEyeInvisible
+              className="password-icon"
+              onClick={togglePasswordVisibility}
+            />
           ) : (
-            <AiFillEye className="password-icon" onClick={togglePasswordVisibility} />
+            <AiFillEye
+              className="password-icon"
+              onClick={togglePasswordVisibility}
+            />
           )}
         </label>
         <button className="primary-button" type="submit">
           Login
         </button>
+        <div>
+          <span className="or">
+            <hr />
+            or
+            <hr />
+          </span>
+          <button className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
+        </div>
       </form>
     </div>
   );
