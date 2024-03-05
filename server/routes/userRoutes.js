@@ -13,6 +13,6 @@ router.use(AuthenticateRoute);
 
 router.route("/update/:id").patch(user.updateUser);
 router.route("/delete/:id").delete(user.deleteUser);
-// router.route("/:id").get(user.getUserById);
+router.route("/:id").get(user.getUserById);
 
 module.exports = router;

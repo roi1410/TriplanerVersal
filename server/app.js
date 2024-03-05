@@ -5,6 +5,13 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const AuthenticateRoute = require("./middleware/authenticateRoute");
+const userRoutes = require('./routes/userRoutes')
+const tripRoutes = require('./routes/tripRoutes')
+const areaRoutes = require('./routes/areaRoutes')
+const flightRoutes = require('./routes/flightRoutes')
+const eventRoutes = require('./routes/eventRoutes')
+const hotelRoutes = require('./routes/hotelRoutes')
+const dayRoutes = require('./routes/dayRoutes')
 
 const corsOptions = {
   origin: ["http://localhost:5173", "http://localhost:5174"],
@@ -12,12 +19,17 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json())
 
-const userRoutes = require("./routes/userRoutes");
-app.use("/api/users", userRoutes);
+app.use('/trip-planner/user', userRoutes)
 
-// Authenticate Route for user
 app.use(AuthenticateRoute);
 
+app.use('/trip-planner/trip', tripRoutes)
+app.use('/trip-planner/area', areaRoutes)
+app.use('/trip-planner/flight', flightRoutes)
+app.use('/trip-planner/event', eventRoutes)
+app.use('/trip-planner/hotel', hotelRoutes)
+// app.use('/triplanner/day', dayRoutes)
 
 module.exports = app;
