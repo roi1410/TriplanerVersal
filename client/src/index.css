@@ -82,7 +82,10 @@ button:focus,
 button:focus-visible,
 .go-back:hover,
 .go-back:focus,
-.go-back:focus-visible {
+.go-back:focus-visible,
+.logout:hover,
+.logout:focus,
+.logout:focus-visible {
   filter: brightness(0.8);
 }
 .primary-button {
@@ -136,12 +139,26 @@ a:focus-visible {
   display: flex;
 }
 
-.go-back{
+.go-back,
+.logout {
   cursor: pointer;
   transition: filter var(--short) linear;
   filter: brightness(1);
 }
 
+.or {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+.or hr {
+  transform: rotate(0);
+  width: 45%;
+  border: none;
+  border-top: 1px solid var(--secondary-300);
+  margin: 0 0.5rem;
+}
 
 @media (prefers-color-scheme: dark) {
   button {
