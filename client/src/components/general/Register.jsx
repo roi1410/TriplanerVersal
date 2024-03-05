@@ -39,7 +39,7 @@ function Register() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard");
+    navigate("/dashboard/new-trip");
   }
 
   return (

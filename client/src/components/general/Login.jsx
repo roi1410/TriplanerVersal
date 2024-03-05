@@ -28,7 +28,7 @@ function Login() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard");
+    navigate("/dashboard/new-trip");
   }
 
   return (

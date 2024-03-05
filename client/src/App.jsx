@@ -1,6 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { ContextProvider } from "./context/AppContext";
+import { AppContext, ContextProvider } from "./context/AppContext";
 import Navbar from "./components/general/Navbar";
 import Home from "./components/general/Home";
 import Login from "./components/general/Login";
@@ -19,8 +19,12 @@ import Hotels from "./components/dashboard/trip/area/Hotels";
 import DailyPlanner from "./components/dashboard/trip/area/DailyPlanner";
 import MyEvents from "./components/dashboard/trip/area/day/MyEvents";
 import MyHotels from "./components/dashboard/trip/area/day/MyHotels";
+import { useContext } from "react";
 
 function App() {
+  const {user} = useContext(AppContext);
+
+
   return (
     <div>
       <ContextProvider>
@@ -32,12 +36,16 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />}/>
+            {user._id ?
+              (<Route path="/dashboard" element={<Dashboard />}/>)
+             :
+              (<Route path="/dashboard" element={<NewTrip />} />)
+            }
               <Route path="/dashboard/new-trip" element={<NewTrip />} />
               <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
-                <Route path="/dashboard/trip-planner/payment" element={<Payment />} />
-                <Route path="/dashboard/trip-planner/flights" element={<Flights />} />
-                <Route path="/dashboard/trip-planner/area" element={<Area />}>
+              <Route path="/dashboard/trip-planner/payment" element={<Payment />} />
+              <Route path="/dashboard/trip-planner/flights" element={<Flights />} />
+              <Route path="/dashboard/trip-planner/area" element={<Area />}>
                   <Route path="/dashboard/trip-planner/area/overview" element={<Overview />} />
                   <Route path="/dashboard/trip-planner/area/events" element={<Events />} />
                   <Route path="/dashboard/trip-planner/area/hotels" element={<Hotels />} />
