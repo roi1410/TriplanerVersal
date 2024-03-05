@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Murecho:700|Murecho:400');:root {
- 
+@import url("https://fonts.googleapis.com/css?family=Murecho:700|Murecho:400");
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   /* font-family: Murecho; */
   line-height: 1.5;
@@ -20,12 +20,10 @@
 }
 
 body {
-  
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   height: 100%;
-  
 }
 
 h1 {
@@ -81,7 +79,10 @@ button {
 }
 button:hover,
 button:focus,
-button:focus-visible {
+button:focus-visible,
+.go-back:hover,
+.go-back:focus,
+.go-back:focus-visible {
   filter: brightness(0.8);
 }
 .primary-button {
@@ -117,31 +118,33 @@ a {
   filter: brightness(0.8);
   letter-spacing: -0.5px;
 }
-/* a:hover,
+a:hover,
 a:focus,
 a:focus-visible {
   filter: brightness(1);
 }
 .active {
   filter: brightness(1);
-} */
+}
 
-.horizontal-card{
+.horizontal-card {
   width: 100%;
   display: flex;
 }
-.square-card{
+.square-card {
   aspect-ratio: 1/1;
   display: flex;
 }
 
-.skeleton-container:last-child{
-  --base-color: red;
-  --highlight-color: var(--secondary-700);}
+.go-back{
+  cursor: pointer;
+  transition: filter var(--short) linear;
+  filter: brightness(1);
+}
 
 
 @media (prefers-color-scheme: dark) {
-    button {
+  button {
     background-color: inherit;
   }
   .Toastify__toast-theme--light {
@@ -231,7 +234,6 @@ a:focus-visible {
     --accent-800: hsl(169, 100%, 20%);
     --accent-900: hsl(169, 100%, 10%);
     --accent-950: hsl(168, 100%, 5%);
-
   }
 }
 @media (prefers-color-scheme: dark) {
@@ -301,6 +303,5 @@ a:focus-visible {
     --accent-800: hsl(169, 100%, 80%);
     --accent-900: hsl(169, 100%, 90%);
     --accent-950: hsl(168, 100%, 95%);
-
   }
 }

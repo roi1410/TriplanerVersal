@@ -23,7 +23,7 @@ function Navbar() {
         <div>
           <div className="home-button" onClick={handleLogout}>
             <NavLink to="/" >
-              {/* <img src={image} alt="Pet Rock" /> */}
+            <button>Home</button>
             </NavLink>
           </div>
           <div className="navbar">
@@ -46,7 +46,7 @@ function Navbar() {
         <div>
           <div className="home-button" onClick={handleLogout}>
             <NavLink to="/">
-              {/* <img src={image} alt="Pet Rock" /> */}
+            <button>Home</button>
             </NavLink>
           </div>
           <div className="navbar">
