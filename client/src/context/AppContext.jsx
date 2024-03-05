@@ -3,8 +3,6 @@ import { createContext, useState } from "react";
 export const AppContext = createContext({
   isLoading: false,
   setIsLoading: () => {},
-  isGuest: false,
-  setIsGuest: () => {},
   user: {},
   setUser: () => {},
   trips: [],
@@ -15,7 +13,6 @@ export const AppContext = createContext({
 
 export const ContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isGuest, setIsGuest] = useState(false);
   const [user, setUser] = useState({});
   const [trips, setTrips] = useState([]);
   const [currentTrip, setCurrentTrip] = useState({});
@@ -23,8 +20,6 @@ export const ContextProvider = ({ children }) => {
   const contextValue = {
     isLoading,
     setIsLoading,
-    isGuest,
-    setIsGuest,
     user,
     setUser,
     trips,

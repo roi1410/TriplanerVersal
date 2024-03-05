@@ -28,7 +28,7 @@ function Login() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard/new-trip");
+    navigate("/dashboard/trip-planner");
   }
 
   return (
@@ -66,7 +66,7 @@ function Login() {
             or
             <hr />
           </span>
-          <button className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
+          <button type="button" className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
         </div>
       </form>
     </div>

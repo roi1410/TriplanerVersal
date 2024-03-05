@@ -13,7 +13,7 @@
 .navbar-container {
   background-color: var(--secondary);
   border-bottom: 1px solid var(--secondary-300);
-  padding: 0.7rem 0.5rem;
+  padding: 0.8rem 0.5rem;
   position: fixed;
   width: 100%;
   top: 0;
@@ -26,5 +26,6 @@
 
 .footer-container {
   background-color: var(--secondary);
-  padding: 1.25rem;
+  padding: 1.324rem;
+  border-top: 1px solid var(--secondary-300);
 }

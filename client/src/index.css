@@ -130,34 +130,62 @@ a:focus-visible {
   filter: brightness(1);
 }
 
-.horizontal-card {
-  width: 100%;
+/* .cards-container-start {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+} */
+.cards-container-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.square-card {
+.cards-container-center > * {
+  width: calc(80% - 4rem);
+}
+.filled-card {
+  cursor: pointer;
+  background-color: var(--secondary-300);
+  display: flex;
+  border-radius: 0.5rem;
+  padding: 2rem 1.5rem;
+  margin: 1rem 0;
+  transition: scale var(--short) ease-in-out , box-shadow var(--short) ease-in-out;
+}
+.dashed-card {
+  cursor: pointer;
+  border: 0.5rem dashed var(--text-900);
+  background-color: var(--secondary-500);
+  border-radius: 0.5rem;
+  padding: 2rem 1.5rem;
+  margin: 1rem 0;
+}
+.outlined-card {
   aspect-ratio: 1/1;
-  display: flex;
+  cursor: pointer;
+  border: 0.5rem soild var(--secondary-500);
+  border-radius: 0.5rem;
+  padding: 2rem 1.5rem;
+  margin: 1rem 0;
 }
+.small-card {
+  width: calc(60% - 4rem);
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+}
+.filled-card:hover,
+.filled-card:focus{
+  scale: 1.05;
+  box-shadow: 0px 0px 20px 10px var(--background-950);
+}
+
+
 
 .go-back,
 .logout {
   cursor: pointer;
   transition: filter var(--short) linear;
   filter: brightness(1);
-}
-
-.or {
-  display: flex;
-  align-items: center;
-  font-weight: 700;
-}
-
-.or hr {
-  transform: rotate(0);
-  width: 45%;
-  border: none;
-  border-top: 1px solid var(--secondary-300);
-  margin: 0 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -256,7 +284,7 @@ a:focus-visible {
 @media (prefers-color-scheme: dark) {
   :root {
     --text: hsl(204, 18%, 89%);
-    --background: hsl(205, 33%, 10%);
+    --background: hsl(202, 17%, 13%);
     --primary: hsl(167, 100%, 33%);
     --secondary: hsl(202, 23%, 16%);
     --accent: hsl(169, 100%, 18%);
@@ -273,17 +301,17 @@ a:focus-visible {
     --text-900: hsl(207, 18%, 90%);
     --text-950: hsl(204, 20%, 95%);
 
-    --background-50: hsl(210, 31%, 5%);
-    --background-100: hsl(205, 33%, 10%);
-    --background-200: hsl(205, 33%, 20%);
-    --background-300: hsl(205, 33%, 30%);
-    --background-400: hsl(205, 33%, 40%);
-    --background-500: hsl(205, 33%, 50%);
-    --background-600: hsl(205, 33%, 60%);
-    --background-700: hsl(205, 33%, 70%);
-    --background-800: hsl(205, 33%, 80%);
-    --background-900: hsl(205, 33%, 90%);
-    --background-950: hsl(203, 31%, 95%);
+    --background-50: hsl(195, 15%, 95%);
+    --background-100: hsl(200, 18%, 90%);
+    --background-200: hsl(203, 16%, 80%);
+    --background-300: hsl(202, 16%, 70%);
+    --background-400: hsl(202, 16%, 60%);
+    --background-500: hsl(202, 16%, 50%);
+    --background-600: hsl(203, 16%, 40%);
+    --background-700: hsl(202, 16%, 30%);
+    --background-800: hsl(203, 16%, 20%);
+    --background-900: hsl(200, 18%, 10%);
+    --background-950: hsl(210, 15%, 5%);
 
     --primary-50: hsl(166, 100%, 5%);
     --primary-100: hsl(167, 100%, 10%);
