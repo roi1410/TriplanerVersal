@@ -1,20 +1,12 @@
-const app = require("./app");
-const mongoose = require("mongoose");
-const port = 5000;
-require("dotenv").config({ path: "./.env" });
-const URL = process.env.MONGODB_URL;
-const dailySchedule = require("./controllers/dailyScheduleController");
+const { Sequelize } = require('sequelize');
 
-mongoose
-  .connect(URL)
-  .then(() => {
-    console.log("Database connected");
-  })
-  .catch(() => {
-    console.log("Error connecting to the database");
-  });
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
-  setInterval(dailySchedule.checkNewDay, 60000);
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite'
 });
+module.exports = sequelize
+
+sequelize.sync();
+
+const app = require("./app");
+app.listen(8001, () => console.log(`Dev Server is Running 8001`));

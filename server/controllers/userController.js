@@ -8,7 +8,7 @@ const secret = process.env.SECRET_KEY;
 // Create a new user and add it to the database -- output => new user
 exports.registerUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ email: req.body.email });
+    const userExists = await User.findOne({where: { email: req.body.email }});
 
     if (userExists) {
       return res.status(400).json({
@@ -30,9 +30,7 @@ exports.registerUser = async (req, res) => {
       httpOnly: true,
       maxAge: 25920000,
       sameSite: "strict",
-    });
-
-    res.status(201).json({
+    }).status(201).json({
       user: newUser,
       token: token,
     });
@@ -48,7 +46,7 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email: email } });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
@@ -70,7 +68,8 @@ exports.loginUser = async (req, res) => {
       token: token,
     });
   } catch (err) {
-    res.status(400).json({
+    console.log(err);
+    res.status(401).json({
       status: "fail",
       message: err,
     });
@@ -95,7 +94,7 @@ exports.logoutUser = (req, res) => {
 // Retrieve all users from the database -- output => all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.findAll({});
     res.send(users);
   } catch (error) {
     console.error(error);
@@ -107,7 +106,7 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findByPk(userId);
 
     if (!user) {
       return res.status(404).send("user not found");
@@ -127,7 +126,7 @@ exports.updateUser = async (req, res) => {
   const userId = req.params.id;
   const newUser = req.body;
   try {
-    const existingUser = await User.findById(userId);
+    const existingUser = await User.findByPk(userId);
 
     if (!existingUser) {
       return res.status(404).send("user not found");
@@ -135,7 +134,7 @@ exports.updateUser = async (req, res) => {
 
     // If the email is being updated, check for duplicates
     if (newUser.email && newUser.email !== existingUser.email) {
-      const userExists = await User.findOne({ email: newUser.email });
+      const userExists = await User.findOne({where:{ email: newUser.email }});
       if (userExists) {
         return res.status(401).json({
           status: "fail",
@@ -149,14 +148,14 @@ exports.updateUser = async (req, res) => {
       newUser.password = await bcrypt.hash(newUser.password, saltRounds);
     }
     // Update the user
-    const updatedUser = await User.findByIdAndUpdate(userId, newUser, {
-      new: true,
-    });
+    const updatedUser = await User.findByPk(userId)
     if (!updatedUser) {
       return res.status(404).send("user not found");
     }
+    await updatedUser.update({ ...newUser }, { where: { id: userId } })
     res.status(200).send(updatedUser);
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       status: "fail",
       message: err,
@@ -168,7 +167,8 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const deletedUser = await User.findByPk(userId);
+    await deletedUser.destroy();
 
     if (!deletedUser) {
       return res.status(404).send("user not found");

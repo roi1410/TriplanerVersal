@@ -9,6 +9,7 @@ export const signup = async (userData) => {
 export const login = async (credentials) => {
   return axios.post(`${import.meta.env.VITE_API_URL}/users/login`, credentials);
 };
+
 export const logout = async () => {
   try {
     await axios.get(`${import.meta.env.VITE_API_URL}/users/logout`, {
@@ -24,3 +25,4 @@ export const logout = async () => {
 //     withCredentials: true,
 //   });
 // };
+
