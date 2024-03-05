@@ -21,7 +21,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json())
 
-app.use('/trip-planner/user', userRoutes)
+app.use('/trip-planner/users', userRoutes)
 
 app.use(AuthenticateRoute);
 

@@ -20,9 +20,9 @@ export const logout = async () => {
   }
 };
 
-// export const authenticate = async () => {
-//   return await axios.get(`${import.meta.env.VITE_API_URL}/users/authenticate`, {
-//     withCredentials: true,
-//   });
-// };
+export const checkForUser = async () => {
+  return await axios.get(`${import.meta.env.VITE_API_URL}/users/auto-login`, {
+    withCredentials: true,
+  });
+};
 
