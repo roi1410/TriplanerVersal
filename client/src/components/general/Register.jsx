@@ -39,7 +39,7 @@ function Register() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard/new-trip");
+    navigate("/dashboard/trip-planner");
   }
 
   return (
@@ -120,7 +120,7 @@ function Register() {
             or
             <hr />
           </span>
-          <button className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
+          <button type="button" className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
         </div>
       </form>
     </div>

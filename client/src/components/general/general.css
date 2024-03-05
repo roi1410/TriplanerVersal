@@ -10,6 +10,19 @@
     transform: translateY(-50%);
 }
 
+.or {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+  }
+  
+  .or hr {
+    transform: rotate(0);
+    width: 45%;
+    border: none;
+    border-top: 1px solid var(--secondary-300);
+    margin: 0 0.5rem;
+  }
 /* REGISTER */
 
 

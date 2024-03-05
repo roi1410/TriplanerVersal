@@ -8,7 +8,6 @@ import Register from "./components/general/Register";
 import Footer from "./components/general/Footer";
 import ErrorPage from "./components/general/ErrorPage";
 import Dashboard from "./components/dashboard/Dashboard";
-import NewTrip from "./components/dashboard/NewTrip";
 import TripPlanner from "./components/dashboard/TripPlanner";
 import Payment from "./components/dashboard/trip/Payment";
 import Flights from "./components/dashboard/trip/Flights";
@@ -36,12 +35,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {user._id ?
-              (<Route path="/dashboard" element={<Dashboard />}/>)
-             :
-              (<Route path="/dashboard" element={<NewTrip />} />)
-            }
-              <Route path="/dashboard/new-trip" element={<NewTrip />} />
+              <Route path="/dashboard" element={<Dashboard />}/>
+              <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
               <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
               <Route path="/dashboard/trip-planner/payment" element={<Payment />} />
               <Route path="/dashboard/trip-planner/flights" element={<Flights />} />

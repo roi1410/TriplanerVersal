@@ -1,0 +1,19 @@
+/* DASHBOARD */
+.trips-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.trips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.trip-container {
+  cursor: pointer;
+}
+.new-trip {
+  cursor: pointer;
+  border: 0.5rem dashed var(--text);
+  background-color: var(--secondary-300);
+}

@@ -18,7 +18,7 @@ function Navbar() {
 
   return (
     <div>
-      {user._id ? (
+      {user.id ? (
         <div>
           <div className="home-button" onClick={handleLogout}>
             <NavLink to="/">
