@@ -2,9 +2,10 @@ import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import Skeleton from "react-loading-skeleton";
+import { checkForUser } from "../../utils/AuthService";
 
 function Dashboard() {
-  const { user, trips, setTrips, currentTrip, setCurrentTrip } =
+  const { user, setUser, trips, setTrips, currentTrip, setCurrentTrip } =
     useContext(AppContext);
   const navigate = useNavigate();
 
@@ -24,16 +25,22 @@ function Dashboard() {
   }, [currentTrip]);
 
   useEffect(() => {
-    if (!user.id) {
-      navigate("trip-planner");
-    }
+    checkForUser().then((response) => {
+      if (response.data) {
+        setUser(response.data);
+      } else {
+        logout();
+        navigate("/");
+        alert("Your previous session has ended, please login again.");
+      }
+    });
   }, []);
 
   return (
-    <div className="trips-container">
-      <button className="dashed-card" onClick={() => handlePlanTrip(-1)}>
+    <div className="cards-container">
+      <div className="dashed-card" onClick={() => handlePlanTrip(-1)}>
         Start A New Trip
-      </button>
+      </div>
       <div className="trips">
         {trips ? (
           trips.map((trip, index) => (

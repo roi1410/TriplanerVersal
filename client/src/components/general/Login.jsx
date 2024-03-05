@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-// import { login } from "../../utils/AuthService";
+import { login } from "../../utils/AuthService";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +18,13 @@ function Login() {
     try {
       const response = await login(data);
       setUser(response.data.user);
+      console.log(response.data);
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);
     }
   };
+
   const togglePasswordVisibility = () => {
     setPasswordShown((prev) => !prev);
   };

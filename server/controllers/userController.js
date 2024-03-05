@@ -8,7 +8,7 @@ const secret = process.env.SECRET_KEY;
 // Create a new user and add it to the database -- output => new user
 exports.registerUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({where: { email: req.body.email }});
+    const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
       return res.status(400).json({
@@ -24,16 +24,19 @@ exports.registerUser = async (req, res) => {
       role: "client",
     });
 
-    const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: "3d" });
+    const token = jwt.sign({ id: newUser.id }, secret, { expiresIn: "3d" });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 25920000,
-      sameSite: "strict",
-    }).status(201).json({
-      user: newUser,
-      token: token,
-    });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: 25920000,
+        sameSite: "strict",
+      })
+      .status(201)
+      .json({
+        user: newUser,
+        token: token,
+      });
   } catch (err) {
     res.status(400).json({
       status: "fail",
@@ -47,7 +50,6 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email: email } });
-
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
         status: "fail",
@@ -55,7 +57,7 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ _id: user._id }, secret, { expiresIn: "3d" });
+    const token = jwt.sign({ id: user.id }, secret, { expiresIn: "3d" });
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -134,7 +136,9 @@ exports.updateUser = async (req, res) => {
 
     // If the email is being updated, check for duplicates
     if (newUser.email && newUser.email !== existingUser.email) {
-      const userExists = await User.findOne({where:{ email: newUser.email }});
+      const userExists = await User.findOne({
+        where: { email: newUser.email },
+      });
       if (userExists) {
         return res.status(401).json({
           status: "fail",
@@ -148,11 +152,11 @@ exports.updateUser = async (req, res) => {
       newUser.password = await bcrypt.hash(newUser.password, saltRounds);
     }
     // Update the user
-    const updatedUser = await User.findByPk(userId)
+    const updatedUser = await User.findByPk(userId);
     if (!updatedUser) {
       return res.status(404).send("user not found");
     }
-    await updatedUser.update({ ...newUser }, { where: { id: userId } })
+    await updatedUser.update({ ...newUser }, { where: { id: userId } });
     res.status(200).send(updatedUser);
   } catch (err) {
     console.log(err);
@@ -180,5 +184,24 @@ exports.deleteUser = async (req, res) => {
       status: "fail",
       message: err,
     });
+  }
+};
+
+exports.autoLogin = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.send(false);
+    }
+    const decoded = jwt.verify(token, secret);
+    console.log(decoded.id);
+    const userExists = await User.findByPk(decoded.id);
+    if (userExists === undefined) {
+      return res.send(false);
+    }
+    res.send(userExists);
+  } catch (error) {
+    res.status(500).json({ message: error.message || "An error occurred." });
   }
 };

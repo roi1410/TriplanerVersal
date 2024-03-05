@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { AppContext } from "../../context/AppContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { signup } from "../../utils/AuthService";
+import { signup } from "../../utils/AuthService";
 import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
@@ -23,6 +23,7 @@ function Register() {
     delete data.passwordVerification;
     try {
       const response = await signup(data);
+      console.log(response);
       setUser(response.data.user);
       navigate("/dashboard");
     } catch (error) {

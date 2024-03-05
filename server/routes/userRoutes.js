@@ -7,6 +7,7 @@ const AuthenticateRoute = require("../middleware/authenticateRoute");
 router.route("/register").post(user.registerUser);
 router.route("/login").post(user.loginUser);
 router.route("/logout").get(user.logoutUser);
+router.route("/auto-login").get(user.autoLogin);
 
 // Authenticae Route
 router.use(AuthenticateRoute);
