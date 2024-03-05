@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../context/AppContext";
 
 function Dashboard() {
-
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleExistingTrip = () => {
@@ -15,7 +16,7 @@ function Dashboard() {
   return (
     <div>
       <button onClick={handleNewTrip}>New Trip</button>
-      <button onClick={handleExistingTrip}>Trip</button>
+      {user._id && <button onClick={handleExistingTrip}>Trip</button>}
     </div>
   );
 }
