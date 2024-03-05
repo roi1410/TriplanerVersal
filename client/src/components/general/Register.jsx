@@ -9,7 +9,7 @@ import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
 function Register() {
-  const { setLoggedIn, setUser } = useContext(AppContext);
+  const { setUser } = useContext(AppContext);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   let navigate = useNavigate();
@@ -24,8 +24,6 @@ function Register() {
     try {
       const response = await signup(data);
       setUser(response.data.user);
-      console.log(response.data);
-      setLoggedIn(true);
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);
@@ -39,6 +37,10 @@ function Register() {
   const togglePasswordVisibility2 = () => {
     setPasswordShown2((prev) => !prev);
   };
+
+  const handleGuestLogin = () =>{
+    navigate("/dashboard");
+  }
 
   return (
     <div className="register-container">
@@ -112,6 +114,14 @@ function Register() {
         <button className="primary-button" type="submit">
           Register
         </button>
+        <div>
+          <span className="or">
+            <hr />
+            or
+            <hr />
+          </span>
+          <button className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
+        </div>
       </form>
     </div>
   );

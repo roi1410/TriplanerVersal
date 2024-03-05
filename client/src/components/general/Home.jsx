@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
+import { AppContext } from "../../context/AppContext";
 
 function Home() {
   const [count, setCount] = useState();
@@ -9,6 +10,7 @@ function Home() {
   useEffect(() =>{
     setTimeout(() => setCount(100), 100000);
   },[])
+
 
   return (
     <div>
