@@ -17,8 +17,8 @@ function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await login(data);
-      setUser(response.data.user);
       console.log(response.data);
+      setUser(response.data.user);
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);

@@ -102,6 +102,15 @@ button:focus-visible,
   border: 2px solid var(--primary);
   color: var(--primary);
 }
+.delete-button{
+  background-color: hsl(0, 100%, 90%);
+  color: hsl(0, 83%, 40%);
+  border-color: hsl(0, 83%, 40%); ;
+}
+.icon{
+  width: fit-content;
+  height: fit-content;
+}
 
 input {
   font-family: inherit;
@@ -141,7 +150,7 @@ a:focus-visible {
   align-items: center;
 }
 .cards-container-center > * {
-  width: calc(80% - 4rem);
+  width: calc(80% - 3rem);
 }
 .filled-card {
   cursor: pointer;
@@ -188,6 +197,11 @@ scale: .98;
   cursor: pointer;
   transition: filter var(--short) linear;
   filter: brightness(1);
+}
+
+.modal-buttons{
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (prefers-color-scheme: dark) {
