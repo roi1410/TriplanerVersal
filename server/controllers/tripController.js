@@ -7,18 +7,21 @@ require("dotenv").config();
 const secret = process.env.SECRET_KEY;
 
 User.hasMany(Trip, {
-    foreignKey: "userId",
-  });
+  foreignKey: "userId",
+});
 Trip.belongsTo(User, {
-    foreignKey: "userId",
-  });
+  foreignKey: "userId",
+});
 
 // Create a new trip and add it to the database -- output => new trip
 exports.registerTrip = async (req, res) => {
   try {
-    const currentUser = await User.findOne({where: { id: req.params.id }});
-
-    const tripExists = await Trip.findOne({where: { userId: currentUser.id ,tripName: req.body.tripName }});
+    const currentUser = await User.findOne({ where: { id: req.params.id } });
+    console.log(req.body, req.params.id);
+    console.log("_________________");
+    const tripExists = await Trip.findOne({
+      where: { userId: currentUser.id, tripName: req.body.tripName },
+    });
     if (tripExists) {
       return res.status(400).json({
         status: "fail",
@@ -26,13 +29,12 @@ exports.registerTrip = async (req, res) => {
       });
     }
 
-    const newTrip = await Trip.create({...req.body,
-        userId: currentUser.dataValues.id,
-      });
-
-    res.status(201).json({
-      trip: newTrip,
+    const newTrip = await Trip.create({
+      ...req.body,
+      userId: currentUser.dataValues.id,
     });
+
+    res.status(201).send(newTrip);
   } catch (err) {
     console.log(err);
     res.status(401).json({
@@ -84,7 +86,7 @@ exports.updateTrip = async (req, res) => {
 
     // If the email is being updated, check for duplicates
     if (newTrip.name && newTrip.name !== existingTrip.name) {
-      const tripExists = await Trip.findOne({where: { name: newTrip.name }});
+      const tripExists = await Trip.findOne({ where: { name: newTrip.name } });
       if (tripExists) {
         return res.status(401).json({
           status: "fail",
@@ -97,7 +99,7 @@ exports.updateTrip = async (req, res) => {
     if (!existingTrip) {
       return res.status(404).send("trip not found");
     }
-    await existingTrip.update({ ...newTrip })
+    await existingTrip.update({ ...newTrip });
     await existingTrip.save();
     res.status(200).send(existingTrip);
   } catch (err) {
@@ -128,4 +130,3 @@ exports.deleteTrip = async (req, res) => {
     });
   }
 };
-

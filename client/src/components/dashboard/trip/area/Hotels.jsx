@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { checkForUser } from "../../../../utils/AuthService";
 import { AppContext } from "../../../../context/AppContext";
 function Hotels() {
-  const {setUser} = useContext(AppContext)
+  const { setUser } = useContext(AppContext);
   useEffect(() => {
     checkForUser().then((response) => {
       if (response.data) {
@@ -15,8 +15,18 @@ function Hotels() {
     });
   }, []);
   return (
-    <div>Hotels</div>
-  )
+    <div>
+      <div className="hotels-container">
+        <div className="cards-container">
+          <div className="filled-card">Choose Hotel...</div>
+          <div className="filled-card">Choose Hotel...</div>
+          <div className="filled-card">Choose Hotel...</div>
+          <div className="filled-card">Choose Hotel...</div>
+        </div>
+        <div>Map</div>
+      </div>
+    </div>
+  );
 }
 
-export default Hotels
+export default Hotels;
