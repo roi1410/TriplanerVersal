@@ -97,7 +97,8 @@ exports.logoutUser = (req, res) => {
 // Retrieve all users from the database -- output => all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll({});
+    const filter = req.body
+    const users = await User.findAll({where:filter});
     res.send(users);
   } catch (error) {
     console.error(error);

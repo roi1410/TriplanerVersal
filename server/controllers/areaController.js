@@ -44,7 +44,8 @@ exports.registerArea = async (req, res) => {
 
 exports.getAreas = async (req, res) => {
   try {
-    const areas = await Area.findAll({});
+    const filter = req.body
+    const areas = await Area.findAll({where:filter});
     res.send(areas);
   } catch (error) {
     console.error(error);

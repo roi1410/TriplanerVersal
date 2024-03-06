@@ -7,18 +7,18 @@ require("dotenv").config();
 const secret = process.env.SECRET_KEY;
 
 Area.hasMany(Hotel, {
-    foreignKey: "areaId",
-  });
+  foreignKey: "areaId",
+});
 Hotel.belongsTo(Area, {
-    foreignKey: "areaId",
-  });
+  foreignKey: "areaId",
+});
 
 // Create a new area and add it to the database -- output => new area
 exports.registerHotel = async (req, res) => {
   try {
-    const currentArea = await Area.findOne({where: { id: req.params.id }});
+    const currentArea = await Area.findOne({ where: { id: req.params.id } });
 
-    const hotelExists = await Hotel.findOne({where: { areaId: currentArea.id ,hotelName: req.body.hotelName }});
+    const hotelExists = await Hotel.findOne({ where: { areaId: currentArea.id, hotelName: req.body.hotelName } });
     if (hotelExists) {
       return res.status(400).json({
         status: "fail",
@@ -26,9 +26,10 @@ exports.registerHotel = async (req, res) => {
       });
     }
 
-    const newHotel = await Hotel.create({...req.body,
-        areaId: currentArea.dataValues.id,
-      });
+    const newHotel = await Hotel.create({
+      ...req.body,
+      areaId: currentArea.dataValues.id,
+    });
 
     res.status(201).json({
       hotel: newHotel,
@@ -44,7 +45,8 @@ exports.registerHotel = async (req, res) => {
 
 exports.getHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.findAll({});
+    const filter = req.body
+    const hotels = await Hotel.findAll({where:filter});
     res.send(hotels);
   } catch (error) {
     console.error(error);
@@ -84,7 +86,7 @@ exports.updateHotel = async (req, res) => {
 
     // If the email is being updated, check for duplicates
     if (newHotel.hotelName && newHotel.hotelName !== existingHotel.hotelName) {
-      const hotelExists = await Hotel.findOne({where: { hotelName: newHotel.hotelName }});
+      const hotelExists = await Hotel.findOne({ where: { hotelName: newHotel.hotelName } });
       if (hotelExists) {
         return res.status(401).json({
           status: "fail",

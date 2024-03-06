@@ -12,6 +12,7 @@ const flightRoutes = require('./routes/flightRoutes')
 const eventRoutes = require('./routes/eventRoutes')
 const hotelRoutes = require('./routes/hotelRoutes')
 const dayRoutes = require('./routes/dayRoutes')
+const getHotelRoute = require('./routes/getHotelRoutes')
 
 const corsOptions = {
   origin: ["http://localhost:5173", "http://localhost:5174"],
@@ -22,6 +23,7 @@ app.use(cors(corsOptions));
 app.use(express.json())
 
 app.use('/trip-planner/users', userRoutes)
+app.use('/trip-planner/ffffffff', getHotelRoute)
 
 app.use(AuthenticateRoute);
 
