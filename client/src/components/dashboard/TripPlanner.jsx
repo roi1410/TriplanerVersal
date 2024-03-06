@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { AppContext } from "../../context/AppContext";
+import { checkForUser } from "../../utils/AuthService";
+
 
 function TripPlanner() {
-  const { user } = useContext(AppContext);
+  const { user , setUser } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -19,6 +21,18 @@ function TripPlanner() {
   const handlePayment = () => {
     navigate("payment");
   };
+
+  useEffect(() => {
+    checkForUser().then((response) => {
+      if (response.data) {
+        setUser(response.data);
+      } else {
+        logout();
+        navigate("/");
+        alert("Your previous session has ended, please login again.");
+      }
+    });
+  }, []);
 
   return (
     <div>
