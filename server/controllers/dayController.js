@@ -5,7 +5,6 @@ const Event = require("../models/eventModel")
 const Hotel = require("../models/hotelModel")
 const Flight = require("../models/flightModel")
 const { format } = require('date-fns')
-const axios = require("axios")
 
 
 Day.belongsToMany(Area, {
@@ -120,7 +119,8 @@ exports.registerDay = async (req, res) => {
 
 exports.getDays = async (req, res) => {
     try {
-        const days = await Day.findAll({});
+        const filter = req.body
+        const days = await Day.findAll({where:filter});
         res.send(days);
     } catch (error) {
         console.error(error);

@@ -12,12 +12,6 @@ const Trip = sequelize.define('Trip',{
       allowNull: true,
       defaultValue: null
     },
-    airport: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      trim: true,
-      defaultValue:null
-    },
   })
 
 module.exports = Trip;

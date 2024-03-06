@@ -43,7 +43,8 @@ exports.registerEvent = async (req, res) => {
 
 exports.getEvents = async (req, res) => {
   try {
-    const events = await Event.findAll({});
+    const filter = req.body
+    const events = await Event.findAll({where:filter});
     res.send(events);
   } catch (error) {
     console.error(error);

@@ -44,7 +44,8 @@ exports.registerFlight = async (req, res) => {
 
 exports.getFlights = async (req, res) => {
   try {
-    const flights = await Flight.findAll({});
+    const filter = req.body
+    const flights = await Flight.findAll({where:filter});
     res.send(flights);
   } catch (error) {
     console.error(error);

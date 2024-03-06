@@ -6,5 +6,6 @@ router.route("/new/:id").post(event.registerEvent);
 router.route("/update/:id").patch(event.updateEvent);
 router.route("/delete/:id").delete(event.deleteEvent);
 router.route("/:id").get(event.getEventById);
+router.route("/getall").post(event.getEvents);
 
 module.exports = router;

@@ -6,5 +6,6 @@ router.route("/new/:id").post(hotel.registerHotel);
 router.route("/update/:id").patch(hotel.updateHotel);
 router.route("/delete/:id").delete(hotel.deleteHotel);
 router.route("/:id").get(hotel.getHotelById);
+router.route("/getall").post(hotel.getHotels);
 
 module.exports = router;
