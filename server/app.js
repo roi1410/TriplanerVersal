@@ -21,7 +21,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json())
 
-app.use('/trip-planner/user', userRoutes)
+app.use('/trip-planner/users', userRoutes)
 
 app.use(AuthenticateRoute);
 
@@ -30,6 +30,6 @@ app.use('/trip-planner/area', areaRoutes)
 app.use('/trip-planner/flight', flightRoutes)
 app.use('/trip-planner/event', eventRoutes)
 app.use('/trip-planner/hotel', hotelRoutes)
-// app.use('/triplanner/day', dayRoutes)
+app.use('/trip-planner/day', dayRoutes)
 
 module.exports = app;

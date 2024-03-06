@@ -7,6 +7,7 @@ const secret = process.env.SECRET_KEY;
 
 // Create a new user and add it to the database -- output => new user
 exports.registerUser = async (req, res) => {
+  console.log("nnn");
   try {
     const userExists = await User.findOne({where: { email: req.body.email }});
 
