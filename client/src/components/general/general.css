@@ -1,0 +1,39 @@
+/* LOGIN */
+.password-input{
+    position: relative;
+}
+.password-icon{
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+}
+
+.or {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+  }
+  
+  .or hr {
+    transform: rotate(0);
+    width: 45%;
+    border: none;
+    border-top: 1px solid var(--secondary-300);
+    margin: 0 0.5rem;
+  }
+/* REGISTER */
+
+
+/* HOME */
+
+
+/* ERROR PAGE */
+.error{
+    min-height:75vh;
+    min-height:75dvh;
+    min-height:75svh;
+    display: grid;
+    place-items: center;
+}
