@@ -159,6 +159,7 @@ a:focus-visible {
   border-radius: 0.5rem;
   padding: 2rem 1.5rem;
   margin: 1rem 0;
+  transition: scale var(--short) ease-in-out;
 }
 .outlined-card {
   aspect-ratio: 1/1;
@@ -175,12 +176,13 @@ a:focus-visible {
 }
 .filled-card:hover,
 .filled-card:focus{
-  scale: 1.05;
+  scale: 1.03;
   box-shadow: 0px 0px 20px 10px var(--background-900);
 }
-
-
-
+.dashed-card:hover,
+.dashed-card:focus{
+scale: .98;
+}
 .go-back,
 .logout {
   cursor: pointer;
