@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkForUser , logout } from "../../../../utils/AuthService";
-import { AppContext } from "../../../../context/AppContext";
+import { GeneralContext } from "../../../../context/GeneralContext";
 
 
 function DailyPlanner() {
-  const {isGuest , setUser} = useContext(AppContext)
+  const {isGuest , setUser} = useContext(GeneralContext)
   const navigate = useNavigate();
 
  

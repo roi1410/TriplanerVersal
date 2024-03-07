@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { checkForUser, logout } from "../utils/AuthService";
 import { useNavigate } from "react-router-dom";
 
-export const AppContext = createContext({
+export const GeneralContext = createContext({
   isLoading: false,
   setIsLoading: () => {},
   isGuest: false,
@@ -11,18 +11,24 @@ export const AppContext = createContext({
   setUser: () => {},
   trips: [],
   setTrips: () => {},
-  currentTrip: {},
-  setCurrentTrip: () => {},
+  areas: [],
+  setAreas: () => {},
+  hotels: [],
+  setHotels: () => {},
+  events: [],
+  setEvents: () => {},
 });
 
-export const ContextProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const GeneralContextProvider = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
   const [user, setUser] = useState({});
   const [trips, setTrips] = useState([]);
-  const [currentTrip, setCurrentTrip] = useState({});
-  const navigate = useNavigate();
+  const [hotels, setHotels] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [areas, setAreas] = useState([{ areaName: "" }]);
   const [checkGuestUpdate, setCheckGuestUpdate] = useState(false);
+  const navigate = useNavigate();
 
   const checkForGuest = (bool) => {
     if (bool === false) {
@@ -36,8 +42,13 @@ export const ContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    checkForGuest(); // Initialize isGuest state based on localStorage
-  }, []); // Empty dependency array ensures this effect runs only once on component mount
+    console.log("TRIPS ", trips);
+    console.log("AREAS ", areas);
+  }, [trips, areas]);
+
+  useEffect(() => {
+    checkForGuest();
+  }, []);
 
   const fetchUser = async () => {
     const response = await checkForUser();
@@ -63,10 +74,16 @@ export const ContextProvider = ({ children }) => {
     setUser,
     trips,
     setTrips,
-    currentTrip,
-    setCurrentTrip,
+    areas,
+    setAreas,
+    hotels,
+    setHotels,
+    events,
+    setEvents,
   };
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <GeneralContext.Provider value={contextValue}>
+      {children}
+    </GeneralContext.Provider>
   );
 };

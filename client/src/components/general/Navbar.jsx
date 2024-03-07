@@ -1,13 +1,13 @@
 import "./general.css";
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import { useContext } from "react";
 import { IoMdLogOut } from "react-icons/io";
 import { logout } from "../../utils/AuthService";
 
 function Navbar() {
-  const { user ,setUser } = useContext(AppContext);
+  const { user ,setUser } = useContext(GeneralContext);
   let navigate = useNavigate();
 
   const handleLogout = async () => {

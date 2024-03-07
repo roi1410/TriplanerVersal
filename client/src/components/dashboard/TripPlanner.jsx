@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
-import { createItem } from "../../utils/CRUDService";
+import { createItem, getItemsWithFilter } from "../../utils/CRUDService";
 import Modal from "react-modal";
+import { CurrentContext } from "../../context/CurrentContext";
 import "./dashboard.css";
 
 const customStyles = {
@@ -20,10 +21,12 @@ const customStyles = {
 };
 
 function TripPlanner() {
-  const { isGuest, user, setUser, currentTrip, setCurrentTrip } =
-    useContext(AppContext);
-  const [area, setArea] = useState([{ areaName: "" }]);
-  const [areaIndex , setAreaIndex] = useState(-1);
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading } =
+    useContext(GeneralContext);
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
+    useContext(CurrentContext);
+
+  const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -34,17 +37,23 @@ function TripPlanner() {
   };
 
   const handleAreaChange = (event) => {
-    const newAreas = [...area];
+    const newAreas = [...areas];
     newAreas[areaIndex].areaName = event.target.value;
-    setArea(newAreas);
-   };   
+    setAreas(newAreas);
+  };
 
-  const handleChooseArea = () => {
-    createItem("area", currentTrip.id, area[areaIndex])
+  const handleAreaSubmit = () => {
+    createItem("area", currentTrip.id, areas[areaIndex])
       .then((response) => {
+        setCurrentArea(response.data);
         closeModal();
       })
       .catch((err) => console.log(err));
+  };
+  const handleChooseArea = (index) => {
+    const tempArea = areas[index];
+    setCurrentArea(tempArea);
+    navigate("area/overview");
   };
 
   const handlePayment = () => {
@@ -52,14 +61,14 @@ function TripPlanner() {
   };
 
   const handleAddLocation = (index) => {
-    const newAreas = [...area];
+    const newAreas = [...areas];
     newAreas.splice(index + 1, 0, { areaName: "" });
-    setArea(newAreas);
-   };   
+    setAreas(newAreas);
+  };
   const handleRemoveLocation = (index) => {
-    const newAreas = [...area];
+    const newAreas = [...areas];
     newAreas.splice(index, 1);
-    setArea(newAreas);
+    setAreas(newAreas);
   };
 
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -73,6 +82,22 @@ function TripPlanner() {
     setIsOpen(false);
   }
 
+  useEffect(() => {
+    getItemsWithFilter("area", { tripId: currentTrip.id })
+      .then((response) => {
+        if (response.data.length > 0) {
+          setAreas(response.data);
+        } else {
+          setAreas([{ areaName: "" }]);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }, [currentTrip]);
+
   return (
     <div>
       <div className="cards-container-center">
@@ -84,40 +109,20 @@ function TripPlanner() {
           <div className="filled-card small-card" onClick={handleChooseFlight}>
             Add Flight To...
           </div>
-
-          {area &&
-            area.map((location, index) => (
+          {areas.length > 0 &&
+            areas.map((location, index) => (
               <div key={index} className="flight-location-container">
-                {area[index].areaName == "" ? (
-                  <div className="filled-card" onClick={()=>openModal(index)}>
+                {areas[index].areaName == "" ? (
+                  <div className="filled-card" onClick={() => openModal(index)}>
                     <h2>Enter Location</h2>{" "}
                   </div>
-                //  <div>
-                //     <input
-                //       type="text"
-                //       placeholder="Enter Location..."
-                //       onChange={(event) => handleAreaChange(event, index)}
-                //     />
-                //     <div className="modal-buttons">
-                //       <button onClick={closeModal} className="outlined-button">
-                //         Cancel
-                //       </button>
-                //       <button
-                //         onClick={() => handleChooseArea(index)}
-                //         className="primary-button"
-                //       >
-                //         Submit
-                //       </button>
-                //     </div>
-                //  </div>
                 ) : (
                   <div
                     className="filled-card"
-                    onClick={()=>navigate("area/overview")}
+                    onClick={() => handleChooseArea(index)}
                   >
                     <h2>{location.areaName}</h2>
                   </div>
-                  
                 )}
                 <Modal
                   isOpen={modalIsOpen}
@@ -137,7 +142,7 @@ function TripPlanner() {
                       Cancel
                     </button>
                     <button
-                      onClick={handleChooseArea}
+                      onClick={handleAreaSubmit}
                       className="primary-button"
                     >
                       Submit

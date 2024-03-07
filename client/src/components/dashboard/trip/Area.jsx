@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { AppContext } from "../../../context/AppContext";
+import { GeneralContext } from "../../../context/GeneralContext";
 import { checkForUser , logout } from "../../../utils/AuthService";
 
 
 function Area() {
-  const {isGuest ,setUser} = useContext(AppContext)
+  const {isGuest ,setUser} = useContext(GeneralContext)
   const navigate = useNavigate();
 
   const handleGoBack = () => {

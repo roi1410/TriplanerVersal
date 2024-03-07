@@ -43,3 +43,24 @@
     display: grid;
     place-items: center;
 }
+
+/* MAP */
+.map{
+min-height: 25rem;
+/* height: clamp(25rem, 30rem, 100%); */
+border-radius: 0.5rem;
+position: fixed;
+right: 2rem;
+width: calc(50% - 2rem);
+bottom: 8rem;
+z-index: 0;
+}
+
+.map-inputs{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
