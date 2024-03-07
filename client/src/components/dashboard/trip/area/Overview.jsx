@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { checkForUser ,logout } from "../../../../utils/AuthService";
-import { AppContext } from "../../../../context/AppContext";
+import { GeneralContext } from "../../../../context/GeneralContext";
 
 function Overview() {
 
-  const {isGuest,setUser} = useContext(AppContext)
+  const {isGuest,setUser} = useContext(GeneralContext)
 
 
 

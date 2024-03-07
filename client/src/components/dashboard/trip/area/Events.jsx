@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { checkForUser , logout } from "../../../../utils/AuthService";
-import { AppContext } from "../../../../context/AppContext";
+import { GeneralContext } from "../../../../context/GeneralContext";
 
 function Events() {
 
-  const {isGuest ,setUser} = useContext(AppContext)
+  const {isGuest ,setUser} = useContext(GeneralContext)
 
 
   return (

@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import Skeleton from "react-loading-skeleton";
-import { checkForUser , logout } from "../../utils/AuthService";
 import Modal from "react-modal";
-import { createItem } from "../../utils/CRUDService";
-// Modal.setAppElement('#yourAppElement');
-
+import { createItem, getItemsWithFilter } from "../../utils/CRUDService";
+import { CurrentContext } from "../../context/CurrentContext";
 
 const customStyles = {
   content: {
@@ -14,15 +12,15 @@ const customStyles = {
     left: "50%",
     right: "auto",
     bottom: "auto",
-    padding:"2rem 1.5rem",
-    borderRadius:"0.5rem",
+    padding: "2rem 1.5rem",
+    borderRadius: "0.5rem",
   },
 };
 
 function Dashboard() {
-  // let subtitle;
-  const {isGuest, user, setUser, trips, setTrips, currentTrip, setCurrentTrip } =
-    useContext(AppContext);
+  const { user, setUser, trips, setTrips, isLoading, setIsLoading } =
+    useContext(GeneralContext);
+  const { currentTrip, setCurrentTrip } = useContext(CurrentContext);
   const [tripData, setTripData] = useState({});
 
   const navigate = useNavigate();
@@ -48,12 +46,18 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    // send request to server to update setTrips
-    // setTrips(response.data)
+    getItemsWithFilter("trip", { userId: user.id })
+      .then((response) => {
+        setTrips(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }, [currentTrip]);
 
   const [modalIsOpen, setIsOpen] = React.useState(false);
-
   function openModal() {
     setIsOpen(true);
   }
@@ -71,7 +75,7 @@ function Dashboard() {
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Choose Trip Data Modal"
-        appElement={document.getElementById('root')}
+        appElement={document.getElementById("root")}
       >
         <input
           type="text"
@@ -95,18 +99,22 @@ function Dashboard() {
         </div>
       </Modal>
       <div className="trips">
-        {trips ? (
-          trips.map((trip, index) => (
-            <div
-              className="filled-card"
-              key={index}
-              onClick={(index) => handlePlanTrip(index)}
-            >
-              {trip} || <Skeleton />
-            </div>
-          ))
+        {!isLoading ? (
+          trips.length > 0 ? (
+            trips.map((trip, index) => (
+              <div
+                className="filled-card"
+                key={index}
+                onClick={() => handlePlanTrip(index)}
+              >
+                {trip.tripName}
+              </div>
+            ))
+          ) : (
+            <p>You haven't planned any trips yet</p>
+          )
         ) : (
-          <p>You haven't planned any trips yet</p>
+          <Skeleton count={5} className="filled-card" />
         )}
       </div>
     </div>

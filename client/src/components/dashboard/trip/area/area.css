@@ -1,0 +1,13 @@
+/* HOTELS */
+.hotels-container{
+    display: flex;
+    position: relative;
+    gap: 2rem;
+}
+.hotels-container>*:not(.map-container){
+flex: 1;
+}
+.map-container{
+    position: static;
+    width: 50%;
+}

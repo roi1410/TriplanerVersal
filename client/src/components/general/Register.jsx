@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../utils/AuthService";
@@ -9,7 +9,7 @@ import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
 function Register() {
-  const { isGuest, setIsGuest, setUser } = useContext(AppContext);
+  const { isGuest, setIsGuest, setUser } = useContext(GeneralContext);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   let navigate = useNavigate();
