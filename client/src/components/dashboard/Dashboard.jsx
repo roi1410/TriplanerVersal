@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import Skeleton from "react-loading-skeleton";
-import { checkForUser } from "../../utils/AuthService";
+import { checkForUser , logout } from "../../utils/AuthService";
 import Modal from "react-modal";
 import { createItem } from "../../utils/CRUDService";
 // Modal.setAppElement('#yourAppElement');
@@ -10,23 +10,18 @@ import { createItem } from "../../utils/CRUDService";
 
 const customStyles = {
   content: {
-    display:"flex",
-    flexDirection:"column",
-    gap:"2rem",
     top: "50%",
     left: "50%",
     right: "auto",
     bottom: "auto",
     padding:"2rem 1.5rem",
     borderRadius:"0.5rem",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "var(--secondary-300)",
   },
 };
 
 function Dashboard() {
   // let subtitle;
-  const { user, setUser, trips, setTrips, currentTrip, setCurrentTrip } =
+  const {isGuest, user, setUser, trips, setTrips, currentTrip, setCurrentTrip } =
     useContext(AppContext);
   const [tripData, setTripData] = useState({});
 
@@ -57,18 +52,6 @@ function Dashboard() {
     // setTrips(response.data)
   }, [currentTrip]);
 
-  useEffect(() => {
-    checkForUser().then((response) => {
-      if (response.data) {
-        setUser(response.data);
-      } else {
-        logout();
-        navigate("/");
-        alert("Your previous session has ended, please login again.");
-      }
-    });
-  }, []);
-
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
   function openModal() {
@@ -88,6 +71,7 @@ function Dashboard() {
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Choose Trip Data Modal"
+        appElement={document.getElementById('root')}
       >
         <input
           type="text"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { login } from "../../utils/AuthService";
 import { useContext } from "react";
@@ -10,7 +10,7 @@ import { AiFillEyeInvisible } from "react-icons/ai";
 
 function Login() {
   const { handleSubmit, register } = useForm();
-  const { setUser } = useContext(AppContext);
+  const { isGuest , setIsGuest , setUser } = useContext(AppContext);
   const [passwordShown, setPasswordShown] = useState(false);
   let navigate = useNavigate();
 
@@ -30,9 +30,15 @@ function Login() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard/trip-planner");
+    setIsGuest(true);
   }
 
+  useEffect(() => {
+    if (isGuest) {
+      navigate("/dashboard/trip-planner");
+    }
+  }, [isGuest]);
+ 
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit(onSubmit)}>
