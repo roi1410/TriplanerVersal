@@ -26,6 +26,12 @@
 /* REGISTER */
 
 
+/* NVABAR */
+.navbar{
+  display: flex;
+  gap: 1rem;
+}
+
 /* HOME */
 
 

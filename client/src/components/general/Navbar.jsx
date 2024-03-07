@@ -33,7 +33,7 @@ function Navbar() {
         <div>
           <div className="home-button" onClick={handleLogout}>
             <NavLink to="/">
-              <button>Home</button>
+              <b>Home</b>
             </NavLink>
           </div>
           <div className="navbar">
