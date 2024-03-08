@@ -5,15 +5,20 @@ import { GeneralContext } from "../../../context/GeneralContext";
 import airportData from "../../../assets/airport.json";
 import flags from "../../../assets/flags.json";
 
-import { findFlights } from "../../../utils/CRUDService";
+import { CreateDateFromMinMax, createItem, findFlights } from "../../../utils/CRUDService";
 import { FaPlaneArrival, FaPlaneDeparture, FaClock } from "react-icons/fa";
 import { GrFormNext } from "react-icons/gr";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "./trip.css";
+import { CurrentContext } from "../../../context/CurrentContext";
+import { login } from "../../../utils/AuthService";
+
 
 function Flights() {
   const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights } = useContext(GeneralContext);
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
+  useContext(CurrentContext);
   const navigate = useNavigate();
   const [showFrom, setShowFrom] = useState([]);
   const [flightOrderObj, setFlightOrderObj] = useState({});
@@ -69,10 +74,15 @@ function Flights() {
     return `${formattedHours}${formattedMinutes}`;
   }
 
-  const handleChooseFlight = (index) => {
+  const handleChooseFlight = async (index) => {
     const selectedFlight = flights[index];
-    console.log(selectedFlight);
-    // SAVE TO DB
+    const minDate = selectedFlight.flights[0].departure_airport.time
+    const maxDate = selectedFlight.flights[selectedFlight.flights.length-1].arrival_airport.time
+    const res = await createItem("flight",currentTrip.id,{flightName:selectedFlight.booking_token,flightInfo:JSON.stringify(selectedFlight)})
+    console.log(res.data.flight);
+    const flightId = {flightId:res.data.flight.id}
+    console.log(flightId);
+    await CreateDateFromMinMax(minDate,maxDate,currentTrip.id,flightId)
     setMyFlights((prev)=>[...prev, selectedFlight])
   };
 
