@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { AppContext } from "../../../context/AppContext";
-import { checkForUser } from "../../../utils/AuthService";
 import airportData from '../../../assets/airport.json'
 import flags from '../../../assets/flags.json'
 import { findFlights } from "../../../utils/CRUDService";
 
 
 function Flights() {
-  const { setUser } = useContext(AppContext)
   const navigate = useNavigate();
   const [showFrom, setShowFrom] = useState([])
   const [flightOrderObj, setFlightOrderObj] = useState({})
@@ -48,17 +45,7 @@ function Flights() {
     setFlightOrderObj({...flightOrderObj,arrAP:e})
   };
 
-  useEffect(() => {
-    checkForUser().then((response) => {
-      if (response.data) {
-        setUser(response.data);
-      } else {
-        logout();
-        navigate("/");
-        alert("Your previous session has ended, please login again.");
-      }
-    });
-  }, []);
+
   return (
     <div>
       <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />

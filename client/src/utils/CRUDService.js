@@ -1,5 +1,5 @@
 import axios from "axios";
-import { format, eachDayOfInterval } from 'date-fns';
+import { eachDayOfInterval } from 'date-fns';
 
 
 axios.defaults.withCredentials = true;
@@ -24,11 +24,13 @@ export const deleteItem = async (type, id) => {
     return axios.delete(`${import.meta.env.VITE_API_URL}/${type}/delete/${id}`, null);
 };
 
-export const CreateDateFromMinMax = async (minDate, maxDate, func) => {
+export const CreateDateFromMinMax = async (minDate, maxDate, tripId, data) => {
     try {
         const interval = { start: minDate, end: maxDate };
         const allDates = eachDayOfInterval(interval);
-        allDates.map((e) => func(e))
+        for (const e of allDates) {
+            await createItem('day', tripId, {...data, day:e})
+        }
     } catch (err) {
         console.log(err.massege);
     }
