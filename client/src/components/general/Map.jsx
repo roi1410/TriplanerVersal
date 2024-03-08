@@ -17,7 +17,7 @@ import {
 } from "../../utils/MapService";
 import { GeneralContext } from "../../context/GeneralContext";
 
-export default function Map() {
+export default function Map({}) {
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
   const [search, setSearch] = useState("");
@@ -26,6 +26,10 @@ export default function Map() {
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
   const mapRef = useRef();
+  const [date, setdate] = useState({ checkIn: "", checkOut: "" });
+  const today=new Date
+  console.log(today);
+  
 
   const showMyLocation = () => {
     if (location.loaded && !location.error) {
@@ -38,6 +42,9 @@ export default function Map() {
       alert(location.error.message);
     }
   };
+  function handleDate() {
+    
+  }
 
   const customIcon = new L.Icon({
     //creating a custom icon to use in Marker
@@ -63,10 +70,13 @@ export default function Map() {
     const res = await fetchPlaceLanLon(search);
     console.log(search);
 
-    sendToLocation(res);
+    if (res.region_id && res.coordinates) {
+      sendToLocation(res.coordinates);
 
-    const res2 = await fetchNearHotels(res);
-    setHotels(res2);
+      const res2 = await fetchNearHotels(res.region_id,date);
+      console.log(res2);
+      setHotels(res2);
+    }
   }
   const cores = { lat: "35.694574086736104", long: "139.74384544324104" };
   async function eventsFetch(coords) {
@@ -113,8 +123,25 @@ export default function Map() {
           Locate Me
         </button>
       </div>
-      <button onClick={() => eventsFetch(cores)}>eventFetch</button>
-      <button onClick={() => console.log(hotels)}>test</button>
+
+      <div className="map-inputs">
+        Check-In
+        <input
+          type="date"
+          onChange={(e) => setdate({ ...date, checkIn:new Date(e.target.value) })}
+          defaultValue={today.toISOString().substr(0, 10)}
+        />
+        Check-Out
+        <input
+          type="date"
+          onChange={(e) => setdate({ ...date, checkOut:new Date(e.target.value) })}
+          defaultValue={today.toISOString().substr(0, 10)}
+         
+        />
+        <button onClick={() => handleDate(date)} className="primary-button">
+          look for date
+        </button>
+      </div>
 
       <MapContainer
         ref={mapRef}
