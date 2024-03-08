@@ -18,7 +18,6 @@ export const CurrentContextProvider = ({ children }) => {
     console.log("CURRENT AREA ", currentArea);
   }, [ currentTrip, currentArea]);
 
-
   const contextValue = {
     currentTrip,
     setCurrentTrip,

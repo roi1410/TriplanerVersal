@@ -17,10 +17,14 @@ export const GeneralContext = createContext({
   setHotels: () => {},
   events: [],
   setEvents: () => {},
+  flights: [],
+  setFlights: () => {},
   myHotels: [],
   setMyHotels: () => {},
   myEvents: [],
   setMyEvents: () => {},
+  myFlights: [],
+  setMyFlights: () => {},
 });
 
 export const GeneralContextProvider = ({ children }) => {
@@ -32,6 +36,8 @@ export const GeneralContextProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
   const [myHotels, setMyHotels] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
+  const [flights, setFlights] = useState([]);
+  const [myFlights, setMyFlights] = useState([]);
   const [areas, setAreas] = useState([{ areaName: "" }]);
   const [checkGuestUpdate, setCheckGuestUpdate] = useState(false);
   const navigate = useNavigate();
@@ -90,6 +96,10 @@ export const GeneralContextProvider = ({ children }) => {
     setMyHotels,
     myEvents,
     setMyEvents,
+    flights,
+    setFlights,
+    myFlights,
+    setMyFlights,
   };
   return (
     <GeneralContext.Provider value={contextValue}>

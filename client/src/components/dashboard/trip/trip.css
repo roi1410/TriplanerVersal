@@ -5,8 +5,90 @@
   top: 63px;
   background-color: var(--background);
   z-index: 2;
-  padding: 0 2rem 2rem 2rem;
+  padding:1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+}
+
+/* FLIGHT */
+.flight-skeleton{
+  width: calc(100% - 3rem);
+  height: 100px;
+}
+
+
+.flight-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 1.5rem;
+  background-color: var(--secondary);
+  box-shadow: 0px 0px 15px 5px var(--secondary-50);
+  border-radius: 0.5rem;
+  position: sticky;
+  top: 63px;
+  z-index: 1;
+
+}
+.flight-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.2rem;
+}
+.flight-inputs input {
+  font-size: 1rem;
+}
+
+.flights {
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.flight {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-items: start;
+}
+.flight span {
+  padding-right: 0.75rem;
+  font-size: 1.2rem;
+}
+.airline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.airline img {
+  aspect-ratio: 1/1;
+  border-radius: 0.5rem;
+}
+
+.flight-order {
+  border-top: 1px solid var(--secondary-300);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 2rem;
+}
+.takeoff {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+.duration {
+  display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.8rem;
 }

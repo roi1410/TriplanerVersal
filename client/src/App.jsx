@@ -24,7 +24,7 @@ function App() {
 
 
   return (
-    <div>
+    <div className="app-container">
       <GeneralContextProvider>
         <CurrentContextProvider>
           <div className="navbar-container">

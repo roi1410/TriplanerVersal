@@ -32,6 +32,7 @@ function Hotels() {
       <div className="hotels-container">
         <div className="cards-container">
           {isLoading ? (
+            // Loader
             <Skeleton className="filled-card" count={20} />
           ) : hotels ? (
             hotels.map((hotel, index) => (

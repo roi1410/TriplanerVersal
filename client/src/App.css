@@ -6,8 +6,18 @@
   min-height: 100%;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
+ }
+ 
+
 .content-container {
   margin: 7rem 2rem 2rem 2rem;
+  flex-grow: 1;
 }
 .navbar-container {
   background-color: var(--secondary);
@@ -29,5 +39,9 @@
   background-color: var(--secondary);
   padding: 1.324rem;
   border-top: 1px solid var(--secondary-300);
+  /* position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%; */
 }
 

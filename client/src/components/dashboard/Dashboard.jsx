@@ -68,7 +68,7 @@ function Dashboard() {
   return (
     <div className="cards-container">
       <div className="dashed-card" onClick={openModal}>
-        Start A New Trip
+        <p>Start A New Trip</p>
       </div>
       <Modal
         isOpen={modalIsOpen}
@@ -107,7 +107,7 @@ function Dashboard() {
                 key={index}
                 onClick={() => handlePlanTrip(index)}
               >
-                {trip.tripName}
+                <h2>{trip.tripName}</h2>
               </div>
             ))
           ) : (
