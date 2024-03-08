@@ -2,7 +2,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <div>Copyright &copy; Name Of Website LLC. 2024{" "}</div>
+    <div>Copyright &copy; tripel LLC. 2024{" "}</div>
   )
 }
 

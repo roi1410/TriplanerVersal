@@ -144,7 +144,7 @@ function TripPlanner() {
 
         <div className="flight-location-container">
           <div className="filled-card small-card" onClick={handleChooseFlight}>
-            Add Flight To...
+            <p>Add Flight To...</p>
           </div>
           {areas.length > 0 &&
             areas.map((location, index) => (
@@ -221,12 +221,12 @@ function TripPlanner() {
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(index)}
                   >
-                    Add Flight To...
+                   <p> Add Flight To...</p>
                   </div>
                   <button
                     className="primary-button icon small-card"
                     onClick={() => handleAddLocation(index)}
-                  >
+                    >
                     <FaPlus />
                   </button>
                   {index > 0 && (
