@@ -5,6 +5,7 @@ import { GeneralContext } from "../../context/GeneralContext";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import {
+  CreateDateFromMinMax,
   createItem,
   getItemsWithFilter,
   updateItem,
@@ -51,10 +52,11 @@ function TripPlanner() {
   };
 
   const handleAreaSubmit = () => {
-    console.log(startDate + " - " + endDate);
+    console.log(startDate + " - " + endDate + currentArea.id);
     if (areas[areaIndex].id === currentArea.id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, { areaId: currentArea.id })
           setCurrentArea(response.data);
           closeModal();
         })
@@ -62,6 +64,7 @@ function TripPlanner() {
     } else {
       createItem("area", currentTrip.id, areas[areaIndex])
         .then((response) => {
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, { areaId: currentArea.id })
           setCurrentArea(response.data);
           closeModal();
         })

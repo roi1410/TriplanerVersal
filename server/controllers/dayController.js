@@ -105,6 +105,7 @@ exports.registerDay = async (req, res) => {
             await newDay.save()
         }
         req.body?.hotelId && await newDay.update({ hotelId: req.body.hotelId })
+        req.body?.day && await newDay.update({ day: req.body.day })
         await addToDay(newDay, req.body)
         await newDay.save()
         res.status(201).json({
@@ -122,7 +123,14 @@ exports.registerDay = async (req, res) => {
 exports.getDays = async (req, res) => {
     try {
         const filter = req.body
-        const days = await Day.findAll({ where: filter });
+        const days = await Day.findAll({include:["Hotel",
+        {
+            association: 'Flights',
+        }, {
+            association: 'Areas',
+        }, {
+            association: 'Events',
+        }], where: filter });
         res.send(days);
     } catch (error) {
         console.error(error);
