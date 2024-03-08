@@ -24,6 +24,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   height: 100%;
+  min-height: calc(100svh - 7.2rem);
 }
 
 h1 {
@@ -102,6 +103,21 @@ button:focus-visible,
   border: 2px solid var(--primary);
   color: var(--primary);
 }
+.delete-button {
+  background-color: hsl(0, 100%, 90%);
+  color: hsl(0, 83%, 40%);
+  border-color: hsl(0, 83%, 40%);
+}
+.icon {
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+  transition: opacity var(--short) ease-in-out;
+}
+.icon:hover,
+.icon:focus{
+  opacity: 0.7;
+}
 
 input {
   font-family: inherit;
@@ -141,7 +157,7 @@ a:focus-visible {
   align-items: center;
 }
 .cards-container-center > * {
-  width: calc(80% - 4rem);
+  width: calc(80% - 3rem);
 }
 .filled-card {
   cursor: pointer;
@@ -150,7 +166,9 @@ a:focus-visible {
   border-radius: 0.5rem;
   padding: 2rem 1.5rem;
   margin: 1rem 0;
-  transition: scale var(--short) ease-in-out , box-shadow var(--short) ease-in-out;
+  transition: scale var(--short) ease-in-out,
+    box-shadow var(--short) ease-in-out;
+    position: relative;
 }
 .dashed-card {
   cursor: pointer;
@@ -175,19 +193,61 @@ a:focus-visible {
   margin: 1rem 0;
 }
 .filled-card:hover,
-.filled-card:focus{
+.filled-card:focus {
   scale: 1.03;
   box-shadow: 0px 0px 20px 10px var(--background-900);
 }
 .dashed-card:hover,
-.dashed-card:focus{
-scale: .98;
+.dashed-card:focus {
+  scale: 0.98;
 }
 .go-back,
 .logout {
   cursor: pointer;
   transition: filter var(--short) linear;
   filter: brightness(1);
+ font-size: 1.8rem;
+}
+.edit{
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.date-inputs{
+display: flex;
+gap: 2rem;
+}
+  .date-inputs>*{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ReactModal__Overlay {
+  background-color: hsla(0, 0%, 10%, 0.5) !important;
+}
+.ReactModal__Content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%,-50%);
+padding: 2rem 1.5rem;
+border-radius: 0.5rem;
+background-color: var(--secondary-300) !important;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (prefers-color-scheme: dark) {

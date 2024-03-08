@@ -7,7 +7,11 @@
 .trips {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+}
+.trips>* {
+  width: 80%;
+
 }
 .trip-container {
   cursor: pointer;
@@ -16,4 +20,22 @@
   cursor: pointer;
   border: 0.5rem dashed var(--text);
   background-color: var(--secondary-300);
+}
+
+.flight-location-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+/* .flight-location-container > * {
+  width: calc(100% - 3rem);
+} */
+.flight-location {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr;
+  justify-items: end;
+  width: 100%;
+}
+.flight-location > * {
+  width: calc(100% - 3rem) !important;
 }

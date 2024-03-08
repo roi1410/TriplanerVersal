@@ -7,21 +7,22 @@
 }
 
 .content-container {
-  margin: 6rem 2rem 2rem 2rem;
+  margin: 7rem 2rem 2rem 2rem;
 }
-
 .navbar-container {
   background-color: var(--secondary);
   border-bottom: 1px solid var(--secondary-300);
-  padding: 0.8rem 0.5rem;
+  padding: 0.8rem 1rem;
   position: fixed;
-  width: 100%;
+  width:calc(100% - 2rem) ;
   top: 0;
   z-index: 2;
 }
 
 .navbar-container>*>*{
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer-container {
@@ -29,3 +30,4 @@
   padding: 1.324rem;
   border-top: 1px solid var(--secondary-300);
 }
+

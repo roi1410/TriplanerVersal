@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkForUser } from "../../../../utils/AuthService";
-import { AppContext } from "../../../../context/AppContext";
+import { checkForUser , logout } from "../../../../utils/AuthService";
+import { GeneralContext } from "../../../../context/GeneralContext";
 
 
 function DailyPlanner() {
-  const {setUser} = useContext(AppContext)
+  const {isGuest , setUser} = useContext(GeneralContext)
   const navigate = useNavigate();
 
  
@@ -16,17 +16,7 @@ function DailyPlanner() {
     navigate("my-events");
   };
 
-  useEffect(() => {
-    checkForUser().then((response) => {
-      if (response.data) {
-        setUser(response.data);
-      } else {
-        logout();
-        navigate("/");
-        alert("Your previous session has ended, please login again.");
-      }
-    });
-  }, []);
+
 
   return (
     <div>

@@ -1,21 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { checkForUser } from "../../../../utils/AuthService";
-import { AppContext } from "../../../../context/AppContext";
+import { checkForUser , logout } from "../../../../utils/AuthService";
+import { GeneralContext } from "../../../../context/GeneralContext";
 
 function Events() {
 
-  const {setUser} = useContext(AppContext)
-  useEffect(() => {
-    checkForUser().then((response) => {
-      if (response.data) {
-        setUser(response.data);
-      } else {
-        logout();
-        navigate("/");
-        alert("Your previous session has ended, please login again.");
-      }
-    });
-  }, []);
+  const {isGuest ,setUser} = useContext(GeneralContext)
+
+
   return (
     <div>Events</div>
   )

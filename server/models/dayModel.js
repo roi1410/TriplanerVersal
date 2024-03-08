@@ -6,7 +6,7 @@ const Day = sequelize.define('Day',{
     day: {
       type: DataTypes.DATE,
       allowNull: false,
-      default: format(new Date(),"MM/dd/yyyy")
+      default: format(new Date(),"dd/mm/yyyy")
     }
   })
 

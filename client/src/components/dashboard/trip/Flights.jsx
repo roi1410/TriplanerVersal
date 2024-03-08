@@ -62,6 +62,7 @@ function Flights() {
   return (
     <div>
       <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />
+
       <div>
         <span>from</span>
         <input type="text" name="from" list="cityname" onChange={(e) => handleInputFrom(e.target.value)} />

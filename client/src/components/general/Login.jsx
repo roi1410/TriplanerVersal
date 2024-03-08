@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { login } from "../../utils/AuthService";
 import { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { AiFillEye } from "react-icons/ai";
@@ -10,15 +10,15 @@ import { AiFillEyeInvisible } from "react-icons/ai";
 
 function Login() {
   const { handleSubmit, register } = useForm();
-  const { setUser } = useContext(AppContext);
+  const { isGuest , setIsGuest , setUser } = useContext(GeneralContext);
   const [passwordShown, setPasswordShown] = useState(false);
   let navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
       const response = await login(data);
-      setUser(response.data.user);
       console.log(response.data);
+      setUser(response.data.user);
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);
@@ -30,9 +30,15 @@ function Login() {
   };
 
   const handleGuestLogin = () =>{
-    navigate("/dashboard/trip-planner");
+    setIsGuest(true);
   }
 
+  useEffect(() => {
+    if (isGuest) {
+      navigate("/dashboard/trip-planner");
+    }
+  }, [isGuest]);
+ 
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit(onSubmit)}>

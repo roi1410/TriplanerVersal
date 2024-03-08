@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { AppContext } from "../../context/AppContext";
+import { GeneralContext } from "../../context/GeneralContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../utils/AuthService";
@@ -9,12 +9,11 @@ import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
 function Register() {
-  const { setUser } = useContext(AppContext);
+  const { isGuest, setIsGuest, setUser } = useContext(GeneralContext);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   let navigate = useNavigate();
   const { handleSubmit, register } = useForm();
-
 
   const onSubmit = async (data) => {
     if (data.password !== data.passwordVerification) {
@@ -31,7 +30,6 @@ function Register() {
     }
   };
 
-  
   const togglePasswordVisibility1 = () => {
     setPasswordShown1((prev) => !prev);
   };
@@ -39,9 +37,15 @@ function Register() {
     setPasswordShown2((prev) => !prev);
   };
 
-  const handleGuestLogin = () =>{
-    navigate("/dashboard/trip-planner");
-  }
+  const handleGuestLogin = () => {
+    setIsGuest(true);
+  };
+  
+  useEffect(() => {
+    if (isGuest) {
+      navigate("/dashboard/trip-planner");
+    }
+  }, [isGuest]);
 
   return (
     <div className="register-container">
@@ -121,7 +125,13 @@ function Register() {
             or
             <hr />
           </span>
-          <button type="button" className="outlined-button" onClick={handleGuestLogin}>Continue As Guest</button>
+          <button
+            type="button"
+            className="outlined-button"
+            onClick={handleGuestLogin}
+          >
+            Continue As Guest
+          </button>
         </div>
       </form>
     </div>
