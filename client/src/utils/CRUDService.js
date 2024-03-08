@@ -1,4 +1,6 @@
 import axios from "axios";
+import { format, eachDayOfInterval } from 'date-fns';
+
 
 axios.defaults.withCredentials = true;
 
@@ -21,3 +23,21 @@ export const getItem = async (type, id) => {
 export const deleteItem = async (type, id) => {
     return axios.delete(`${import.meta.env.VITE_API_URL}/${type}/delete/${id}`, null);
 };
+
+export const CreateDateFromMinMax = async (minDate, maxDate, func) => {
+    try {
+        const interval = { start: minDate, end: maxDate };
+        const allDates = eachDayOfInterval(interval);
+        allDates.map((e) => func(e))
+    } catch (err) {
+        console.log(err.massege);
+    }
+}
+
+export const findFlights = async (data) => {
+    try {
+        return axios.post(`http://localhost:8001/trip-planner/getFlight/find`, data);
+    } catch (err) {
+        console.log(err.massege);
+    }
+}

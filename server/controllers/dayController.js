@@ -42,6 +42,8 @@ Day.belongsTo(Hotel, {
     foreignKey: "HotelId",
 });
 
+
+
 const addToDay = async (day, data) => {
     const area = await Area.findByPk(data.areaId)
     if (area && day.hasArea(data.areaId)) {
@@ -120,7 +122,7 @@ exports.registerDay = async (req, res) => {
 exports.getDays = async (req, res) => {
     try {
         const filter = req.body
-        const days = await Day.findAll({where:filter});
+        const days = await Day.findAll({ where: filter });
         res.send(days);
     } catch (error) {
         console.error(error);
