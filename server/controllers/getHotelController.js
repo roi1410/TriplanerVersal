@@ -14,7 +14,7 @@ exports.getHotelInfo = async (req, res) => {
             arrival_id: arrAP,
             outbound_date: depTM,
             currency: "USD",
-            api_key: "b6d282278cda6c559e0c1222985bcd1cf1ab749541ad43c3537a7bd8e5674406"
+            api_key: process.env.FLIGHTS_API_KEY
         }, (json) => {
             console.log(json.best_flights);
             res.send(json.best_flights)
