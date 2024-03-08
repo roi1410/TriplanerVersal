@@ -61,6 +61,7 @@ z-index: 0;
   display: flex;
   justify-content: space-around;
   margin-top: 2rem;
-  position: relative;
+  position: fixed;
   z-index: 1;
+  width: calc(50% - 2rem);
 }

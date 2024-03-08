@@ -26,11 +26,10 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 80% !important;
 }
-.flight-location-container > * {
+/* .flight-location-container > * {
   width: calc(100% - 3rem);
-}
+} */
 .flight-location {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr;
