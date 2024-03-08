@@ -4,10 +4,16 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { GeneralContext } from "../../context/GeneralContext";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
-import { createItem, getItemsWithFilter } from "../../utils/CRUDService";
+import {
+  createItem,
+  getItemsWithFilter,
+  updateItem,
+} from "../../utils/CRUDService";
 import Modal from "react-modal";
 import { CurrentContext } from "../../context/CurrentContext";
+import { MdEdit } from "react-icons/md";
 import "./dashboard.css";
+import { format, addDays } from "date-fns";
 
 const customStyles = {
   content: {
@@ -25,6 +31,8 @@ function TripPlanner() {
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(addDays(new Date(), 1));
 
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
@@ -43,12 +51,22 @@ function TripPlanner() {
   };
 
   const handleAreaSubmit = () => {
-    createItem("area", currentTrip.id, areas[areaIndex])
-      .then((response) => {
-        setCurrentArea(response.data);
-        closeModal();
-      })
-      .catch((err) => console.log(err));
+    console.log(startDate + " - " + endDate);
+    if (areas[areaIndex].id === currentArea.id) {
+      updateItem("area", currentArea.id, areas[areaIndex])
+        .then((response) => {
+          setCurrentArea(response.data);
+          closeModal();
+        })
+        .catch((err) => console.log(err));
+    } else {
+      createItem("area", currentTrip.id, areas[areaIndex])
+        .then((response) => {
+          setCurrentArea(response.data);
+          closeModal();
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const handleChooseArea = (index) => {
     const tempArea = areas[index];
@@ -96,7 +114,26 @@ function TripPlanner() {
         console.log(err);
         setIsLoading(false);
       });
-  }, [currentTrip]);
+  }, [currentTrip, currentArea]);
+
+  const handleAreaEdit = (event, index) => {
+    event.stopPropagation();
+    setCurrentArea(areas[index]);
+    openModal(index);
+  };
+
+  const handleStartDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    setStartDate(selectedDate);
+    if (selectedDate > endDate) {
+      setEndDate(addDays(selectedDate, 1));
+    }
+  };
+
+  const handleEndDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    setEndDate(selectedDate);
+  };
 
   return (
     <div>
@@ -122,6 +159,12 @@ function TripPlanner() {
                     onClick={() => handleChooseArea(index)}
                   >
                     <h2>{location.areaName}</h2>
+                    <button
+                      className="outlined-button edit icon"
+                      onClick={(event) => handleAreaEdit(event, index)}
+                    >
+                      <MdEdit />
+                    </button>
                   </div>
                 )}
                 <Modal
@@ -135,8 +178,32 @@ function TripPlanner() {
                   <input
                     type="text"
                     placeholder="Enter Location..."
+                    defaultValue={currentArea.areaName || ""}
                     onChange={(event) => handleAreaChange(event)}
                   />
+                  <div className="date-inputs">
+                    <label htmlFor="start-date">
+                      Start Date
+                      <input
+                        type="date"
+                        id="start-date"
+                        value={format(startDate, "yyyy-MM-dd")}
+                        min={format(new Date(), "yyyy-MM-dd")}
+                        onChange={handleStartDateChange}
+                      />
+                    </label>
+
+                    <label htmlFor="end-date">
+                      End Date
+                      <input
+                        type="date"
+                        id="end-date"
+                        value={format(endDate, "yyyy-MM-dd")}
+                        min={format(startDate, "yyyy-MM-dd")}
+                        onChange={handleEndDateChange}
+                      />
+                    </label>
+                  </div>
                   <div className="modal-buttons">
                     <button onClick={closeModal} className="outlined-button">
                       Cancel

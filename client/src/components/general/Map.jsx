@@ -16,13 +16,16 @@ import {
   fetchPlace,
 } from "../../utils/MapService";
 import { GeneralContext } from "../../context/GeneralContext";
+import { CurrentContext } from "../../context/CurrentContext";
 
 export default function Map() {
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
   const [search, setSearch] = useState("");
   const input = useRef();
-  const { hotels, setHotels, events, setEvents } = useContext(GeneralContext);
+  const { hotels, setHotels, events, setEvents, setIsLoading } =
+    useContext(GeneralContext);
+  const { currentArea, setCurrentArea } = useContext(CurrentContext);
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
   const mapRef = useRef();
@@ -62,12 +65,20 @@ export default function Map() {
   async function handleSubmit(search) {
     const res = await fetchPlaceLanLon(search);
     console.log(search);
-
     sendToLocation(res);
 
     const res2 = await fetchNearHotels(res);
     setHotels(res2);
+    setIsLoading(false);
   }
+
+  //   to search for the first entered location
+  useEffect(() => {
+    if (search == "") {
+      handleSubmit(currentArea.areaName);
+    }
+  }, []);
+
   const cores = { lat: "35.694574086736104", long: "139.74384544324104" };
   async function eventsFetch(coords) {
     const res = await fetchPlace(coords);
@@ -104,6 +115,7 @@ export default function Map() {
         <input
           type="text"
           placeholder="Enter Location"
+          defaultValue={currentArea.areaName}
           onChange={(e) => setSearch(e.target.value)}
         />
         <button className="primary-button" onClick={() => handleSubmit(search)}>
@@ -113,8 +125,8 @@ export default function Map() {
           Locate Me
         </button>
       </div>
-      <button onClick={() => eventsFetch(cores)}>eventFetch</button>
-      <button onClick={() => console.log(hotels)}>test</button>
+      {/* <button onClick={() => eventsFetch(cores)}>eventFetch</button>
+      <button onClick={() => console.log(hotels)}>test</button> */}
 
       <MapContainer
         ref={mapRef}
@@ -137,12 +149,12 @@ export default function Map() {
           </Marker>
         )}
         {hotels &&
-          hotels.map((hotel, key) => {
+          hotels.map((hotel, hotelIndex) => {
             return (
               hotel.lat &&
               hotel.long && (
                 <Marker
-                  key={key}
+                  key={hotelIndex}
                   icon={customIcon}
                   position={[hotel.lat, hotel.long]}
                 >
@@ -152,12 +164,12 @@ export default function Map() {
             );
           })}
         {events &&
-          events.map((event, key) => {
+          events.map((event, eventIndex) => {
             return (
               event?.lat &&
               event?.long && (
                 <Marker
-                  key={key}
+                  key={eventIndex}
                   icon={customIcon}
                   position={[event.lat, event.long]}
                 >

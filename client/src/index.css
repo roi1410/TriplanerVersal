@@ -111,6 +111,12 @@ button:focus-visible,
 .icon {
   width: fit-content;
   height: fit-content;
+  cursor: pointer;
+  transition: opacity var(--short) ease-in-out;
+}
+.icon:hover,
+.icon:focus{
+  opacity: 0.7;
 }
 
 input {
@@ -162,6 +168,7 @@ a:focus-visible {
   margin: 1rem 0;
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
+    position: relative;
 }
 .dashed-card {
   cursor: pointer;
@@ -200,6 +207,24 @@ a:focus-visible {
   transition: filter var(--short) linear;
   filter: brightness(1);
  font-size: 1.8rem;
+}
+.edit{
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.date-inputs{
+display: flex;
+gap: 2rem;
+}
+  .date-inputs>*{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .ReactModal__Overlay {

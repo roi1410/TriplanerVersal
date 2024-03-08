@@ -1,0 +1,12 @@
+/* AREA */
+.mini-navbar {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 63px;
+  background-color: var(--background);
+  z-index: 2;
+  padding: 0 2rem 2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
