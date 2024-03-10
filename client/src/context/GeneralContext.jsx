@@ -7,6 +7,8 @@ export const GeneralContext = createContext({
   setIsLoading: () => {},
   isGuest: false,
   setIsGuest: () => {},
+  goBack: "",
+  setGoBack: () => {},
   user: {},
   setUser: () => {},
   trips: [],
@@ -30,6 +32,7 @@ export const GeneralContext = createContext({
 export const GeneralContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
+  const [goBack, setGoBack] = useState("");
   const [user, setUser] = useState({});
   const [trips, setTrips] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -82,6 +85,8 @@ export const GeneralContextProvider = ({ children }) => {
     setIsLoading,
     isGuest,
     setIsGuest: checkForGuest,
+    goBack,
+    setGoBack,
     user,
     setUser,
     trips,

@@ -5,18 +5,18 @@ import { GeneralContext } from "../../../context/GeneralContext";
 import { checkForUser , logout } from "../../../utils/AuthService";
 
 function Payment() {
-  const {isGuest ,setUser} = useContext(GeneralContext)
+  const {isGuest ,setUser, setGoBack} = useContext(GeneralContext)
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
 
+  useEffect(() => {
+      setGoBack("/dashboard/trip-planner");
+  }, []);
  
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" /> Payment
+       Payment
     </div>
   );
 }
