@@ -1,4 +1,5 @@
 /* HOTELS */
+
 .hotels-container{
     display: flex;
     position: relative;
@@ -8,7 +9,8 @@
 flex: 1;
 text-align: start;
 }
-.map-container{
-    position: static;
-    width: 50%;
+.map-container {
+  position: static;
+  width: 50%;
 }
+

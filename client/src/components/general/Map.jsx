@@ -6,29 +6,26 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { useRef, useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import useGeoLocation from "../../hooks/useGeoLocation";
-import {
-  fetchPlaceLanLon,
-  fetchNearHotels,
-  fetchPlace,
-} from "../../utils/MapService";
 import { GeneralContext } from "../../context/GeneralContext";
 import { CurrentContext } from "../../context/CurrentContext";
 
-export default function Map() {
+export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
-  const [search, setSearch] = useState("");
-  const input = useRef();
-  const { hotels, setHotels, events, setEvents, setIsLoading } =
+  const { hotels, events, setEvents, mapRef, search, setSearch, setIsLoading } =
     useContext(GeneralContext);
-  const { currentArea, setCurrentArea } = useContext(CurrentContext);
+    const { currentArea, setCurrentArea } = useContext(CurrentContext);
+
+
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
-  const mapRef = useRef();
+
+  
+  
 
   const showMyLocation = () => {
     if (location.loaded && !location.error) {
@@ -44,47 +41,16 @@ export default function Map() {
 
   const customIcon = new L.Icon({
     //creating a custom icon to use in Marker
-    iconUrl: iconUrl,
+    iconUrl: PNG,
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
 
-  function MapView() {
+  function MapView({}) {
     let map = useMap();
     return null;
   }
 
-  function sendToLocation({ lat, long }) {
-    if (lat && long) {
-      mapRef.current.flyTo([lat, long], ZOOM_LEVEL, { animate: true });
-    } else {
-      alert(location.error.message);
-    }
-  }
-
-  async function handleSubmit(search) {
-    const res = await fetchPlaceLanLon(search);
-    console.log(search);
-    sendToLocation(res);
-
-    const res2 = await fetchNearHotels(res);
-    setHotels(res2);
-    setIsLoading(false);
-  }
-
-  //   to search for the first entered location
-  useEffect(() => {
-    if (search == "") {
-      handleSubmit(currentArea.areaName);
-    }
-  }, []);
-
-  const cores = { lat: "35.694574086736104", long: "139.74384544324104" };
-  async function eventsFetch(coords) {
-    const res = await fetchPlace(coords);
-    setEvents(res);
-    console.log(res);
-  }
   function renderIntoPopUp(event) {
     if (event?.image) {
       return (
@@ -125,8 +91,28 @@ export default function Map() {
           Locate Me
         </button>
       </div>
-      {/* <button onClick={() => eventsFetch(cores)}>eventFetch</button>
-      <button onClick={() => console.log(hotels)}>test</button> */}
+
+      {mapType === "hotels" && (
+        <div className="map-inputs">
+          Check-In
+          <input
+            type="date"
+            onChange={(e) =>
+              setdate({ ...date, checkIn: new Date(e.target.value) })
+            }
+            defaultValue={today.toISOString().substring(0, 10)}
+          />
+          Check-Out
+          <input
+            type="date"
+            onChange={(e) =>
+              setdate({ ...date, checkOut: new Date(e.target.value) })
+            }
+            defaultValue={today.toISOString().substring(0, 10)}
+          />
+        </div>
+      )}
+
 
       <MapContainer
         ref={mapRef}
@@ -158,7 +144,7 @@ export default function Map() {
                   icon={customIcon}
                   position={[hotel.lat, hotel.long]}
                 >
-                  <Popup>{" My location"}</Popup>
+                  <Popup>{hotel.name}</Popup>
                 </Marker>
               )
             );
