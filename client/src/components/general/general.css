@@ -226,6 +226,7 @@ form {
 }
 
 /* MAP */
+
 .map {
   min-height: 25rem;
   /* height: clamp(25rem, 30rem, 100%); */

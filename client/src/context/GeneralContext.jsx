@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { checkForUser, logout } from "../utils/AuthService";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,10 @@ export const GeneralContext = createContext({
   setHotels: () => {},
   events: [],
   setEvents: () => {},
+  mapRef: {},
+  search: "",
+  setSearch: () => {},
+  sendToLocation: () => {},
   flights: [],
   setFlights: () => {},
   myHotels: [],
@@ -37,12 +41,16 @@ export const GeneralContextProvider = ({ children }) => {
   const [trips, setTrips] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [events, setEvents] = useState([]);
+ 
+  const [search, setSearch] = useState("");
+
   const [myHotels, setMyHotels] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
   const [flights, setFlights] = useState([]);
   const [myFlights, setMyFlights] = useState([]);
   const [areas, setAreas] = useState([{ areaName: "" }]);
   const [checkGuestUpdate, setCheckGuestUpdate] = useState(false);
+  const mapRef = useRef();
   const navigate = useNavigate();
 
   const checkForGuest = (bool) => {
@@ -57,8 +65,8 @@ export const GeneralContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("TRIPS ", trips);
-    console.log("AREAS ", areas);
+    // console.log("TRIPS ", trips);
+    // console.log("AREAS ", areas);
   }, [trips, areas]);
 
   useEffect(() => {
@@ -80,6 +88,14 @@ export const GeneralContextProvider = ({ children }) => {
     fetchUser();
   }, [isGuest]); // Run this effect whenever isGuest state changes
 
+  function sendToLocation({ lat, long }) {
+    if (lat && long) {
+      mapRef.current.flyTo([lat, long], 9, { animate: true });
+    } else {
+      alert(location.error.message);
+    }
+  }
+
   const contextValue = {
     isLoading,
     setIsLoading,
@@ -97,6 +113,10 @@ export const GeneralContextProvider = ({ children }) => {
     setHotels,
     events,
     setEvents,
+    mapRef,
+    search,
+    setSearch,
+    sendToLocation,
     myHotels,
     setMyHotels,
     myEvents,
