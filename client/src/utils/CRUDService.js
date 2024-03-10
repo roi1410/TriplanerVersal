@@ -26,7 +26,7 @@ export const deleteItem = async (type, id) => {
 
 export const CreateDateFromMinMax = async (minDate, maxDate, tripId, data) => {
     try {
-        console.log(minDate+"   " + maxDate+"  ");
+
         const interval = { start: minDate, end: maxDate };
         const allDates = eachDayOfInterval(interval);
         for (const e of allDates) {

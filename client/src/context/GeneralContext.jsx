@@ -65,8 +65,8 @@ export const GeneralContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("TRIPS ", trips);
-    console.log("AREAS ", areas);
+    // console.log("TRIPS ", trips);
+    // console.log("AREAS ", areas);
   }, [trips, areas]);
 
   useEffect(() => {

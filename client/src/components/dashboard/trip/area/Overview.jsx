@@ -9,7 +9,7 @@ import hotelPNG from "../../../../assets/image.png";
 import Map from "../../../general/Map";
 
 function Overview() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading } =
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading,setGoBack } =
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
@@ -38,6 +38,7 @@ function Overview() {
     },
   ];
 
+
   const hotels = [
     {
       checkIn: "2024-03-10",
@@ -61,9 +62,13 @@ function Overview() {
     },
   ];
 
+  // setGoBack("/dashboard")
+
+
   // useEffect(() => {
   //   getAreaDays()
   // }, [])
+
 
   // const getAreaDays = async () => {
   //   const alldays = await getItemsWithFilter("day", { areaId:currentArea.id})
@@ -71,11 +76,23 @@ function Overview() {
   //   setAllShownDays(alldays.data)
   // }
 
+
+  useEffect(()=>{
+console.log(allShownDays);
+  },[allShownDays])
+
   return (
     <div>
+
       {/* {allShownDays.map((v) => (
         <div>
           <span>{v.day}</span>
+
+      {
+        allShownDays.map((day , dayIndex)=>
+        <div key={dayIndex}>
+          <span>{day.day}</span>
+
         </div>
       ))} */}
       <div>
