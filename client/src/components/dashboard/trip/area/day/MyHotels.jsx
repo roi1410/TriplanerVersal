@@ -6,17 +6,14 @@ import { GeneralContext } from "../../../../../context/GeneralContext";
 
 function MyHotels() {
   
-  const { isGuest, setUser } = useContext(GeneralContext);
+  const { isGuest, setUser, setGoBack } = useContext(GeneralContext);
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate("/dashboard/trip-planner/area/daily-planner");
-  };
 
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" /> MyHotels
+       MyHotels
     </div>
   );
 }

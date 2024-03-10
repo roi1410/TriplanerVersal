@@ -28,7 +28,7 @@ const customStyles = {
 };
 
 function TripPlanner() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading } =
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack } =
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
@@ -38,9 +38,13 @@ function TripPlanner() {
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate("/dashboard");
-  };
+  useEffect(() => {
+    if (user.id) {
+      setGoBack("/dashboard");
+    }
+  }, [user.id]);
+
+
   const handleChooseFlight = () => {
     navigate("flights");
   };
@@ -56,7 +60,9 @@ function TripPlanner() {
     if (areas[areaIndex].id === currentArea.id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
-          CreateDateFromMinMax(startDate, endDate, currentTrip.id, { areaId: currentArea.id })
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+            areaId: currentArea.id,
+          });
           setCurrentArea(response.data);
           closeModal();
         })
@@ -64,7 +70,9 @@ function TripPlanner() {
     } else {
       createItem("area", currentTrip.id, areas[areaIndex])
         .then((response) => {
-          CreateDateFromMinMax(startDate, endDate, currentTrip.id, { areaId: currentArea.id })
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+            areaId: currentArea.id,
+          });
           setCurrentArea(response.data);
           closeModal();
         })
@@ -141,10 +149,6 @@ function TripPlanner() {
   return (
     <div>
       <div className="cards-container-center">
-        {user.id && (
-          <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />
-        )}
-
         <div className="flight-location-container">
           <div className="filled-card small-card" onClick={handleChooseFlight}>
             <p>Add Flight To...</p>
@@ -224,12 +228,12 @@ function TripPlanner() {
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(index)}
                   >
-                   <p> Add Flight To...</p>
+                    <p> Add Flight To...</p>
                   </div>
                   <button
                     className="primary-button icon small-card"
                     onClick={() => handleAddLocation(index)}
-                    >
+                  >
                     <FaPlus />
                   </button>
                   {index > 0 && (

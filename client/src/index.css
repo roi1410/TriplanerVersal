@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Murecho:700|Murecho:400");
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* font-family: Murecho; */
+  font-family: Murecho;
   line-height: 1.5;
   font-weight: 400;
   font-size: 15px;
@@ -17,6 +17,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -255,6 +256,26 @@ background-color: var(--secondary-300) !important;
   display: flex;
   justify-content: space-between;
 }
+.header{
+position: relative;
+font-size: 5rem;
+text-shadow: 0 0 30px var(--primary);
+}
+.header::after{
+  content: "";
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    position: absolute;
+    /* top: -1.125ch;
+    left: 10ch; */
+    top: -1.25ch;
+    left: 9ch;
+    aspect-ratio: 1 / 1;
+    height: 5ch;
+    z-index: -1;
+}
 
 @media (prefers-color-scheme: dark) {
   button {
@@ -348,6 +369,9 @@ background-color: var(--secondary-300) !important;
     --accent-900: hsl(169, 100%, 10%);
     --accent-950: hsl(168, 100%, 5%);
   }
+  .header::after{
+background-image: url("./assets//tripel/primary-background-light.png");
+  }
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -417,4 +441,7 @@ background-color: var(--secondary-300) !important;
     --accent-900: hsl(169, 100%, 90%);
     --accent-950: hsl(168, 100%, 95%);
   }
+  .header::after{
+    background-image: url("./assets//tripel/primary-background-dark.png");
+      }
 }

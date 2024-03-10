@@ -5,17 +5,13 @@ import { checkForUser , logout } from "../../../../../utils/AuthService";
 import { GeneralContext } from "../../../../../context/GeneralContext";
 
 function MyEvents() {
-  const {isGuest , setUser} = useContext(GeneralContext)
+  const {isGuest , setUser, setGoBack} = useContext(GeneralContext)
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate("/dashboard/trip-planner/area/daily-planner");
-  };
-
+ 
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />{" "}
       MyEvents
     </div>
   );

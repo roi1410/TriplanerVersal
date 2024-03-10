@@ -13,14 +13,11 @@ import Skeleton from "react-loading-skeleton";
 import "./trip.css";
 
 function Flights() {
-  const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights } = useContext(GeneralContext);
+  const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights , setGoBack} = useContext(GeneralContext);
   const navigate = useNavigate();
   const [showFrom, setShowFrom] = useState([]);
   const [flightOrderObj, setFlightOrderObj] = useState({});
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
   const getflights = async (v) => {
     setIsLoading(true);
     const flights = await findFlights(v);
@@ -31,6 +28,7 @@ function Flights() {
 
   useEffect(() => {
     setIsLoading(false);
+    setGoBack("/dashboard/trip-planner")
   }, []);
 
   const handleInputFrom = (e) => {
@@ -78,7 +76,6 @@ function Flights() {
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />
       <div>
         <div className="flight-inputs">
           <label>

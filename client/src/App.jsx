@@ -37,7 +37,6 @@ function App() {
               <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={<Dashboard />}/>
                 <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
-                <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
                 <Route path="/dashboard/trip-planner/payment" element={<Payment />} />
                 <Route path="/dashboard/trip-planner/flights" element={<Flights />} />
                 <Route path="/dashboard/trip-planner/area" element={<Area />}>
