@@ -56,8 +56,7 @@ function TripPlanner() {
   };
 
   const handleAreaSubmit = () => {
-    console.log(startDate + " - " + endDate + currentArea.id);
-    if (areas[areaIndex].id === currentArea.id) {
+    if (areas[areaIndex].id === currentArea.id && areas[areaIndex].id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
