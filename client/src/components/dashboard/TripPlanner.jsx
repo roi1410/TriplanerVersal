@@ -45,10 +45,11 @@ function TripPlanner() {
     if (user.id) {
       setGoBack("/dashboard");
     }
-    console.log(currentArea.id);
+    console.log(currentArea);
   }, [user.id]);
 
   function openModal(index) {
+    console.log(index);
     setAreaIndex(index);
     setIsOpen(true);
   }
@@ -63,6 +64,7 @@ function TripPlanner() {
   };
 
   const handleAreaChange = (event) => {
+    console.log(areas);
     const newAreas = [...areas];
     newAreas[areaIndex].areaName = event.target.value;
     setAreas(newAreas);
@@ -71,9 +73,8 @@ function TripPlanner() {
   const handleAreaSubmit = () => {
     console.log(startDate, endDate);
     console.log(currentTrip);
-    console.log(areas[areaIndex]);
     console.log(currentArea);
-    if (areas[areaIndex].id === currentArea.id && areas[areaIndex].id) {
+    if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
@@ -204,7 +205,7 @@ function TripPlanner() {
                 {areas[index].areaName == "" ? (
                   <div
                     className="filled-card"
-                    onClick={(event) => handleAreaAdd(event, index)}
+                    onClick={() => handleAreaAdd( index)}
                   >
                     <h2>Enter Location</h2>{" "}
                   </div>
