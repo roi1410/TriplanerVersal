@@ -1,4 +1,4 @@
-const Area = require("../models/areaModel");
+const Trip = require("../models/tripModel");
 const Flight = require("../models/flightModel")
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -6,33 +6,37 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secret = process.env.SECRET_KEY;
 
-Area.hasMany(Flight, {
-    foreignKey: "areaId",
+Trip.hasMany(Flight, {
+    foreignKey: "tripId",
   });
-Flight.belongsTo(Area, {
-    foreignKey: "areaId",
+Flight.belongsTo(Trip, {
+    foreignKey: "tripId",
   });
 
-// Create a new area and add it to the database -- output => new area
+// Create a new trip and add it to the database -- output => new trip
 exports.registerFlight = async (req, res) => {
   try {
-    const currentArea = await Area.findOne({where: { id: req.params.id }});
+    const currentTrip = await Trip.findOne({where: { id: req.params.id }});
 
-    const flightExists = await Flight.findOne({where: { areaId: currentArea.id ,flightName: req.body.flightName }});
+    const flightExists = await Flight.findOne({where: { tripId: currentTrip.id ,flightName: req.body.flightName }});
     if (flightExists) {
-      return res.status(400).json({
-        status: "fail",
-        mesage: "Area already exists",
-      });
-    }
-
-    const newFlight = await Flight.create({...req.body,
-        areaId: currentArea.dataValues.id,
+      await flightExists.update({...req.body,
+        tripId: currentTrip.dataValues.id,
       });
 
     res.status(201).json({
-      flight: newFlight,
+      flight: flightExists,
     });
+    } else {
+      const newFlight = await Flight.create({...req.body,
+          tripId: currentTrip.dataValues.id,
+        });
+  
+      res.status(201).json({
+        flight: newFlight,
+      });
+    }
+
   } catch (err) {
     console.log(err);
     res.status(401).json({

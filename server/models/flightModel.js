@@ -6,6 +6,11 @@ const Flight = sequelize.define('Flight',{
       type: DataTypes.STRING,
       allowNull: false,
       trim: true,
+    },
+    flightInfo: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue:null
     }
   })
 
