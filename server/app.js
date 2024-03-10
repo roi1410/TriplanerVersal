@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 app.use(express.json())
 
 app.use('/trip-planner/users', userRoutes)
-app.use('/trip-planner/ffffffff', getHotelRoute)
+app.use('/trip-planner/getFlight', getHotelRoute)
 
 app.use(AuthenticateRoute);
 

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Murecho:700|Murecho:400");
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* font-family: Murecho; */
+  font-family: Murecho;
   line-height: 1.5;
   font-weight: 400;
   font-size: 15px;
@@ -17,6 +17,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -25,6 +26,7 @@ body {
   box-sizing: border-box;
   height: 100%;
   min-height: calc(100svh - 7.2rem);
+  position: relative;
 }
 
 h1 {
@@ -47,6 +49,13 @@ h3 {
   margin: 0;
   letter-spacing: -1px;
   font-weight: 700;
+}
+h4{
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin: 0;
+  letter-spacing: -1px;
+  font-weight: 400;
 }
 p {
   font-size: 1rem;
@@ -111,6 +120,12 @@ button:focus-visible,
 .icon {
   width: fit-content;
   height: fit-content;
+  cursor: pointer;
+  transition: opacity var(--short) ease-in-out;
+}
+.icon:hover,
+.icon:focus{
+  opacity: 0.7;
 }
 
 input {
@@ -162,10 +177,9 @@ a:focus-visible {
   margin: 1rem 0;
   flex-direction: column;
   align-items: center;
-
+    position: relative;
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
-    
 }
 .filled-card img{
   height: 10rem;
@@ -174,6 +188,7 @@ a:focus-visible {
 }
 .filled-card span{
   font-weight: 300;
+
 }
 .dashed-card {
   cursor: pointer;
@@ -185,12 +200,10 @@ a:focus-visible {
   transition: scale var(--short) ease-in-out;
 }
 .outlined-card {
-  aspect-ratio: 1/1;
-  cursor: pointer;
-  border: 0.5rem soild var(--secondary-500);
   border-radius: 0.5rem;
   padding: 2rem 1.5rem;
   margin: 1rem 0;
+  border: 2px solid var(--text);
 }
 .small-card {
   width: calc(60% - 4rem);
@@ -212,6 +225,24 @@ a:focus-visible {
   transition: filter var(--short) linear;
   filter: brightness(1);
  font-size: 1.8rem;
+}
+.edit{
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.date-inputs{
+display: flex;
+gap: 2rem;
+}
+  .date-inputs>*{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .ReactModal__Overlay {
@@ -235,6 +266,26 @@ background-color: var(--secondary-300) !important;
 .modal-buttons {
   display: flex;
   justify-content: space-between;
+}
+.header{
+position: relative;
+font-size: 5rem;
+text-shadow: 0 0 30px var(--primary);
+}
+.header::after{
+  content: "";
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    position: absolute;
+    /* top: -1.125ch;
+    left: 10ch; */
+    top: -1.25ch;
+    left: 9ch;
+    aspect-ratio: 1 / 1;
+    height: 5ch;
+    z-index: -1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -329,11 +380,14 @@ background-color: var(--secondary-300) !important;
     --accent-900: hsl(169, 100%, 10%);
     --accent-950: hsl(168, 100%, 5%);
   }
+  .header::after{
+background-image: url("./assets//tripel/primary-background-light.png");
+  }
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --text: hsl(204, 18%, 89%);
-    --background: hsl(202, 17%, 13%);
+    --background: hsl(202, 16%, 13%);
     --primary: hsl(167, 100%, 33%);
     --secondary: hsl(202, 23%, 16%);
     --accent: hsl(169, 100%, 18%);
@@ -398,4 +452,7 @@ background-color: var(--secondary-300) !important;
     --accent-900: hsl(169, 100%, 90%);
     --accent-950: hsl(168, 100%, 95%);
   }
+  .header::after{
+    background-image: url("./assets//tripel/primary-background-dark.png");
+      }
 }

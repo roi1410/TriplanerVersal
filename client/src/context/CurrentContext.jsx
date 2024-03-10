@@ -18,12 +18,32 @@ export const CurrentContextProvider = ({ children }) => {
     console.log("CURRENT AREA ", currentArea);
   }, [ currentTrip, currentArea]);
 
+  const saveTripLocally = async (tripData)=>{
+    if(currentTrip!=""){
+      console.log(tripData);
+      localStorage.setItem("currentTrip",tripData.id)
+      setCurrentTrip(tripData)
+    }else if(localStorage.getItem("currentTrip")!=""){
+      setCurrentTrip(getItem("trip", { tripId: localStorage.getItem("currentTrip") }))
+    }
+  }
+
+  const saveAreaLocally = async (areaData)=>{
+    if(currentTrip!=""){
+      console.log(areaData);
+      localStorage.setItem("currentArea",areaData.id)
+      setCurrentTrip(areaData)
+    }else if(localStorage.getItem("currentArea")!=""){
+      setCurrentTrip(getItem("area", { areaId: localStorage.getItem("currentArea") }))
+    }
+  }
+
 
   const contextValue = {
     currentTrip,
-    setCurrentTrip,
+    setCurrentTrip: saveTripLocally,
     currentArea,
-    setCurrentArea,
+    setCurrentArea: saveAreaLocally,
   };
   return (
     <CurrentContext.Provider value={contextValue}>{children}</CurrentContext.Provider>

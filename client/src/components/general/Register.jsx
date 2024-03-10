@@ -119,7 +119,7 @@ function Register() {
         <button className="primary-button" type="submit">
           Register
         </button>
-        <div>
+        <div className="guest-login">
           <span className="or">
             <hr />
             or

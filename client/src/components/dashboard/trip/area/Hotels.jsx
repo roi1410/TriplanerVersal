@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { GeneralContext } from "../../../../context/GeneralContext";
 import Map from "../../../general/Map";
+import { FaLink } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
 import "./area.css";
 import {
   fetchNearHotels,
@@ -9,7 +11,7 @@ import {
 import hotelPNG from "../../../../assets/image.png";
 
 function Hotels() {
-  const { isGuest, setUser, hotels, setHotels, mapRef, sendToLocation } =
+  const { isGuest, setUser, hotels, setHotels, mapRef, sendToLocation, isLoading } =
     useContext(GeneralContext);
   const today = new Date();
   const [date, setdate] = useState({
@@ -33,11 +35,15 @@ function Hotels() {
     }
   }
 
+
   return (
     <div>
       <div className="hotels-container">
         <div className="cards-container">
-          {hotels ? (
+          {isLoading ? (
+            // Loader
+            <Skeleton className="filled-card" count={20} />
+          ) :hotels ? (
             hotels.map((hotel, index) => {
               return (
                 <div key={index} className="filled-card">
@@ -52,10 +58,9 @@ function Hotels() {
               );
             })
           ) : (
-            <div className="filled-card"> no hotels provided</div>
+            <p>Location not found, please try again</p>
           )}
 
-          <></>
         </div>
         <div className="map-container">
           <Map

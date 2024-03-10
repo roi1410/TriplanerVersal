@@ -11,12 +11,16 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import useGeoLocation from "../../hooks/useGeoLocation";
 import { GeneralContext } from "../../context/GeneralContext";
+import { CurrentContext } from "../../context/CurrentContext";
 
 export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
-  const { hotels, events, setEvents, mapRef, search, setSearch } =
+  const { hotels, events, setEvents, mapRef, search, setSearch, setIsLoading } =
     useContext(GeneralContext);
+    const { currentArea, setCurrentArea } = useContext(CurrentContext);
+
+
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
 
@@ -47,7 +51,6 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
     return null;
   }
 
- 
   function renderIntoPopUp(event) {
     if (event?.image) {
       return (
@@ -78,6 +81,7 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
         <input
           type="text"
           placeholder="Enter Location"
+          defaultValue={currentArea.areaName}
           onChange={(e) => setSearch(e.target.value)}
         />
         <button className="primary-button" onClick={() => handleSubmit(search)}>
@@ -109,6 +113,7 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
         </div>
       )}
 
+
       <MapContainer
         ref={mapRef}
         className="map"
@@ -130,12 +135,12 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
           </Marker>
         )}
         {hotels &&
-          hotels.map((hotel, key) => {
+          hotels.map((hotel, hotelIndex) => {
             return (
               hotel.lat &&
               hotel.long && (
                 <Marker
-                  key={key}
+                  key={hotelIndex}
                   icon={customIcon}
                   position={[hotel.lat, hotel.long]}
                 >
@@ -145,12 +150,12 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
             );
           })}
         {events &&
-          events.map((event, key) => {
+          events.map((event, eventIndex) => {
             return (
               event?.lat &&
               event?.long && (
                 <Marker
-                  key={key}
+                  key={eventIndex}
                   icon={customIcon}
                   position={[event.lat, event.long]}
                 >

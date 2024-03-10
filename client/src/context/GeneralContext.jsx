@@ -7,6 +7,8 @@ export const GeneralContext = createContext({
   setIsLoading: () => {},
   isGuest: false,
   setIsGuest: () => {},
+  goBack: "",
+  setGoBack: () => {},
   user: {},
   setUser: () => {},
   trips: [],
@@ -21,16 +23,31 @@ export const GeneralContext = createContext({
   search: "",
   setSearch: () => {},
   sendToLocation: () => {},
+  flights: [],
+  setFlights: () => {},
+  myHotels: [],
+  setMyHotels: () => {},
+  myEvents: [],
+  setMyEvents: () => {},
+  myFlights: [],
+  setMyFlights: () => {},
 });
 
 export const GeneralContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
+  const [goBack, setGoBack] = useState("");
   const [user, setUser] = useState({});
   const [trips, setTrips] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [events, setEvents] = useState([]);
+ 
   const [search, setSearch] = useState("");
+
+  const [myHotels, setMyHotels] = useState([]);
+  const [myEvents, setMyEvents] = useState([]);
+  const [flights, setFlights] = useState([]);
+  const [myFlights, setMyFlights] = useState([]);
   const [areas, setAreas] = useState([{ areaName: "" }]);
   const [checkGuestUpdate, setCheckGuestUpdate] = useState(false);
   const mapRef = useRef();
@@ -84,6 +101,8 @@ export const GeneralContextProvider = ({ children }) => {
     setIsLoading,
     isGuest,
     setIsGuest: checkForGuest,
+    goBack,
+    setGoBack,
     user,
     setUser,
     trips,
@@ -98,6 +117,14 @@ export const GeneralContextProvider = ({ children }) => {
     search,
     setSearch,
     sendToLocation,
+    myHotels,
+    setMyHotels,
+    myEvents,
+    setMyEvents,
+    flights,
+    setFlights,
+    myFlights,
+    setMyFlights,
   };
   return (
     <GeneralContext.Provider value={contextValue}>

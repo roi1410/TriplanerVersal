@@ -42,6 +42,7 @@ function Login() {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit(onSubmit)}>
+        <h2>Login</h2>
         <input
           type="email"
           placeholder="Email"
@@ -68,7 +69,7 @@ function Login() {
         <button className="primary-button" type="submit">
           Login
         </button>
-        <div>
+        <div className="guest-login">
           <span className="or">
             <hr />
             or
