@@ -34,7 +34,7 @@ function TripPlanner() {
     useContext(CurrentContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
-
+  const [loaded, setLoaded] = useState(false);
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
@@ -42,7 +42,9 @@ function TripPlanner() {
     if (user.id) {
       setGoBack("/dashboard");
     }
+    console.log(currentArea.id);
   }, [user.id]);
+
 
 
   const handleChooseFlight = () => {
@@ -78,6 +80,7 @@ function TripPlanner() {
         .catch((err) => console.log(err));
     }
   };
+
   const handleChooseArea = (index) => {
     const tempArea = areas[index];
     setCurrentArea(tempArea);
@@ -111,6 +114,7 @@ function TripPlanner() {
   }
 
   useEffect(() => {
+    console.log(currentTrip);
     getItemsWithFilter("area", { tripId: currentTrip.id })
       .then((response) => {
         if (response.data.length > 0) {
@@ -124,6 +128,7 @@ function TripPlanner() {
         console.log(err);
         setIsLoading(false);
       });
+      
   }, [currentTrip, currentArea]);
 
   const handleAreaEdit = (event, index) => {
@@ -145,14 +150,17 @@ function TripPlanner() {
     setEndDate(selectedDate);
   };
 
+
+
   return (
     <div>
       <div className="cards-container-center">
         <div className="flight-location-container">
           <div className="filled-card small-card" onClick={handleChooseFlight}>
             <p>Add Flight To...</p>
+            
           </div>
-          {areas.length > 0 &&
+          {areas.length > 0  &&
             areas.map((location, index) => (
               <div key={index} className="flight-location-container">
                 {areas[index].areaName == "" ? (

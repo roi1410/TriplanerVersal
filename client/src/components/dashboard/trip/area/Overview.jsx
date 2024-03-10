@@ -6,14 +6,16 @@ import { format } from "date-fns";
 import { getItemsWithFilter } from "../../../../utils/CRUDService";
 
 function Overview() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading } =
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading,setGoBack } =
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
   const [allShownDays, setAllShownDays] = useState([])
 
+  // setGoBack("/dashboard")
   useEffect(() => {
     getAreaDays()
+    
   }, [])
 
 
