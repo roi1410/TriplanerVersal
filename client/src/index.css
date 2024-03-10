@@ -160,8 +160,20 @@ a:focus-visible {
   border-radius: 0.5rem;
   padding: 2rem 1.5rem;
   margin: 1rem 0;
+  flex-direction: column;
+  align-items: center;
+
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
+    
+}
+.filled-card img{
+  height: 10rem;
+  width: 15rem;
+
+}
+.filled-card span{
+  font-weight: 300;
 }
 .dashed-card {
   cursor: pointer;
