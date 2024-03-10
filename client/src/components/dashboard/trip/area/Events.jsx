@@ -2,13 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import { checkForUser, logout } from "../../../../utils/AuthService";
 import { GeneralContext } from "../../../../context/GeneralContext";
 import { fetchPlace, fetchPlaceLanLon } from "../../../../utils/MapService";
-import eventlPNG from "../../../../assets/event.png"
+import eventlPNG from "../../../../assets/event.png";
 import Map from "../../../general/Map";
+import Skeleton from "react-loading-skeleton";
+import { createItem } from "../../../../utils/CRUDService";
+import { CurrentContext } from "../../../../context/CurrentContext";
 
 function Events() {
-  
-  const { isGuest, setUser, events, mapRef, sendToLocation, setEvents } =
-    useContext(GeneralContext);
+  const {
+    isGuest,
+    setUser,
+    events,
+    mapRef,
+    sendToLocation,
+    setEvents,
+    isLoading,
+    setIsLoading,
+  } = useContext(GeneralContext);
+  const { currentArea } = useContext(CurrentContext);
   const today = new Date();
   const [date, setdate] = useState({
     checkIn: today.toISOString().substring(0, 10),
@@ -32,8 +43,16 @@ function Events() {
         setEvents(res2.filter((elm) => elm !== null));
         console.log(res2);
         localStorage.setItem("eventsDisplay", JSON.stringify(events));
+        setIsLoading(false);
       }
     }
+  }
+  async function eventAddToTrip(data) {
+    const res = await createItem("event", currentArea.id, {
+      eventName: data.name,
+      eventInfo: JSON.stringify(data),
+    });
+    console.log(res);
   }
 
   return (
@@ -41,7 +60,10 @@ function Events() {
       <button onClick={() => console.log(events)}>test</button>
       <div className="hotels-container">
         <div className="cards-container">
-          {events ? (
+          {isLoading ? (
+            // Loader
+            <Skeleton className="filled-card" count={20} />
+          ) : events ? (
             events.map((event, index) => {
               return (
                 <div key={index} className="filled-card">
@@ -49,7 +71,9 @@ function Events() {
                   {event.image && <img src={event.image} alt="ops" />}
 
                   {event.website && (
-                    <a href={event.website} target="_blank">Go to website</a>
+                    <a href={event.website} target="_blank">
+                      Go to website
+                    </a>
                   )}
                   {event.openingHours && (
                     <>
@@ -62,6 +86,9 @@ function Events() {
                     </>
                   )}
                   <span>Address-{event.address}</span>
+                  <button onClick={() => eventAddToTrip(event)}>
+                    add to trip
+                  </button>
                 </div>
               );
             })

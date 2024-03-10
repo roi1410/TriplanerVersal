@@ -7,17 +7,10 @@ const Hotel = sequelize.define('Hotel',{
       allowNull: false,
       trim: true,
     },
-    cost: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-      defaultValue: null
-    },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: null
-    },
-
+    hotelInfo:{
+      type:DataTypes.JSON,
+      allowNull:true
+    }
   })
 
 module.exports = Hotel;

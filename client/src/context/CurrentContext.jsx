@@ -32,9 +32,9 @@ export const CurrentContextProvider = ({ children }) => {
     if(currentTrip!=""){
       console.log(areaData);
       localStorage.setItem("currentArea",areaData.id)
-      setCurrentTrip(areaData)
+      setCurrentArea(areaData)
     }else if(localStorage.getItem("currentArea")!=""){
-      setCurrentTrip(getItem("area", { areaId: localStorage.getItem("currentArea") }))
+      setCurrentArea(getItem("area", { areaId: localStorage.getItem("currentArea") }))
     }
   }
 

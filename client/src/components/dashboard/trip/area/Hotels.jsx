@@ -9,10 +9,13 @@ import {
   fetchPlaceLanLon,
 } from "../../../../utils/MapService";
 import hotelPNG from "../../../../assets/image.png";
+import { CreateDateFromMinMax, createItem } from "../../../../utils/CRUDService";
+import { CurrentContext } from "../../../../context/CurrentContext";
 
 function Hotels() {
-  const { isGuest, setUser, hotels, setHotels, mapRef, sendToLocation, isLoading } =
+  const { isGuest, setUser, hotels, setHotels, mapRef, sendToLocation, isLoading,setIsLoading } =
     useContext(GeneralContext);
+    const {currentArea,currentTrip}=useContext(CurrentContext)
   const today = new Date();
   const [date, setdate] = useState({
     checkIn: today.toISOString().substring(0, 10),
@@ -20,7 +23,10 @@ function Hotels() {
   });
 
   useEffect(() => {
-    setHotels(JSON.parse(localStorage.getItem("hotelsDisplay")));
+   
+      setHotels(JSON.parse(localStorage.getItem("hotelsDisplay")));
+      hotels&&setIsLoading(false)
+    
   }, []);
 
   async function handleSubmitHotels(search) {
@@ -30,10 +36,20 @@ function Hotels() {
       sendToLocation(res.coordinates);
 
       const res2 = await fetchNearHotels(res.region_id, date);
+      console.log(res2);
       setHotels(res2);
-      localStorage.setItem("hotelsDisplay", JSON.stringify(res2));
+      res2&&localStorage.setItem("hotelsDisplay", JSON.stringify(res2));
+      setIsLoading(false)
     }
   }
+  async function addHotelToTrip(data) {
+console.log(data);
+const res= await createItem("hotel",currentArea.id,data)
+console.log(res);
+console.log(res.data.hotel.id);
+await CreateDateFromMinMax(data.checkIn,data.checkOut,currentTrip.id,{hotelId:res.data.hotel.id})
+  }
+
 
 
   return (
@@ -44,6 +60,8 @@ function Hotels() {
             // Loader
             <Skeleton className="filled-card" count={20} />
           ) :hotels ? (
+            
+            
             hotels.map((hotel, index) => {
               return (
                 <div key={index} className="filled-card">
@@ -54,6 +72,7 @@ function Hotels() {
                     {hotel.checkOut}
                   </span>
                   <span className="price">Price-{hotel.price}</span>
+                  <button onClick={()=>addHotelToTrip(hotel)}>add to fav</button>
                 </div>
               );
             })

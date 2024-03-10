@@ -33,10 +33,9 @@ export async function fetchNearHotels(region_id, data) {
     console.log(res);
     return res.data.properties.slice(0, 20).map((hotel) => {
       return {
-        name: hotel.name,
+        hotelName: hotel.name,
         lat: hotel.mapMarker.latLong.latitude,
         long: hotel.mapMarker.latLong.longitude,
-        hotelId: hotel.id,
         image: hotel.propertyImage.image.url,
         price: hotel.price.lead.formatted,
         checkIn: checkInB,
@@ -109,7 +108,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             website: place.properties.website,
             address: place.properties.formatted,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
           };
 
         case "entertainment":
@@ -121,7 +120,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             address: place.properties.formatted,
             website: place.properties.website,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
           };
         case "leisure":
           return {
@@ -132,7 +131,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             address: place.properties.formatted,
             image: place.properties.wiki_and_media.image,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
           };
 
         case "tourism":
@@ -143,7 +142,7 @@ export async function fetchPlace({ lat, long }) {
             name: place.properties.name,
             image: place.properties.wiki_and_media.image,
             address: place.properties.formatted,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
           };
 
         default:
@@ -156,7 +155,7 @@ export async function fetchPlace({ lat, long }) {
             address: place.properties.formatted||null,
             website: place.properties.website||null,
             image: place.properties.wiki_and_media?.image||null,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
 
           };
 

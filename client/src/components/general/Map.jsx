@@ -11,21 +11,23 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import useGeoLocation from "../../hooks/useGeoLocation";
 import { GeneralContext } from "../../context/GeneralContext";
-import { CurrentContext } from "../../context/CurrentContext";
+import hotelPNG from "../../assets/image.png";
 
-export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
+export default function Map({
+  mapType,
+  handleSubmit,
+  setdate,
+
+  PNG,
+  PNG2,
+}) {
+  const today=new Date()
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
-  const { hotels, events, setEvents, mapRef, search, setSearch, setIsLoading } =
+  const { hotels, events, setEvents, mapRef, search, setSearch } =
     useContext(GeneralContext);
-    const { currentArea, setCurrentArea } = useContext(CurrentContext);
-
-
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
-
-  
-  
 
   const showMyLocation = () => {
     if (location.loaded && !location.error) {
@@ -42,6 +44,12 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
   const customIcon = new L.Icon({
     //creating a custom icon to use in Marker
     iconUrl: PNG,
+    iconSize: [25, 35],
+    iconAnchor: [5, 30],
+  });
+  const hotelIcon = new L.Icon({
+    //creating a custom icon to use in Marker
+    iconUrl: hotelPNG,
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
@@ -77,42 +85,52 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
 
   return (
     <>
-      <div className="map-inputs">
-        <input
-          type="text"
-          placeholder="Enter Location"
-          defaultValue={currentArea.areaName}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button className="primary-button" onClick={() => handleSubmit(search)}>
-          Submit
-        </button>
-        <button className="outlined-button" onClick={showMyLocation}>
-          Locate Me
-        </button>
-      </div>
+      {mapType !==
+        "overview"&&(
+          <div className="map-inputs">
+            <input
+              type="text"
+              placeholder="Enter Location"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              className="primary-button"
+              onClick={() => handleSubmit(search)}
+            >
+              Submit
+            </button>
+            <button className="outlined-button" onClick={showMyLocation}>
+              Locate Me
+            </button>
 
-      {mapType === "hotels" && (
-        <div className="map-inputs">
-          Check-In
-          <input
-            type="date"
-            onChange={(e) =>
-              setdate({ ...date, checkIn: new Date(e.target.value) })
-            }
-            defaultValue={today.toISOString().substring(0, 10)}
-          />
-          Check-Out
-          <input
-            type="date"
-            onChange={(e) =>
-              setdate({ ...date, checkOut: new Date(e.target.value) })
-            }
-            defaultValue={today.toISOString().substring(0, 10)}
-          />
-        </div>
-      )}
-
+            {mapType === "hotels" && (
+              <>
+                Check-In
+                <input
+                  type="date"
+                  onChange={(e) =>
+                    setdate((date) => ({
+                      ...date,
+                      checkIn: new Date(e.target.value),
+                    }))
+                  }
+                  defaultValue={today.toISOString().substring(0, 10)}
+                />
+                Check-Out
+                <input
+                  type="date"
+                  onChange={(e) =>
+                    setdate((date) => ({
+                      ...date,
+                      checkOut: new Date(e.target.value),
+                    }))
+                  }
+                  defaultValue={today.toISOString().substring(0, 10)}
+                />
+              </>
+            )}
+          </div>
+        )}
 
       <MapContainer
         ref={mapRef}
@@ -135,13 +153,14 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
           </Marker>
         )}
         {hotels &&
-          hotels.map((hotel, hotelIndex) => {
+          mapType === "hotels" &&
+          hotels.map((hotel, key) => {
             return (
               hotel.lat &&
               hotel.long && (
                 <Marker
-                  key={hotelIndex}
-                  icon={customIcon}
+                  key={key}
+                  icon={hotelIcon}
                   position={[hotel.lat, hotel.long]}
                 >
                   <Popup>{hotel.name}</Popup>
@@ -150,12 +169,13 @@ export default function Map({ mapType, handleSubmit ,setdate,today,PNG}) {
             );
           })}
         {events &&
-          events.map((event, eventIndex) => {
+        mapType === "events" &&
+          events.map((event, key) => {
             return (
               event?.lat &&
               event?.long && (
                 <Marker
-                  key={eventIndex}
+                  key={key}
                   icon={customIcon}
                   position={[event.lat, event.long]}
                 >

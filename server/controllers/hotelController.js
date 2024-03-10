@@ -27,7 +27,8 @@ exports.registerHotel = async (req, res) => {
     }
 
     const newHotel = await Hotel.create({
-      ...req.body,
+      hotelInfo:{...req.body},
+      hotelName: req.body.hotelName,
       areaId: currentArea.dataValues.id,
     });
 
