@@ -19,17 +19,21 @@ function Overview() {
 
 
   const getAreaDays = async () => {
-    const alldays = await getItemsWithFilter("day", { areaId:currentArea.id})
+    const alldays = await getItemsWithFilter("area",{id: currentArea.id})
     console.log(alldays);
-    setAllShownDays(alldays.data)
+    setAllShownDays(alldays.data[0].Days)
   }
+
+  useEffect(()=>{
+console.log(allShownDays);
+  },[allShownDays])
 
   return (
     <div>
       {
-        allShownDays.map((v)=>
-        <div>
-          <span>{v.day}</span>
+        allShownDays.map((day , dayIndex)=>
+        <div key={dayIndex}>
+          <span>{day.day}</span>
         </div>
         )
       }
