@@ -47,7 +47,7 @@ Day.belongsTo(Hotel, {
 const addToDay = async (day, data) => {
     const area = await Area.findByPk(data.areaId)
     if (area && day.hasArea(data.areaId)) {
-        await day.addArea(data.areaId);
+        await day.setArea(data.areaId);
     }
     const flight = await Flight.findByPk(data.flightId)
     if (flight && day.hasFlight(data.flightId)) {
@@ -83,7 +83,7 @@ const removeFromDay = async (day, data) => {
 
 // Create a new trip and add it to the database -- output => new trip
 exports.registerDay = async (req, res) => {
-    console.log("ddd");
+    console.log(req.body);
     try {
         const currentTrip = await Trip.findOne({ where: { id: req.params.id } });
         if (!currentTrip) {

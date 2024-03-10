@@ -33,8 +33,6 @@ exports.registerArea = async (req, res) => {
       areaName: req.body.areaName,
       tripId: currentTrip.dataValues.id,
     });
-    console.log("___________________________________________");
-
     res.status(201).json({
       area: newArea,
     });
@@ -50,7 +48,15 @@ exports.registerArea = async (req, res) => {
 exports.getAreas = async (req, res) => {
   try {
     const filter = req.body;
-    const areas = await Area.findAll({ where: filter });
+    const areas = await Area.findAll({include:{
+      association: "Days",
+      include:["Hotel",
+      {
+          association: 'Flights',
+      }, {
+          association: 'Events',
+      }]
+    }, where: filter });
     res.send(areas);
   } catch (error) {
     console.error(error);

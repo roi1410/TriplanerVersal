@@ -15,6 +15,7 @@ import { CurrentContext } from "../../context/CurrentContext";
 import { MdEdit } from "react-icons/md";
 import "./dashboard.css";
 import { format, addDays } from "date-fns";
+// import { sortBy } from 'date-fns/fp';
 
 const customStyles = {
   content: {
@@ -34,7 +35,9 @@ function TripPlanner() {
     useContext(CurrentContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
-  const [loaded, setLoaded] = useState(false);
+  const [allShownDays, setAllShownDays] = useState([]);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
@@ -45,7 +48,15 @@ function TripPlanner() {
     console.log(currentArea.id);
   }, [user.id]);
 
-
+  function openModal(index) {
+    setAreaIndex(index);
+    setIsOpen(true);
+  }
+  function closeModal() {
+    setAllShownDays([]);
+    setAreaIndex(-1);
+    setIsOpen(false);
+  }
 
   const handleChooseFlight = () => {
     navigate("flights");
@@ -58,12 +69,18 @@ function TripPlanner() {
   };
 
   const handleAreaSubmit = () => {
+    console.log(startDate, endDate);
+    console.log(currentTrip);
+    console.log(areas[areaIndex]);
+    console.log(currentArea);
     if (areas[areaIndex].id === currentArea.id && areas[areaIndex].id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: currentArea.id,
-          });
+          }).then((response) =>
+            console.log(response).catch((err) => console.error(err))
+          );
           setCurrentArea(response.data);
           closeModal();
         })
@@ -71,9 +88,12 @@ function TripPlanner() {
     } else {
       createItem("area", currentTrip.id, areas[areaIndex])
         .then((response) => {
+          console.log(response.data);
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
-            areaId: currentArea.id,
-          });
+            areaId: response.data.area.id,
+          })
+            .then((response) => console.log(response))
+            .catch((err) => console.error(err));
           setCurrentArea(response.data);
           closeModal();
         })
@@ -102,17 +122,6 @@ function TripPlanner() {
     setAreas(newAreas);
   };
 
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal(index) {
-    setAreaIndex(index);
-    setIsOpen(true);
-  }
-  function closeModal() {
-    setAreaIndex(-1);
-    setIsOpen(false);
-  }
-
   useEffect(() => {
     console.log(currentTrip);
     getItemsWithFilter("area", { tripId: currentTrip.id })
@@ -136,6 +145,10 @@ function TripPlanner() {
     setCurrentArea(areas[index]);
     openModal(index);
   };
+  const handleAreaAdd = ( index) => {
+    // setCurrentArea(areas[index]);
+    openModal(index);
+  };
 
   const handleStartDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
@@ -150,6 +163,31 @@ function TripPlanner() {
     setEndDate(selectedDate);
   };
 
+  useEffect(() => {
+    if (currentArea.id) {
+      getItemsWithFilter("area", { Id: currentArea.id })
+        .then((response) => {
+          console.log("DAYS ", response.data);
+          setAllShownDays(response.data[0].Days);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [currentArea]);
+
+  const getFirstDay = () => {
+    if (allShownDays.length > 0) {
+      return format(allShownDays[0]?.day, "yyyy-MM-dd");
+    } else {
+      return format(new Date(), "yyyy-MM-dd");
+    }
+  };
+  const getLastDay = () => {
+    if (allShownDays.length > 0) {
+      return format(allShownDays[allShownDays.length - 1]?.day, "yyyy-MM-dd");
+    } else {
+      return format(addDays(new Date(), 1), "yyyy-MM-dd");
+    }
+  };
 
 
   return (
@@ -164,7 +202,10 @@ function TripPlanner() {
             areas.map((location, index) => (
               <div key={index} className="flight-location-container">
                 {areas[index].areaName == "" ? (
-                  <div className="filled-card" onClick={() => openModal(index)}>
+                  <div
+                    className="filled-card"
+                    onClick={(event) => handleAreaAdd(event, index)}
+                  >
                     <h2>Enter Location</h2>{" "}
                   </div>
                 ) : (
@@ -201,7 +242,7 @@ function TripPlanner() {
                       <input
                         type="date"
                         id="start-date"
-                        value={format(startDate, "yyyy-MM-dd")}
+                        defaultValue={getFirstDay()}
                         min={format(new Date(), "yyyy-MM-dd")}
                         onChange={handleStartDateChange}
                       />
@@ -212,8 +253,8 @@ function TripPlanner() {
                       <input
                         type="date"
                         id="end-date"
-                        value={format(endDate, "yyyy-MM-dd")}
-                        min={format(startDate, "yyyy-MM-dd")}
+                        defaultValue={getLastDay()}
+                        min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
                         onChange={handleEndDateChange}
                       />
                     </label>
