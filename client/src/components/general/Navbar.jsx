@@ -40,6 +40,13 @@ function Navbar() {
 
   const handleGoBack = () =>{
     navigate(`${goBack}`);
+    if(goBack=="/dashboard"){
+      localStorage.removeItem("currentTrip")
+    }else if(goBack=="/dashboard/trip-planner"){
+      localStorage.removeItem("currenArea")
+      localStorage.removeItem("currentFlight")
+    }
+
     setGoBack("")
   }
 
