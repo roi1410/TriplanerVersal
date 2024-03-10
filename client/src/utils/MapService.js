@@ -94,9 +94,9 @@ export async function fetchPlace({ lat, long }) {
             long: place.properties.lon,
             name: place.properties.name,
             openingHours: place.properties.opening_hours,
-            image: place.properties.wiki_and_media.image,
+            image: place.properties.wiki_and_media?.image||null,
             address: place.properties.formatted,
-            contact:place.properties.contact.phone||null
+            contact:place.properties.contact?.phone||null
           };
 
         case "catering":
@@ -130,7 +130,7 @@ export async function fetchPlace({ lat, long }) {
             name: place.properties.name,
             openingHours: place.properties.opening_hours,
             address: place.properties.formatted,
-            image: place.properties.wiki_and_media.image,
+            image: place.properties.wiki_and_media?.image,
             contact:place.properties.contact?.phone||null
           };
 
@@ -140,7 +140,7 @@ export async function fetchPlace({ lat, long }) {
             lat: place.properties.lat,
             long: place.properties.lon,
             name: place.properties.name,
-            image: place.properties.wiki_and_media.image,
+            image: place.properties.wiki_and_media?.image,
             address: place.properties.formatted,
             contact:place.properties.contact?.phone||null
           };

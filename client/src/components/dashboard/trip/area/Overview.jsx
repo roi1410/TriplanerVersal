@@ -65,16 +65,17 @@ function Overview() {
   // setGoBack("/dashboard")
 
 
-  // useEffect(() => {
-  //   getAreaDays()
-  // }, [])
+  useEffect(() => {
+    getAreaDays()
+  }, [])
 
 
-  // const getAreaDays = async () => {
-  //   const alldays = await getItemsWithFilter("day", { areaId:currentArea.id})
-  //   console.log(alldays);
-  //   setAllShownDays(alldays.data)
-  // }
+  const getAreaDays = async () => {
+    const alldays = await getItemsWithFilter("area", { id:currentArea.id})
+    console.log(alldays.data[0].Days);
+    console.log(alldays.data[0]);
+    setAllShownDays(alldays.data[0].Days)
+  }
 
 
   useEffect(()=>{

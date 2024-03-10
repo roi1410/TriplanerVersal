@@ -48,7 +48,7 @@ exports.registerArea = async (req, res) => {
 exports.getAreas = async (req, res) => {
   try {
     const filter = req.body;
-    const areas = await Area.findAll({include:{
+    const areas = await Area.findAll({include:[{
       association: "Days",
       include:["Hotel",
       {
@@ -56,7 +56,7 @@ exports.getAreas = async (req, res) => {
       }, {
           association: 'Events',
       }]
-    }, where: filter });
+    },"Hotels","Events"], where: filter });
     res.send(areas);
   } catch (error) {
     console.error(error);
