@@ -7,21 +7,11 @@ const Event = sequelize.define('Event',{
       allowNull: false,
       trim: true,
     },
-    cost: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-      defaultValue: null
-    },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: null
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: null
-    },
+    eventInfo:{
+      type:DataTypes.JSON
+      ,allowNull:true
+    }
+    
   })
 
 module.exports = Event;

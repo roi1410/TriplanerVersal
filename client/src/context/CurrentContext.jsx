@@ -40,6 +40,8 @@ export const CurrentContextProvider = ({ children }) => {
     }
   }
 
+
+
   const saveAreaLocally = async (areaData) => {
     const myItem = localStorage.getItem('currentArea');
     if(Object.keys(areaData).length !== 0){
@@ -66,6 +68,7 @@ export const CurrentContextProvider = ({ children }) => {
     }
     else{
       console.log("3");
+
     }
   }
   const saveFlightLocally = async (flightData) => {

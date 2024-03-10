@@ -246,4 +246,5 @@ form {
   position: fixed;
   z-index: 1;
   width: calc(50% - 2rem);
+  flex-direction: column;
 }

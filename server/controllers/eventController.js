@@ -21,7 +21,7 @@ exports.registerEvent = async (req, res) => {
     if (eventExists) {
       return res.status(400).json({
         status: "fail",
-        mesage: "Area already exists",
+        message: "Area already exists",
       });
     }
 

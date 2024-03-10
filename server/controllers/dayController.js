@@ -36,10 +36,10 @@ Flight.belongsToMany(Day, {
 });
 
 Hotel.belongsTo(Day, {
-    foreignKey: "HotelId",
+    foreignKey: "hotelId",
 })
 Day.belongsTo(Hotel, {
-    foreignKey: "HotelId",
+    foreignKey: "hotelId",
 });
 
 
@@ -97,17 +97,19 @@ exports.registerDay = async (req, res) => {
                 tripId: currentTrip.id, day: req.body?.day
             },
             defaults: {
-                day: format(new Date(), "MM/dd/yyyy"),
                 tripId: currentTrip.dataValues.id,
             }
         });
         if (isCreated) {
             await newDay.save()
         }
-        req.body?.hotelId && await newDay.update({ hotelId: req.body.hotelId })
-        req.body?.day && await newDay.update({ day: req.body.day })
+        if ( req.body?.hotelId) {
+            newDay.hotelId = req.body.hotelId ;
+            await newDay.save()
+        }
         await addToDay(newDay, req.body)
         await newDay.save()
+        console.log(newDay),
         res.status(201).json({
             day: newDay,
         });
