@@ -35,7 +35,7 @@ function TripPlanner() {
   const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack, flights, setFlights } =
 
     useContext(GeneralContext);
-  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea ,  setCurrentFlight} =
     useContext(CurrentContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
@@ -72,10 +72,12 @@ function TripPlanner() {
     setIsOpen(false);
   }
 
-  const handleChooseFlight = () => {
-    if(clickedFlight===0){
+  const handleChooseFlight = (info) => {
+    if (info) {
+      console.log(info);
+      setCurrentFlight(info)
       navigate("flightShowCase")
-    }else{
+    } else {
       navigate("flights");
     }
   };
@@ -131,14 +133,16 @@ function TripPlanner() {
     console.log(newAreas);
     setAllShownAreasAndFlights(newAreas);
   };
-  const handleRemoveLocation = (index) => {
+  const handleRemoveLocation = (index, id, nextItem) => {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
     setAllShownAreasAndFlights(newAreas);
-    setAreas(newAreas);
-    deleteItem("area", (index+1))
+    deleteItem("area", (id))
+    if (nextItem?.flightName) {
+      deleteItem("flight", (nextItem.id))
+    }
     console.log(areas);
-    console.log("the idnex is "+index);
+    console.log("the idnex is " + index);
   };
 
   useEffect(() => {
@@ -220,15 +224,26 @@ function TripPlanner() {
     <div>
       <div className="cards-container-center">
         <div className="flight-location-container">
-          {allShownAreasAndFlights[0]?.areaName?
-          <div className="filled-card small-card" onClick={handleChooseFlight}>
+        {allShownAreasAndFlights[0]?.flightName ? <div
+                    className="filled-card small-card"
+                    onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
+                  >
+                    <div>
+                      <img src={JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
+                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
+                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.id}    </span>
+                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.time}</span>
+                    </div>
+                  </div> :
+                    <div
+                      className="filled-card small-card"
+                      onClick={() => handleChooseFlight(false)}
+                    >
 
-            <p>Add Flight To...</p>
+                      <p> Add Flight To...</p>
 
-          </div>:<div className="filled-card small-card" onClick={handleChooseFlight}>
-            <p>this is a flight</p>
-
-          </div>}
+                    </div>
+                  }
           {allShownAreasAndFlights.length > 0 &&
             allShownAreasAndFlights.map((location, index) =>
               (location?.areaName || location?.areaName == "") && <div key={index} className="flight-location-container">
@@ -303,20 +318,26 @@ function TripPlanner() {
                   </div>
                 </Modal>
                 <div className="flight-location">
-                  {allShownAreasAndFlights[index+1]?.flightName ? <div
+                  {/* <button onClick={() => console.log((JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1)}>tst</button> */}
+                  {allShownAreasAndFlights[index + 1]?.flightName ? <div
                     className="filled-card small-card"
-                    onClick={() => handleChooseFlight(index)}
+                    onClick={() => handleChooseFlight(allShownAreasAndFlights[index + 1])}
                   >
-                    <p> this is a flight</p>
-                  </div>:
-                  <div
-                    className="filled-card small-card"
-                    onClick={() => handleChooseFlight(index)}
-                  >
-                    
-                    <p> Add Flight To...</p>
+                    <div>
+                      <img src={JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
+                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
+                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.id}    </span>
+                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.time}</span>
+                    </div>
+                  </div> :
+                    <div
+                      className="filled-card small-card"
+                      onClick={() => handleChooseFlight(false)}
+                    >
 
-                  </div>
+                      <p> Add Flight To...</p>
+
+                    </div>
                   }
                   <button
                     className="primary-button icon small-card"
@@ -327,7 +348,7 @@ function TripPlanner() {
                   {index > 0 && (
                     <button
                       className="delete-button icon small-card"
-                      onClick={() => handleRemoveLocation(index)}
+                      onClick={() => handleRemoveLocation(index, location.id)}
                     >
                       <FaTrash />
                     </button>

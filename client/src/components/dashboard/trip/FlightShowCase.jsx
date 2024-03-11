@@ -5,18 +5,33 @@ import { GrNext } from "react-icons/gr";
 import { format } from "date-fns";
 import "./trip.css";
 import { MdPadding } from "react-icons/md";
+import { CurrentContext } from "../../../context/CurrentContext";
+import { deleteItem, removeItem } from "../../../utils/CRUDService";
+import { useNavigate } from "react-router-dom";
+
 
 const FlightShowCase = () => {
+  const navigate = useNavigate();
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea, CurrentFlight } =
+    useContext(CurrentContext);
   const { flights, setFlights } = useContext(GeneralContext);
-  const [myFlight, setMyFlight] = useState(flights[0]?.flights[0]);
+  const [myFlight, setMyFlight] = useState(JSON.parse(JSON.parse(localStorage.getItem("currentFlight")).flightInfo).flights);
+  const [wFlight, setwFlight] = useState(JSON.parse(localStorage.getItem("currentFlight")))
+  const [load, setload] = useState(false)
 
   useEffect(() => {
-    console.log(myFlight);
+    console.log(wFlight);
   }, []);
 
-  const handleChangeFlight=()=>{
-
+  const handleChangeFlight = () => {
+    deleteItem("flight", wFlight.id)
+    setload(!load)
   }
+  useEffect(()=>{
+    if(load){
+      navigate('/dashboard/trip-planner/flights')
+    }
+  },[load])
 
 
   function formatMinutesToString(minutesAsString) {
@@ -29,33 +44,33 @@ const FlightShowCase = () => {
   }
   return (
     <div className="outlined-card">
-      <div className="flights">
-        <div className="flight">
+      {myFlight.map((value, i) => <div className="flights">
+        <div key={i} className="flight">
           <div className="airline">
-            <img src={myFlight.airline_logo} alt="airline logo" />
-            <h4>{myFlight.airline}</h4>
+            <img src={value.airline_logo} alt="airline logo" />
+            <h4>{value.airline}</h4>
           </div>
           <div className="takeoff">
             <div>
               <span>
                 <FaPlaneDeparture />
               </span>
-              <span>{myFlight.departure_airport.id}</span>
+              <span>{value.departure_airport.id}</span>
             </div>
             <div>
               <span>
                 <FaClock />
               </span>
               <span>
-                {format(myFlight.departure_airport.time, "HH:mm")} |{" "}
-                {format(myFlight.departure_airport.time, "dd/MM/yyyy")}
+                {format(value.departure_airport.time, "HH:mm")} |{" "}
+                {format(value.departure_airport.time, "dd/MM/yyyy")}
               </span>{" "}
             </div>{" "}
-            <p>{myFlight.departure_airport.name}</p>
+            <p>{value.departure_airport.name}</p>
           </div>
           <div className="duration">
             <GrNext />
-            <p>{formatMinutesToString(myFlight.duration)}</p>
+            <p>{formatMinutesToString(value.duration)}</p>
             <GrNext />
           </div>
           <div className="landing">
@@ -63,22 +78,22 @@ const FlightShowCase = () => {
               <span>
                 <FaPlaneArrival />
               </span>
-              <span>{myFlight.arrival_airport.id}</span>
+              <span>{value.arrival_airport.id}</span>
             </div>
             <div>
               <span>
                 <FaClock />
               </span>
               <span>
-                {format(myFlight.arrival_airport.time, "HH:mm")} |{" "}
-                {format(myFlight.arrival_airport.time, "dd/MM/yyyy")}
+                {format(value.arrival_airport.time, "HH:mm")} |{" "}
+                {format(value.arrival_airport.time, "dd/MM/yyyy")}
               </span>
             </div>
-            <p>{myFlight.departure_airport.name}</p>
+            <p>{value.departure_airport.name}</p>
           </div>
-          <button onClick={handleChangeFlight} >Change Flight</button>
         </div>
-      </div>
+      </div>)}
+      <button onClick={handleChangeFlight} >Change Flight</button>
     </div>
   );
 };

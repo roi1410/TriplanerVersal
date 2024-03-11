@@ -152,7 +152,7 @@ function Flights() {
         <div className="cards-container">
           {isLoading ? (
             <Skeleton count={3} className="flight-skeleton outlined-card" />
-          ) : flights ? (
+          ) : flights?.flights ? (
             flights.map((e, i) => (
               <div key={i} className="outlined-card">
                 <div className="flights">
