@@ -9,13 +9,15 @@ import {
   createItem,
   getItemsWithFilter,
   updateItem,
+  deleteItem
 } from "../../utils/CRUDService";
 import Modal from "react-modal";
 import { CurrentContext } from "../../context/CurrentContext";
 import { MdEdit } from "react-icons/md";
 import "./dashboard.css";
+
 import { format, addDays, min, max, isAfter, isEqual } from "date-fns";
-// import { sortBy } from 'date-fns/fp';
+import { GrNext } from "react-icons/gr";
 
 const customStyles = {
   content: {
@@ -29,7 +31,9 @@ const customStyles = {
 };
 
 function TripPlanner() {
+
   const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack, flights, setFlights } =
+
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
@@ -39,6 +43,7 @@ function TripPlanner() {
   const [allShownAreasAndFlights, setAllShownAreasAndFlights] = useState([]);
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
+  const [clickedFlight, setClickedFlight] = useState(false);
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
@@ -68,20 +73,20 @@ function TripPlanner() {
   }
 
   const handleChooseFlight = () => {
-    navigate("flights");
+    if(clickedFlight===0){
+      navigate("flightShowCase")
+    }else{
+      navigate("flights");
+    }
   };
 
   const handleAreaChange = (event) => {
-    console.log(areas);
     const newAreas = [...areas];
     newAreas[areaIndex].areaName = event.target.value;
     setAreas(newAreas);
   };
 
   const handleAreaSubmit = () => {
-    console.log(startDate, endDate);
-    console.log(currentTrip);
-    console.log(currentArea);
     if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
@@ -130,11 +135,17 @@ function TripPlanner() {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
     setAllShownAreasAndFlights(newAreas);
+    setAreas(newAreas);
+    deleteItem("area", (index+1))
+    console.log(areas);
+    console.log("the idnex is "+index);
   };
 
   useEffect(() => {
+
     console.log(currentTrip);
     getItemsWithFilter("trip", { Id: currentTrip.id })
+
       .then((response) => {
         if (response.data[0].Areas.length > 0) {
           setAreas(response.data[0].Areas);
@@ -183,7 +194,6 @@ function TripPlanner() {
     if (currentArea.id) {
       getItemsWithFilter("area", { Id: currentArea.id })
         .then((response) => {
-          console.log("DAYS ", response.data);
           setAllShownDays(response.data[0].Days);
         })
         .catch((err) => console.error(err));
@@ -212,6 +222,7 @@ function TripPlanner() {
         <div className="flight-location-container">
           {allShownAreasAndFlights[0]?.areaName?
           <div className="filled-card small-card" onClick={handleChooseFlight}>
+
             <p>Add Flight To...</p>
 
           </div>:<div className="filled-card small-card" onClick={handleChooseFlight}>
@@ -302,7 +313,9 @@ function TripPlanner() {
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(index)}
                   >
-                    <p> add flight to</p>
+                    
+                    <p> Add Flight To...</p>
+
                   </div>
                   }
                   <button

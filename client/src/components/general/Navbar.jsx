@@ -43,8 +43,9 @@ function Navbar() {
     if(goBack=="/dashboard"){
       localStorage.removeItem("currentTrip")
     }else if(goBack=="/dashboard/trip-planner"){
-      localStorage.removeItem("currenArea")
+      localStorage.removeItem("currentArea")
       localStorage.removeItem("currentFlight")
+      localStorage.removeItem("currentDay")
     }
 
     setGoBack("")

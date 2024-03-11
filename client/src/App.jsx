@@ -12,6 +12,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import TripPlanner from "./components/dashboard/TripPlanner";
 import Payment from "./components/dashboard/trip/Payment";
 import Flights from "./components/dashboard/trip/Flights";
+import FlightShowCase from "./components/dashboard/trip/FlightShowCase";
 import Area from "./components/dashboard/trip/Area";
 import Overview from "./components/dashboard/trip/area/Overview";
 import Events from "./components/dashboard/trip/area/Events";
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/dashboard/trip-planner" element={<TripPlanner />}/>
                 <Route path="/dashboard/trip-planner/payment" element={<Payment />} />
                 <Route path="/dashboard/trip-planner/flights" element={<Flights />} />
+                <Route path="/dashboard/trip-planner/flightShowCase" element={<FlightShowCase />} />
                 <Route path="/dashboard/trip-planner/area" element={<Area />}>
                     <Route path="/dashboard/trip-planner/area/overview" element={<Overview />} />
                     <Route path="/dashboard/trip-planner/area/events" element={<Events />} />
