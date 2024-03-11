@@ -12,12 +12,13 @@ function Register() {
   const { isGuest, setIsGuest, setUser } = useContext(GeneralContext);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(false);
   let navigate = useNavigate();
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     if (data.password !== data.passwordVerification) {
-      return alert("Passwords do not match");
+      return setPasswordMatch(true);
     }
     delete data.passwordVerification;
     try {
@@ -40,7 +41,7 @@ function Register() {
   const handleGuestLogin = () => {
     setIsGuest(true);
   };
-  
+
   useEffect(() => {
     if (isGuest) {
       navigate("/dashboard/trip-planner");
@@ -56,23 +57,27 @@ function Register() {
             placeholder="First Name"
             {...register("firstName", { required: true })}
           />
+          {errors.firstName && alert("First Name is required.")}
           <input
             type="lastName"
             placeholder="Last Name"
             {...register("lastName")}
           />
+          {errors.lastName && alert("Last Name is required")}
         </div>
         <input
           type="email"
           placeholder="Email"
-          {...register("email", { required: true })}
+          {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
         />
+        {errors.email && alert("Email is required and must be a valid email address")}
         <label className="password-input">
           <input
             type={passwordShown1 ? "text" : "password"}
             placeholder="Password"
             {...register("password", { required: true, minLength: 8 })}
           />
+          {errors.password && alert("Password is required and must be at least 8 characters long")}
           {passwordShown1 ? (
             <AiFillEyeInvisible
               className="password-icon"
@@ -106,6 +111,7 @@ function Register() {
             />
           )}
         </label>
+        {passwordMatch && alert("Passwords do not match")}
         <label>
           <input
             type="checkbox"

@@ -47,7 +47,7 @@ exports.registerTrip = async (req, res) => {
 exports.getTrips = async (req, res) => {
   try {
     const filter = req.body
-    const trips = await Trip.findAll({where:filter});
+    const trips = await Trip.findAll({include:[{association:"Areas",include:["Days"]},{association:"Flights",include:["Days"]}],where:filter});
     res.send(trips);
   } catch (error) {
     console.error(error);

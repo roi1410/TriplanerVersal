@@ -33,13 +33,17 @@ function Events() {
   });
   useEffect(() => {
     setEvents(JSON.parse(localStorage.getItem("eventsDisplay")));
-    getItemsWithFilter("event", { areaId: currentArea.id })
+ getItemsWithFilter("event", { areaId: currentArea.id })
       .then((response) => {
         setMyEvents(response.data);
       })
       .catch((err) => console.error(err))
-  }, [currentArea]);
- 
+  }, [currentArea]); 
+  
+  async function setItemLocalStorage() {
+    localStorage.setItem("eventsDisplay", JSON.stringify(events));
+  }
+
 
   async function handleSubmitEvents(search) {
     setIsLoading(true);
@@ -53,8 +57,7 @@ function Events() {
 
       if (res2) {
         setEvents(res2.filter((elm) => elm !== null));
-        console.log(res2);
-        localStorage.setItem("eventsDisplay", JSON.stringify(events));
+        setItemLocalStorage()
         setIsLoading(false);
       }
     }

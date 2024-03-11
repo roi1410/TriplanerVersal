@@ -114,18 +114,17 @@ export const CurrentContextProvider = ({ children }) => {
   };
   const saveFlightLocally = async (flightData) => {
     console.log(flightData);
-    const myItem = localStorage.getItem("currentFlight");
-    if (Object.keys(flightData).length !== 0) {
-      localStorage.setItem(
-        "currentFlight",
-        JSON.stringify(flightData.flightId)
-      );
-      setCurrentFlight(flightData);
-    } else if (myItem !== "undefined") {
-      const newId = JSON.parse(localStorage.getItem("currentFlight"));
-      const response = await getItem("flight", newId);
-      setCurrentFlight(response.data);
-    } else {
+    const myItem = localStorage.getItem('currentFlight');
+    if(Object.keys(flightData).length !== 0){
+      localStorage.setItem("currentFlight",JSON.stringify(flightData))
+      setCurrentFlight(flightData)
+    }else if(myItem !== "undefined"){
+      const newId=JSON.parse(localStorage.getItem("currentFlight"));
+      const response = await getItem("flight", newId)
+      setCurrentFlight(response.data)
+    }
+    else{
+
       console.log("3");
     }
   };
