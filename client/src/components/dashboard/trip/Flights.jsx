@@ -41,7 +41,7 @@ function Flights() {
   useEffect(() => {
     setIsLoading(false);
     setGoBack("/dashboard/trip-planner")
-    window.location.reload();
+   
   }, []);
 
   const handleInputFrom = (e) => {
