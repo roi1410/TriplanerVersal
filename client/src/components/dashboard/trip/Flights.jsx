@@ -24,6 +24,11 @@ function Flights() {
   const [showFrom, setShowFrom] = useState([]);
   const [flightOrderObj, setFlightOrderObj] = useState({});
 
+
+  const handleGoBack = () => {
+    navigate("/dashboard/trip-planner");
+  };
+
   const getflights = async (v) => {
     console.log(v);
     setIsLoading(true);

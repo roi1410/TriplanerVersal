@@ -21,7 +21,7 @@ const customStyles = {
 
 function Navbar() {
   const { user, setUser, setGoBack, goBack } = useContext(GeneralContext);
-  const {currentLogo, setCurrentLogo} = useContext(CurrentContext);
+  const {currentLogo, setCurrentLogo,setCurrentTrip} = useContext(CurrentContext);
   const navigate = useNavigate();
 
 
@@ -38,6 +38,7 @@ function Navbar() {
     navigate(`${goBack}`);
     if(goBack=="/dashboard"){
       localStorage.removeItem("currentTrip")
+      setCurrentTrip({})
     }else if(goBack=="/dashboard/trip-planner"){
       localStorage.removeItem("currentArea")
       localStorage.removeItem("currentFlight")

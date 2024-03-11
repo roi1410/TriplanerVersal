@@ -52,21 +52,24 @@ function TripPlanner() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
   const [allShownDays, setAllShownDays] = useState([]);
-  const [allShownAreasAndFlights, setAllShownAreasAndFlights] = useState([]);
+  const [allShownAreasAndFlights, setAllShownAreasAndFlights] = useState([
+    { areaName: "" },
+  ]);
   const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  const [clickedFlight, setClickedFlight] = useState(false);
+  const [test, setTest] = useState(false);
+  const [showenFlights, setShowenFlights] = useState([]);
   const [areaIndex, setAreaIndex] = useState(-1);
+  const [realArea, setRealArea] = useState("");
   const navigate = useNavigate();
 
   const orderShown = () => {
-    const tempAllShownArr = areas.concat(flights);
-    const arr2 = tempAllShownArr.map(
+    const tempAllShownArr = areas.concat(showenFlights);
+    const arr2 = tempAllShownArr?.map(
       (v) =>
         (v = {
           ...v,
-          minDate: min(v.Days.map((d) => d.day)),
-          maxDay: max(v.Days.map((d) => d.day)),
+          minDate: min(v?.Days?.map((d) => d?.day)),
+          maxDay: max(v?.Days?.map((d) => d?.day)),
         })
     );
     const arr3 = arr2.sort((a, b) =>
@@ -81,7 +84,6 @@ function TripPlanner() {
         : -1
     );
     setAllShownAreasAndFlights(arr3);
-    console.log(arr3);
   };
 
   useEffect(() => {
@@ -91,7 +93,6 @@ function TripPlanner() {
   }, [user.id]);
 
   function openModal(index) {
-    console.log(index);
     setAreaIndex(index);
     setIsOpen(true);
   }
@@ -112,9 +113,7 @@ function TripPlanner() {
   };
 
   const handleAreaChange = (event) => {
-    const newAreas = [...areas];
-    newAreas[areaIndex].areaName = event.target.value;
-    setAreas(newAreas);
+    setRealArea(event.target.value);
   };
 
   const handleAreaSubmit = () => {
@@ -124,22 +123,20 @@ function TripPlanner() {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: currentArea.id,
           })
-            .then((response) => console.log(response))
+            .then(() => orderShown())
             .catch((err) => console.error(err));
           setCurrentArea(response.data);
           closeModal();
         })
         .catch((err) => console.log(err));
     } else {
-      createItem("area", currentTrip.id, areas[areaIndex])
+      createItem("area", currentTrip.id, { areaName: realArea })
         .then((response) => {
           console.log(response.data);
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: response.data.area.id,
           })
-            .then((response) => console.log(response))
-            .catch((err) => console.error(err));
-          setCurrentArea(response.data);
+          window.location.reload();
           closeModal();
         })
         .catch((err) => console.log(err));
@@ -147,9 +144,7 @@ function TripPlanner() {
   };
 
   const handleChooseArea = (index) => {
-    console.log(index);
-    const tempArea = areas[index - 1];
-    console.log(tempArea);
+    const tempArea = areas[index];
     setCurrentArea(tempArea);
     navigate("area/overview");
   };
@@ -161,14 +156,11 @@ function TripPlanner() {
   const handleAddLocation = (index) => {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index + 1, 0, { areaName: "" });
-    console.log(newAreas);
     setAllShownAreasAndFlights(newAreas);
   };
   const handleRemoveLocation = (index, id, nextItem) => {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
-
-
     setAllShownAreasAndFlights(newAreas);
     deleteItem("area", id);
     if (nextItem?.flightName) {
@@ -177,27 +169,31 @@ function TripPlanner() {
   };
 
   useEffect(() => {
-    console.log(currentTrip);
-    getItemsWithFilter("trip", { Id: currentTrip.id })
+    getItemsWithFilter("trip", { id: currentTrip.id })
       .then((response) => {
-        if (response.data[0].Areas.length > 0) {
-          setAreas(response.data[0].Areas);
-        } else {
-          setAreas([{ areaName: "" }]);
+        if (localStorage.getItem("currentTrip") == response.data[0].id) {
+          if (response.data[0].Areas.length > 0) {
+            setAreas(response.data[0].Areas);
+          } else {
+            // setAreas([{ areaName: "" }]);
+          }
+          if (response.data[0].Flights.length > 0) {
+            setShowenFlights(response.data[0].Flights);
+          }
+
+          if (areas[0].tripId === currentTrip.id) {
+            orderShown();
+          }
+          setIsLoading(false);
         }
-        if (response.data[0].Flights.length > 0) {
-          setFlights(response.data[0].Flights);
-        }
-        if (areas[0].areaName !== "") {
-          orderShown();
-        }
-        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
       });
   }, [currentTrip, currentArea]);
+
+
 
   const handleAreaEdit = (event, index) => {
     event.stopPropagation();
@@ -256,7 +252,7 @@ function TripPlanner() {
               className="filled-card small-card"
               onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
             >
-              <div className="flight-preview">
+              <div>
                 <img
                   src={
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
@@ -270,8 +266,8 @@ function TripPlanner() {
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
                       .departure_airport.id
                   }
+                  <GrNext />
                 </span>
-                <GrNext />
                 <span>
                   {
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
@@ -279,6 +275,19 @@ function TripPlanner() {
                         .length - 1
                     ].arrival_airport.id
                   }{" "}
+                </span>
+                <span>
+                  {
+                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
+                      .departure_airport.time
+                  }
+                  <GrNext />
+                  {
+                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
+                      JSON.parse(allShownAreasAndFlights[0].flightInfo).flights
+                        .length - 1
+                    ].arrival_airport.time
+                  }
                 </span>
               </div>
             </div>
@@ -379,31 +388,55 @@ function TripPlanner() {
                             )
                           }
                         >
-                          <div className="flight-preview">
-                <img
-                  src={
-                    JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights[0]
-                      .airline_logo
-                  }
-                  alt=""
-                  className="flight-company-img"
-                />
-                <span>
-                  {
-                    JSON.parse(allShownAreasAndFlights[index +1].flightInfo).flights[0]
-                      .departure_airport.id
-                  }
-                </span>
-                <GrNext />
-                <span>
-                  {
-                    JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights[
-                      JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights
-                        .length - 1
-                    ].arrival_airport.id
-                  }{" "}
-                </span>
-              </div>
+                          <div>
+                            <img
+                              src={
+                                JSON.parse(
+                                  allShownAreasAndFlights[index + 1].flightInfo
+                                ).flights[0].airline_logo
+                              }
+                              alt=""
+                              className="flight-company-img"
+                            />
+                            <span>
+                              {
+                                JSON.parse(
+                                  allShownAreasAndFlights[index + 1].flightInfo
+                                ).flights[0].departure_airport.id
+                              }
+                              <GrNext />
+                            </span>
+                            <span>
+                              {
+                                JSON.parse(
+                                  allShownAreasAndFlights[index + 1].flightInfo
+                                ).flights[
+                                  JSON.parse(
+                                    allShownAreasAndFlights[index + 1]
+                                      .flightInfo
+                                  ).flights.length - 1
+                                ].arrival_airport.id
+                              }{" "}
+                            </span>
+                            <span>
+                              {
+                                JSON.parse(
+                                  allShownAreasAndFlights[index + 1].flightInfo
+                                ).flights[0].departure_airport.time
+                              }
+                              <GrNext />
+                              {
+                                JSON.parse(
+                                  allShownAreasAndFlights[index + 1].flightInfo
+                                ).flights[
+                                  JSON.parse(
+                                    allShownAreasAndFlights[index + 1]
+                                      .flightInfo
+                                  ).flights.length - 1
+                                ].arrival_airport.time
+                              }
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         <div
