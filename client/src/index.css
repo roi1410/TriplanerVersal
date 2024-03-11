@@ -200,6 +200,9 @@ a:focus-visible {
 .filled-card span {
   font-weight: 300;
 }
+.no-click{
+  cursor: default;
+}
 .dashed-card {
   cursor: pointer;
   border: 0.5rem dashed var(--text-900);
@@ -224,6 +227,11 @@ a:focus-visible {
 .filled-card:focus {
   scale: 1.03;
   box-shadow: 0px 0px 20px 10px var(--background-900);
+}
+.no-click:hover,
+.no-click:focus {
+  scale: 1;
+  box-shadow: none;
 }
 .dashed-card:hover,
 .dashed-card:focus {

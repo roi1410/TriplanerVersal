@@ -8,6 +8,8 @@ import Skeleton from "react-loading-skeleton";
 import hotelPNG from "../../../../assets/image.png";
 import Map from "../../../general/Map";
 import FlightsSummery from "./FlightsSummery";
+import { FaLink, FaClock, FaPhone } from "react-icons/fa";
+import { FaLocationDot, FaCalendarDays } from "react-icons/fa6";
 
 function Overview() {
   const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack } =
@@ -41,6 +43,10 @@ function Overview() {
     console.log(allShownDays);
   }, [allShownDays]);
 
+  const handleCall = (number) => {
+    window.location.href = `tel:${number}`;
+  };
+
   return (
     <div>
       {/* {allShownDays.map((v) => (
@@ -61,23 +67,27 @@ function Overview() {
               <div className="cards-container">
                 {isLoading ? (
                   // Loader
-                  <Skeleton className="filled-card" count={20} />
+                  <Skeleton className="outlined-card smaller-skeleton" count={20} />
                 ) : allShownDays ? (
                   <>
                     {allShownDays.map((day, index) => {
                       return (
-                        <div key={index} className="filled-card">
-                              <h1>day {index + 1}</h1>
-
+                        <div
+                          key={index}
+                          className="outlined-card overview-card"
+                        >
+                          <h4 className="bold">
+                            Day #{index + 1}{" "}
+                            <span>
+                              {format(day.day, "EEEE, MMMM do, yyyy")}
+                            </span>
+                          </h4>
+                          <hr />
                           {day?.Flights &&
                             day.Flights.map((flightRawData) => {
                               const flight = JSON.parse(
                                 flightRawData.flightInfo
                               );
-
-                              const startFlight = flight[0];
-                              const endFlight = flight[-1];
-                              console.log(flight);
                               return (
                                 <>
                                   <FlightsSummery
@@ -88,67 +98,73 @@ function Overview() {
                               );
                             })}
                           {day.Hotel?.hotelInfo && (
-                            <>
-                          
-
-                              <h4>{day.Hotel.hotelInfo.hotelName}</h4>
-                              <img src={day.Hotel.hotelInfo.image} alt="" />
-                              <span className="checkedInAndOut">
-                                Check-In: {day.Hotel.hotelInfo.checkIn}{" "}
-                                _______________ Check-Out:{" "}
-                                {day.Hotel.hotelInfo.checkOut}
-                              </span>
-                              <span className="price">
-                                Price: {day.Hotel.hotelInfo.price}
-                              </span>
-
-                            </>
+                            <div className="hotel-preview">
+                              <img
+                                src={day.Hotel.hotelInfo.image}
+                                alt="Hotel image"
+                              />
+                              <div className="text-over-image">
+                                <h4>{day.Hotel.hotelInfo.hotelName}</h4>
+                                <div className="dates">
+                                  <span>
+                                    <FaCalendarDays />
+                                    {day.Hotel.hotelInfo.checkIn}
+                                  </span>
+                                  <span>
+                                    <FaCalendarDays />
+                                    {day.Hotel.hotelInfo.checkOut}
+                                  </span>
+                                </div>
+                                <p>
+                                  <b>Total Price:</b>{" "}
+                                  {day.Hotel.hotelInfo.price}
+                                </p>
+                              </div>
+                            </div>
                           )}
-                          ________________________________________________________________
                           {day.Events &&
                             day.Events.map((event, index) => {
                               const parseEv = JSON.parse(event.eventInfo);
 
                               return (
                                 parseEv && (
-                                  <div key={index} className="filled-card">
-                                    <>
-                                      <h1>Event</h1>
-                                      <h4>{parseEv.name}</h4>
-                                      {parseEv.image && (
-                                        <img src={parseEv.image} alt="ops" />
-                                      )}
-
-                                      {parseEv.website && (
-                                        <a
-                                          href={parseEv.website}
-                                          target="_blank"
-                                        >
-                                          Go to website
-                                        </a>
-                                      )}
-                                      {parseEv.openingHours && (
-                                        <>
-                                          <span>
-                                            openingHours-
-                                            {parseEv.openingHours}
-                                          </span>
-                                        </>
-                                      )}
-                                      {parseEv.contact && (
-                                        <>
-                                          <span>
-                                            phon Number-{parseEv.contact}
-                                          </span>
-                                        </>
-                                      )}
-                                      <span>Address-{parseEv.address}</span>
-                                    </>
+                                  <div
+                                    key={index}
+                                    className="filled-card no-click"
+                                  >
+                                    <div>
+                                      <div>
+                                        <h4>{parseEv.name}</h4>
+                                        <div>
+                                          {parseEv.website && (
+                                            <a
+                                              href={parseEv.website}
+                                              target="_blank"
+                                            >
+                                              <FaLink />
+                                            </a>
+                                          )}
+                                          {parseEv.contact && (
+                                            <a href="" target="_blank">
+                                              <FaPhone
+                                                onClick={(event) => {
+                                                  event.stopPropagation();
+                                                  handleCall(parseEv.contact);
+                                                }}
+                                              />
+                                            </a>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <p>
+                                        <FaLocationDot />
+                                        {parseEv.address}
+                                      </p>
+                                    </div>
                                   </div>
                                 )
                               );
                             })}
-
                         </div>
                       );
                     })}
@@ -160,18 +176,11 @@ function Overview() {
             </div>
           </div>
           <div className="map-container">
-            <button
-              onClick={() =>
-                console.log(JSON.parse(allShownDays[0].Flights[0].flightInfo))
-              }
-            >
-              test
-            </button>
-            {/* <Map
+            <Map
               allEventHotels={allEventHotels}
               mapType={"overview"}
               PNG={hotelPNG}
-            /> */}
+            />
           </div>
         </div>
       </div>

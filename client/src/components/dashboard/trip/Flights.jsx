@@ -24,10 +24,13 @@ function Flights() {
   const [showFrom, setShowFrom] = useState([]);
   const [flightOrderObj, setFlightOrderObj] = useState({});
 
+
   const handleGoBack = () => {
     navigate("/dashboard/trip-planner");
   };
+
   const getflights = async (v) => {
+    console.log(v);
     setIsLoading(true);
     const flights = await findFlights(v);
     console.log(flights.data);
@@ -92,7 +95,6 @@ function Flights() {
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />
       <div>
         <div className="flight-inputs">
           <label>
@@ -142,7 +144,6 @@ function Flights() {
               }
             />
           </label>
-          {/* <button onClick={() => console.log(flightOrderObj)}>tst</button> */}
           <button
             className="primary-button"
             onClick={() => getflights(flightOrderObj)}
@@ -221,7 +222,7 @@ function Flights() {
               </div>
             ))
           ) : (
-            <p>No flights found within the given data, please try again</p>
+            <p style={{marginTop:"2rem"}}>No flights found within the given data, please try again</p>
           )}
         </div>
       </div>
