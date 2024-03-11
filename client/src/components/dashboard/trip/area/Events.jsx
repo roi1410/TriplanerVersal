@@ -31,6 +31,7 @@ function Events() {
   }, []);
 
   async function handleSubmitEvents(search) {
+    setIsLoading(true);
     const res = await fetchPlaceLanLon(search);
     console.log(search);
 

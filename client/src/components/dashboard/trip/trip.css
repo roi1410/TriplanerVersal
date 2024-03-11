@@ -2,7 +2,7 @@
 .mini-navbar {
   position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 63px;
+  top: 59px;
   background-color: var(--background);
   z-index: 2;
   padding:1rem 2rem;

@@ -14,3 +14,27 @@ text-align: start;
   width: 50%;
 }
 
+/* DAILY PLANNER */
+.daily-planner-container{
+
+}
+.daily-planner-container span{
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.daily-planner-container span button{
+font-size: 1.8rem;
+}
+
+.event-day-pair{
+  display: flex;
+  position: relative;
+}
+.event-day-pair>*{
+  flex-grow: 1;
+}
+.event-day-pair li{
+  list-style: none;
+
+}

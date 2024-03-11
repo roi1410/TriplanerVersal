@@ -6,12 +6,13 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import useGeoLocation from "../../hooks/useGeoLocation";
 import { GeneralContext } from "../../context/GeneralContext";
 import hotelPNG from "../../assets/image.png";
+import { CurrentContext } from "../../context/CurrentContext";
 
 export default function Map({
   mapType,
@@ -21,11 +22,20 @@ export default function Map({
   PNG,
   PNG2,
 }) {
-  const today=new Date()
+  const today = new Date();
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
-  const { hotels, events, setEvents, mapRef, search, setSearch } =
-    useContext(GeneralContext);
+  const {
+    hotels,
+    events,
+    setEvents,
+    mapRef,
+    search,
+    setSearch,
+    setIsLoading,
+    isLoading,
+  } = useContext(GeneralContext);
+  const { currentArea } = useContext(CurrentContext);
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
 
@@ -83,54 +93,62 @@ export default function Map({
     }
   }
 
+  //   to search for the first entered location
+  useEffect(() => {
+    if (search == "" && mapType != "overview") {
+      setIsLoading(true);
+      handleSubmit(currentArea.areaName);
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <>
-      {mapType !==
-        "overview"&&(
-          <div className="map-inputs">
-            <input
-              type="text"
-              placeholder="Enter Location"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button
-              className="primary-button"
-              onClick={() => handleSubmit(search)}
-            >
-              Submit
-            </button>
-            <button className="outlined-button" onClick={showMyLocation}>
-              Locate Me
-            </button>
+      {mapType !== "overview" && (
+        <div className="map-inputs">
+          <input
+            type="text"
+            placeholder="Enter Location"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button
+            className="primary-button"
+            onClick={() => handleSubmit(search)}
+          >
+            Submit
+          </button>
+          <button className="outlined-button" onClick={showMyLocation}>
+            Locate Me
+          </button>
 
-            {mapType === "hotels" && (
-              <>
-                Check-In
-                <input
-                  type="date"
-                  onChange={(e) =>
-                    setdate((date) => ({
-                      ...date,
-                      checkIn: new Date(e.target.value),
-                    }))
-                  }
-                  defaultValue={today.toISOString().substring(0, 10)}
-                />
-                Check-Out
-                <input
-                  type="date"
-                  onChange={(e) =>
-                    setdate((date) => ({
-                      ...date,
-                      checkOut: new Date(e.target.value),
-                    }))
-                  }
-                  defaultValue={today.toISOString().substring(0, 10)}
-                />
-              </>
-            )}
-          </div>
-        )}
+          {mapType === "hotels" && (
+            <>
+              Check-In
+              <input
+                type="date"
+                onChange={(e) =>
+                  setdate((date) => ({
+                    ...date,
+                    checkIn: new Date(e.target.value),
+                  }))
+                }
+                defaultValue={today.toISOString().substring(0, 10)}
+              />
+              Check-Out
+              <input
+                type="date"
+                onChange={(e) =>
+                  setdate((date) => ({
+                    ...date,
+                    checkOut: new Date(e.target.value),
+                  }))
+                }
+                defaultValue={today.toISOString().substring(0, 10)}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       <MapContainer
         ref={mapRef}
@@ -169,7 +187,7 @@ export default function Map({
             );
           })}
         {events &&
-        mapType === "events" &&
+          mapType === "events" &&
           events.map((event, key) => {
             return (
               event?.lat &&

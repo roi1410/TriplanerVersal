@@ -24,6 +24,10 @@ export const deleteItem = async (type, id) => {
     return axios.delete(`${import.meta.env.VITE_API_URL}/${type}/delete/${id}`, null);
 };
 
+export const removeItem = async (type, id , removedObj) => {
+    return axios.post(`${import.meta.env.VITE_API_URL}/${type}/remove/${id}`, removedObj);
+};
+
 export const CreateDateFromMinMax = async (minDate, maxDate, tripId, data) => {
     try {
 

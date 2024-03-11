@@ -7,7 +7,7 @@ import flags from "../../../assets/flags.json";
 
 import { CreateDateFromMinMax, createItem, findFlights } from "../../../utils/CRUDService";
 import { FaPlaneArrival, FaPlaneDeparture, FaClock } from "react-icons/fa";
-import { GrFormNext } from "react-icons/gr";
+import { GrNext } from "react-icons/gr";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "./trip.css";
@@ -177,9 +177,9 @@ function Flights() {
                         <p>{v.departure_airport.name}</p>
                       </div>
                       <div className="duration">
-                        <GrFormNext />
+                        <GrNext />
                         <p>{formatMinutesToString(v.duration)}</p>
-                        <GrFormNext />
+                        <GrNext />
                       </div>
                       <div className="landing">
                         <div>
