@@ -117,34 +117,35 @@ function TripPlanner() {
   };
 
   const handleAreaSubmit = () => {
-    if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
-      updateItem("area", currentArea.id, areas[areaIndex])
-        .then((response) => {
-          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
-            areaId: currentArea.id,
-          })
-            .then(() => orderShown())
-            .catch((err) => console.error(err));
-          setCurrentArea(response.data);
-          closeModal();
-        })
-        .catch((err) => console.log(err));
-    } else {
+    // if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
+    //   updateItem("area", currentArea.id, areas[areaIndex])
+    //     .then((response) => {
+    //       CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+    //         areaId: currentArea.id,
+    //       })
+    //         .then(() => orderShown())
+    //         .catch((err) => console.error(err));
+    //       setCurrentArea(response.data);
+    //       closeModal();
+    //     })
+    //     .catch((err) => console.log(err));
+    // } else {
       createItem("area", currentTrip.id, { areaName: realArea })
         .then((response) => {
-          console.log(response.data);
+          console.log(startDate, endDate, response.data.area.id);
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: response.data.area.id,
+          }).then(()=>{
+             window.location.reload();
           })
-          window.location.reload();
           closeModal();
         })
         .catch((err) => console.log(err));
     }
-  };
+  
 
-  const handleChooseArea = (index) => {
-    const tempArea = areas[index];
+  const handleChooseArea = (location) => {
+    const tempArea = location;
     setCurrentArea(tempArea);
     navigate("area/overview");
   };
@@ -170,9 +171,9 @@ function TripPlanner() {
 
   useEffect(() => {
     getItemsWithFilter("trip", { id: currentTrip.id })
-      .then((response) => {
-        if (localStorage.getItem("currentTrip") == response.data[0].id) {
-          if (response.data[0].Areas.length > 0) {
+    .then((response) => {
+      if (localStorage.getItem("currentTrip") == response.data[0].id) {
+        if (response.data[0].Areas.length > 0) {
             setAreas(response.data[0].Areas);
           } else {
             // setAreas([{ areaName: "" }]);
@@ -180,7 +181,7 @@ function TripPlanner() {
           if (response.data[0].Flights.length > 0) {
             setShowenFlights(response.data[0].Flights);
           }
-
+          
           if (areas[0].tripId === currentTrip.id) {
             orderShown();
           }
@@ -192,7 +193,6 @@ function TripPlanner() {
         setIsLoading(false);
       });
   }, [currentTrip, currentArea]);
-
 
 
   const handleAreaEdit = (event, index) => {
@@ -314,7 +314,7 @@ function TripPlanner() {
                     ) : (
                       <div
                         className="filled-card"
-                        onClick={() => handleChooseArea(index)}
+                        onClick={() => handleChooseArea(location)}
                       >
                         <h2>{location.areaName}</h2>
                         <button

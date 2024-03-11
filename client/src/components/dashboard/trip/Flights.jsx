@@ -41,6 +41,7 @@ function Flights() {
   useEffect(() => {
     setIsLoading(false);
     setGoBack("/dashboard/trip-planner")
+    window.location.reload();
   }, []);
 
   const handleInputFrom = (e) => {
@@ -88,9 +89,11 @@ function Flights() {
     const flightId = {flightId:res.data.flight.id}
     console.log(flightId);
     await CreateDateFromMinMax(minDate,maxDate,currentTrip.id,flightId)
-    setMyFlights((prev)=>[...prev, selectedFlight])
+    .then(()=>
+    navigate("/dashboard/trip-planner"),
+    setMyFlights((prev)=>[...prev, selectedFlight]),
     setCurrentFlight(flightId)
-    navigate("/dashboard/trip-planner")
+    )
   };
 
   return (
