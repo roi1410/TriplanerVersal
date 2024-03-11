@@ -18,7 +18,7 @@ export default function Map({
   mapType,
   handleSubmit,
   setdate,
-
+  allShownDays,
   PNG,
   PNG2,
 }) {
@@ -202,6 +202,8 @@ export default function Map({
               )
             );
           })}
+          {allShownDays&&mapType==="overview"&&
+          allShownDays.map((event))}
 
         <MapView />
       </MapContainer>
