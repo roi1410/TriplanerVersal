@@ -14,13 +14,14 @@ const FlightShowCase = () => {
   const navigate = useNavigate();
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea, CurrentFlight } =
     useContext(CurrentContext);
-  const { flights, setFlights } = useContext(GeneralContext);
+  const { flights, setFlights, setGoBack } = useContext(GeneralContext);
   const [myFlight, setMyFlight] = useState(JSON.parse(JSON.parse(localStorage.getItem("currentFlight")).flightInfo).flights);
   const [wFlight, setwFlight] = useState(JSON.parse(localStorage.getItem("currentFlight")))
   const [load, setload] = useState(false)
 
   useEffect(() => {
     console.log(wFlight);
+    setGoBack("/dashboard/trip-planner")
   }, []);
 
   const handleChangeFlight = () => {
@@ -94,7 +95,7 @@ const FlightShowCase = () => {
         </div>
 
       </div>)}
-      <button onClick={handleChangeFlight} >Change Flight</button>
+      <button className="primary-button" onClick={handleChangeFlight} >Change Flight</button>
 
     </div>
   );

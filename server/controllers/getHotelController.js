@@ -4,6 +4,7 @@ const { getJson } = require("serpapi");
 exports.getHotelInfo = async (req, res) => {
     try {
         console.error("aaa");
+        console.log(req.body);
         const {arrAP,depAP,depTM} = req.body
         await getJson({
             engine: "google_flights",
