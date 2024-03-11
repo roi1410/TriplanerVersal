@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getItem } from "../utils/CRUDService";
+import lightLogo from "../assets/tripel/secondary-secondary-light.png";
+import darkLogo from "../assets/tripel/secondary-secondary-dark.png";
 
 export const CurrentContext = createContext({
   setTrips: () => {},
@@ -13,6 +15,8 @@ export const CurrentContext = createContext({
   setCurrentFlight: () => {},
   currentDay: {},
   setCurrentDay: () => {},
+  currentLogo: null,
+  setCurrentLogo: () => {},
 });
 
 export const CurrentContextProvider = ({ children }) => {
@@ -21,48 +25,52 @@ export const CurrentContextProvider = ({ children }) => {
   const [currentHotel, setCurrentHotel] = useState({});
   const [currentFlight, setCurrentFlight] = useState({});
   const [currentDay, setCurrentDay] = useState({});
+  const [currentLogo, setCurrentLogo] = useState(null);
 
   useEffect(() => {
     saveTripLocally({});
-    // console.log("CURRENT TRIP ", currentTrip);
-    // console.log("CURRENT AREA ", currentArea);
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
+    if (isDarkMode.matches) {
+      setCurrentLogo(darkLogo);
+    }else{
+      setCurrentLogo(lightLogo)
+    }
   }, []);
-
 
   useEffect(() => {
     // Load initial state from localStorage for each piece of state
     const loadInitialState = async () => {
-       const tripId = localStorage.getItem('currentTrip');
-       const areaId = localStorage.getItem('currentArea');
-       const hotelId = localStorage.getItem('currentHotel');
-       const flightId = localStorage.getItem('currentFlight');
-       const dayId = localStorage.getItem('currentDay');
-   
-       // Load each piece of state if it exists in localStorage
-       if (tripId) {
-         const response = await getItem("trip", tripId);
-         setCurrentTrip(response.data);
-       }
-       if (areaId) {
-         const response = await getItem("area", areaId);
-         setCurrentArea(response.data);
-       }
-       if (hotelId) {
-         const response = await getItem("hotel", hotelId);
-         setCurrentHotel(response.data);
-       }
-       if (flightId) {
-         const response = await getItem("flight", flightId);
-         setCurrentFlight(response.data);
-       }
-       if (dayId) {
-         const response = await getItem("day", dayId);
-         setCurrentDay(response.data);
-       }
+      const tripId = localStorage.getItem("currentTrip");
+      const areaId = localStorage.getItem("currentArea");
+      const hotelId = localStorage.getItem("currentHotel");
+      const flightId = localStorage.getItem("currentFlight");
+      const dayId = localStorage.getItem("currentDay");
+
+      // Load each piece of state if it exists in localStorage
+      if (tripId) {
+        const response = await getItem("trip", tripId);
+        setCurrentTrip(response.data);
+      }
+      if (areaId) {
+        const response = await getItem("area", areaId);
+        setCurrentArea(response.data);
+      }
+      if (hotelId) {
+        const response = await getItem("hotel", hotelId);
+        setCurrentHotel(response.data);
+      }
+      if (flightId) {
+        const response = await getItem("flight", flightId);
+        setCurrentFlight(response.data);
+      }
+      if (dayId) {
+        const response = await getItem("day", dayId);
+        setCurrentDay(response.data);
+      }
     };
-   
+
     loadInitialState();
-   }, []);
+  }, []);
 
   const saveTripLocally = async (tripData) => {
     const myItem = localStorage.getItem("currentTrip");
@@ -116,6 +124,7 @@ export const CurrentContextProvider = ({ children }) => {
       setCurrentFlight(response.data)
     }
     else{
+
       console.log("3");
     }
   };
@@ -138,6 +147,7 @@ export const CurrentContextProvider = ({ children }) => {
     }
   };
 
+
   const contextValue = {
     currentTrip,
     setCurrentTrip: saveTripLocally,
@@ -149,6 +159,8 @@ export const CurrentContextProvider = ({ children }) => {
     setCurrentFlight: saveFlightLocally,
     currentDay,
     setCurrentDay: saveDayLocally,
+    currentLogo,
+    setCurrentLogo,
   };
   return (
     <CurrentContext.Provider value={contextValue}>
