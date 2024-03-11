@@ -168,6 +168,7 @@ function TripPlanner() {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
 
+
     setAllShownAreasAndFlights(newAreas);
     deleteItem("area", id);
     if (nextItem?.flightName) {
