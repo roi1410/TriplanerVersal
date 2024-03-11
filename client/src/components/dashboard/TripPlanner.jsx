@@ -16,6 +16,8 @@ import { CurrentContext } from "../../context/CurrentContext";
 import { MdEdit } from "react-icons/md";
 import "./dashboard.css";
 import { format, addDays } from "date-fns";
+import { GrNext } from "react-icons/gr";
+
 // import { sortBy } from 'date-fns/fp';
 
 const customStyles = {
@@ -30,7 +32,7 @@ const customStyles = {
 };
 
 function TripPlanner() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack } =
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack, flights,setFlights } =
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
@@ -39,6 +41,7 @@ function TripPlanner() {
   const [allShownDays, setAllShownDays] = useState([]);
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
+  const [clickedFlight, setClickedFlight] = useState(false);
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
 
@@ -46,7 +49,6 @@ function TripPlanner() {
     if (user.id) {
       setGoBack("/dashboard");
     }
-    console.log(currentArea);
   }, [user.id]);
 
   function openModal(index) {
@@ -61,8 +63,11 @@ function TripPlanner() {
   }
 
   const handleChooseFlight = () => {
-
-    navigate("flights");
+    if(clickedFlight===0){
+      navigate("flightShowCase")
+    }else{
+      navigate("flights");
+    }
   };
 
   const handleAreaChange = (event) => {
@@ -121,11 +126,10 @@ function TripPlanner() {
     setAreas(newAreas);
     deleteItem("area", (index+1))
     console.log(areas);
-    console.log("the idnex is"+index);
+    console.log("the idnex is "+index);
   };
 
   useEffect(() => {
-    console.log(currentTrip);
     getItemsWithFilter("area", { tripId: currentTrip.id })
       .then((response) => {
         if (response.data.length > 0) {
@@ -169,7 +173,6 @@ function TripPlanner() {
     if (currentArea.id) {
       getItemsWithFilter("area", { Id: currentArea.id })
         .then((response) => {
-          console.log("DAYS ", response.data);
           setAllShownDays(response.data[0].Days);
         })
         .catch((err) => console.error(err));
@@ -197,7 +200,21 @@ function TripPlanner() {
       <div className="cards-container-center">
         <div className="flight-location-container">
           <div className="filled-card small-card" onClick={handleChooseFlight}>
-            <p>Add Flight To...</p>
+            {flights.length > 0 ?
+            <div>
+              <img src={flights[0].flights[0].airline_logo} alt="" className="flight-company-img"/>
+              <span>{flights[0].flights[0].departure_airport.id}<GrNext /></span>
+              <span>{flights[0].flights[0].arrival_airport.id}    </span>
+              <span>{flights[0].flights[0].departure_airport.time}<GrNext />{flights[0].flights[0].arrival_airport.time}</span>
+              {clickedFlight===false &&
+              setClickedFlight(0)}
+              
+            </div>
+             :
+              <p>Add Flight To...</p>
+            
+          }
+          
             
           </div>
           {areas.length > 0  &&
@@ -278,6 +295,7 @@ function TripPlanner() {
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(index)}
                   >
+                    
                     <p> Add Flight To...</p>
                   </div>
                   <button
