@@ -67,6 +67,8 @@ function Overview() {
                     {allShownDays.map((day, index) => {
                       return (
                         <div key={index} className="filled-card">
+                              <h1>day {index + 1}</h1>
+
                           {day?.Flights &&
                             day.Flights.map((flightRawData) => {
                               const flight = JSON.parse(
@@ -87,8 +89,8 @@ function Overview() {
                             })}
                           {day.Hotel?.hotelInfo && (
                             <>
-                              <h1>day {index + 1}</h1>
-                              <h2>Hotel</h2>
+                          
+
                               <h4>{day.Hotel.hotelInfo.hotelName}</h4>
                               <img src={day.Hotel.hotelInfo.image} alt="" />
                               <span className="checkedInAndOut">
@@ -99,6 +101,7 @@ function Overview() {
                               <span className="price">
                                 Price: {day.Hotel.hotelInfo.price}
                               </span>
+
                             </>
                           )}
                           ________________________________________________________________
@@ -145,6 +148,7 @@ function Overview() {
                                 )
                               );
                             })}
+
                         </div>
                       );
                     })}

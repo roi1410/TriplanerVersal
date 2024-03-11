@@ -8,8 +8,13 @@ import {
 import { GeneralContext } from "../../../../../context/GeneralContext";
 import { CurrentContext } from "../../../../../context/CurrentContext";
 import Skeleton from "react-loading-skeleton";
+import { FaClock } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import placeholderImage from "../../../../../assets/placeholder.jpg";
 
-function MyEvents({setUpdateDay , updateDay}) {
+
+
+function MyEvents({ setUpdateDay, updateDay }) {
   const { myEvents, setMyEvents, isLoading, setIsLoading, myDays, setMyDays } =
     useContext(GeneralContext);
   const { currentArea, currentDay, setCurrentDay, currentTrip } =
@@ -36,27 +41,56 @@ function MyEvents({setUpdateDay , updateDay}) {
     });
     setUpdateDay(!updateDay);
   };
-
   return (
-    <div>
-      <ul className="cards-container-center">
+    
+      <div className="cards-container-center">
         {isLoading ? (
           <Skeleton className="filled-card" count={5} />
         ) : myEvents && myEvents.length > 0 ? (
           myEvents.map((event, index) => (
-            <li
+            <div
               key={index}
-              className="filled-card"
+              className="filled-card add-event"
               onClick={() => handleAssignEvent(index)}
             >
-              <h4>{event.eventName}</h4>
-            </li>
+              {event.image ? (
+                <img src={JSON.parse(event.eventInfo).image} alt="Event image" />
+              ) : (
+                <img src={placeholderImage} alt="Event image" />
+              )}
+              <div className="info">
+                <div className="event-name">
+                  <h4 className="bold">{event.eventName}</h4>
+                  {/* {JSON.parse(event.eventInfo).website && (
+                    <a href={JSON.parse(event.eventInfo).website} target="_blank">
+                      <FaLink />
+                    </a>
+                  )} */}
+                </div>{" "}
+                {JSON.parse(event.eventInfo).openingHours && (
+            <>
+              <div>
+                <p>
+                  <FaClock />
+                </p>
+                <span>{JSON.parse(event.eventInfo).openingHours}</span>{" "}
+              </div>
+            </>
+          )}
+         <div>
+            <p>
+                <FaLocationDot />
+              </p>
+              <span>{JSON.parse(event.eventInfo).address}</span>{" "}
+         </div>
+              </div>
+            </div>
           ))
         ) : (
           <p>You haven't added any events to schedule on your trip</p>
         )}
-      </ul>
-    </div>
+      </div>
+    
   );
 }
 

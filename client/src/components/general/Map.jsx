@@ -90,46 +90,54 @@ export default function Map({
     <>
       {mapType !== "overview" && (
         <div className="map-inputs">
-          <input
-            type="text"
-            placeholder="Enter Location"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button
-            className="primary-button"
-            onClick={() => handleSubmit(search)}
-          >
-            Submit
-          </button>
-          <button className="outlined-button" onClick={showMyLocation}>
-            Locate Me
-          </button>
+         <div>
+            <input
+              type="text"
+              placeholder="Enter Location"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+           <div>
+              <button
+                className="primary-button"
+                onClick={() => handleSubmit(search)}
+              >
+                Submit
+              </button>
+              <button className="outlined-button" onClick={showMyLocation}>
+                Locate Me
+              </button>
+           </div>
+         </div>
 
           {mapType === "hotels" && (
-            <>
-              Check-In
-              <input
-                type="date"
-                onChange={(e) =>
-                  setdate((date) => ({
-                    ...date,
-                    checkIn: new Date(e.target.value),
-                  }))
-                }
-                defaultValue={today.toISOString().substring(0, 10)}
-              />
-              Check-Out
-              <input
-                type="date"
-                onChange={(e) =>
-                  setdate((date) => ({
-                    ...date,
-                    checkOut: new Date(e.target.value),
-                  }))
-                }
-                defaultValue={today.toISOString().substring(0, 10)}
-              />
-            </>
+            <div>
+             <label>
+                Check-in
+                <input
+                  type="date"
+                  onChange={(e) =>
+                    setdate((date) => ({
+                      ...date,
+                      checkIn: new Date(e.target.value),
+                    }))
+                  }
+                  defaultValue={today.toISOString().substring(0, 10)}
+                />
+             </label>
+             <label>
+                Check-out
+                <input
+                  type="date"
+                  onChange={(e) =>
+                    setdate((date) => ({
+                      ...date,
+                      checkOut: new Date(e.target.value),
+                    }))
+                  }
+                  defaultValue={today.toISOString().substring(0, 10)}
+                />
+             </label>
+            </div>
           )}
         </div>
       )}

@@ -108,7 +108,7 @@ export const CurrentContextProvider = ({ children }) => {
     console.log(flightData);
     const myItem = localStorage.getItem('currentFlight');
     if(Object.keys(flightData).length !== 0){
-      localStorage.setItem("currentFlight",JSON.stringify(flightData.flightId))
+      localStorage.setItem("currentFlight",JSON.stringify(flightData))
       setCurrentFlight(flightData)
     }else if(myItem !== "undefined"){
       const newId=JSON.parse(localStorage.getItem("currentFlight"));
