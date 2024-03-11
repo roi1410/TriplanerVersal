@@ -126,13 +126,15 @@ function TripPlanner() {
   };
 
   const handleAddLocation = (index) => {
-    const newAreas = [...areas];
+    const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index + 1, 0, { areaName: "" });
-    setAreas(newAreas);
+    console.log(newAreas);
+    setAllShownAreasAndFlights(newAreas);
   };
   const handleRemoveLocation = (index) => {
-    const newAreas = [...areas];
+    const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
+    setAllShownAreasAndFlights(newAreas);
     setAreas(newAreas);
     deleteItem("area", (index+1))
     console.log(areas);
@@ -229,7 +231,7 @@ function TripPlanner() {
           </div>}
           {allShownAreasAndFlights.length > 0 &&
             allShownAreasAndFlights.map((location, index) =>
-              location?.areaName && <div key={index} className="flight-location-container">
+              (location?.areaName || location?.areaName == "") && <div key={index} className="flight-location-container">
                 {allShownAreasAndFlights[index].areaName == "" ? (
                   <div
                     className="filled-card"
