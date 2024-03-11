@@ -229,22 +229,37 @@ form {
 
 .map {
   min-height: 25rem;
-  /* height: clamp(25rem, 30rem, 100%); */
   border-radius: 0.5rem;
   position: fixed;
-  right: 2rem;
   width: calc(50% - 2rem);
-  bottom: 8rem;
+  top: 50vh;
+  top: 50dvh;
+  top: 50svh;
+  transform: translateY(calc(-50% + 5rem));
   z-index: 0;
 }
 
 .map-inputs {
-  width: 100%;
   display: flex;
   justify-content: space-around;
-  margin-top: 2rem;
   position: fixed;
   z-index: 1;
   width: calc(50% - 2rem);
   flex-direction: column;
+  gap: 1rem;
+  top: calc(26svh);
+  transform: translateY(-50%);
+}
+
+.map-inputs > * {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+.map-inputs > * > * {
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
