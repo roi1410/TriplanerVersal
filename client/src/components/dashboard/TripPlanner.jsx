@@ -125,8 +125,6 @@ function TripPlanner() {
     newAreas.splice(index, 1);
     setAreas(newAreas);
     deleteItem("area", (index+1))
-    console.log(areas);
-    console.log("the idnex is "+index);
   };
 
   useEffect(() => {

@@ -76,8 +76,8 @@ const FlightShowCase = () => {
             </div>
             <p>{myFlight.departure_airport.name}</p>
           </div>
-          <button onClick={handleChangeFlight} >Change Flight</button>
         </div>
+          <button onClick={handleChangeFlight} >Change Flight</button>
       </div>
     </div>
   );
