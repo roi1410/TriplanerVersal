@@ -232,7 +232,7 @@ function TripPlanner() {
                       <img src={JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
                       <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
                       <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.id}    </span>
-                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.time}</span>
+                      {/* <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.time}</span> */}
                     </div>
                   </div> :
                     <div
@@ -327,7 +327,7 @@ function TripPlanner() {
                       <img src={JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
                       <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
                       <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.id}    </span>
-                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.time}</span>
+                      {/* <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.time}</span> */}
                     </div>
                   </div> :
                     <div

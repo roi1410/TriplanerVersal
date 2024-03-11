@@ -93,7 +93,7 @@ const FlightShowCase = () => {
           </div>
         </div>
       </div>)}
-      <button onClick={handleChangeFlight} >Change Flight</button>
+      <button className="primary-button" onClick={handleChangeFlight} >Change Flight</button>
     </div>
   );
 };
