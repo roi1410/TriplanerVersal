@@ -31,12 +31,24 @@ const customStyles = {
 };
 
 function TripPlanner() {
-
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack, flights, setFlights } =
-
-    useContext(GeneralContext);
-  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea ,  setCurrentFlight} =
-    useContext(CurrentContext);
+  const {
+    user,
+    setUser,
+    areas,
+    setAreas,
+    isLoading,
+    setIsLoading,
+    setGoBack,
+    flights,
+    setFlights,
+  } = useContext(GeneralContext);
+  const {
+    currentTrip,
+    setCurrentTrip,
+    currentArea,
+    setCurrentArea,
+    setCurrentFlight,
+  } = useContext(CurrentContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
   const [allShownDays, setAllShownDays] = useState([]);
@@ -48,12 +60,29 @@ function TripPlanner() {
   const navigate = useNavigate();
 
   const orderShown = () => {
-    const tempAllShownArr = areas.concat(flights)
-    const arr2 = tempAllShownArr.map((v) => v = { ...v, minDate: min(v.Days.map((d) => d.day)), maxDay: max(v.Days.map((d) => d.day)) })
-    const arr3 = arr2.sort((a, b) => (isEqual(a.minDate, b.minDate) ? (isAfter(a.maxDate, b.maxDate) ? true : false) : isAfter(a.minDate, b.minDate)) ? 1 : -1)
+    const tempAllShownArr = areas.concat(flights);
+    const arr2 = tempAllShownArr.map(
+      (v) =>
+        (v = {
+          ...v,
+          minDate: min(v.Days.map((d) => d.day)),
+          maxDay: max(v.Days.map((d) => d.day)),
+        })
+    );
+    const arr3 = arr2.sort((a, b) =>
+      (
+        isEqual(a.minDate, b.minDate)
+          ? isAfter(a.maxDate, b.maxDate)
+            ? true
+            : false
+          : isAfter(a.minDate, b.minDate)
+      )
+        ? 1
+        : -1
+    );
     setAllShownAreasAndFlights(arr3);
     console.log(arr3);
-  }
+  };
 
   useEffect(() => {
     if (user.id) {
@@ -72,17 +101,14 @@ function TripPlanner() {
     setIsOpen(false);
   }
 
-
-
   const handleChooseFlight = (info) => {
     if (info) {
       console.log(info);
-      setCurrentFlight(info)
-      navigate("flightShowCase")
+      setCurrentFlight(info);
+      navigate("flightShowCase");
     } else {
       navigate("flights");
     }
-
   };
 
   const handleAreaChange = (event) => {
@@ -121,7 +147,9 @@ function TripPlanner() {
   };
 
   const handleChooseArea = (index) => {
-    const tempArea = areas[index];
+    console.log(index);
+    const tempArea = areas[index - 1];
+    console.log(tempArea);
     setCurrentArea(tempArea);
     navigate("area/overview");
   };
@@ -141,18 +169,15 @@ function TripPlanner() {
     newAreas.splice(index, 1);
 
     setAllShownAreasAndFlights(newAreas);
-    deleteItem("area", (id))
+    deleteItem("area", id);
     if (nextItem?.flightName) {
-      deleteItem("flight", (nextItem.id))
+      deleteItem("flight", nextItem.id);
     }
-   
   };
 
   useEffect(() => {
-
     console.log(currentTrip);
     getItemsWithFilter("trip", { Id: currentTrip.id })
-
       .then((response) => {
         if (response.data[0].Areas.length > 0) {
           setAreas(response.data[0].Areas);
@@ -162,8 +187,8 @@ function TripPlanner() {
         if (response.data[0].Flights.length > 0) {
           setFlights(response.data[0].Flights);
         }
-        if (areas[0].areaName !== '') {
-          orderShown()
+        if (areas[0].areaName !== "") {
+          orderShown();
         }
         setIsLoading(false);
       })
@@ -171,7 +196,6 @@ function TripPlanner() {
         console.log(err);
         setIsLoading(false);
       });
-
   }, [currentTrip, currentArea]);
 
   const handleAreaEdit = (event, index) => {
@@ -226,140 +250,187 @@ function TripPlanner() {
     <div>
       <div className="cards-container-center">
         <div className="flight-location-container">
-
-
-        {allShownAreasAndFlights[0]?.flightName ? <div
-                    className="filled-card small-card"
-                    onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
-                  >
-                    <div>
-                      <img src={JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
-                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
-                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.id}    </span>
-                      <span>{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[0].flightInfo).flights).length-1].arrival_airport.time}</span>
-                    </div>
-                  </div> :
-                    <div
-                      className="filled-card small-card"
-                      onClick={() => handleChooseFlight(false)}
-                    >
-
-                      <p> Add Flight To...</p>
-
-                    </div>
+          {allShownAreasAndFlights[0]?.flightName ? (
+            <div
+              className="filled-card small-card"
+              onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
+            >
+              <div className="flight-preview">
+                <img
+                  src={
+                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
+                      .airline_logo
                   }
-          {allShownAreasAndFlights.length > 0 &&
-            allShownAreasAndFlights.map((location, index) =>
-              (location?.areaName || location?.areaName == "") && <div key={index} className="flight-location-container">
-                {allShownAreasAndFlights[index].areaName == "" ? (
-
-                  <div
-                    className="filled-card"
-                    onClick={() => handleAreaAdd(index)}
-                  >
-                    <h2>Enter Location</h2>{" "}
-                  </div>
-                ) : (
-                  <div
-                    className="filled-card"
-                    onClick={() => handleChooseArea(index)}
-                  >
-                    <h2>{location.areaName}</h2>
-                    <button
-                      className="outlined-button edit icon"
-                      onClick={(event) => handleAreaEdit(event, index)}
-                    >
-                      <MdEdit />
-                    </button>
-                  </div>
-                )}
-                <Modal
-                  isOpen={modalIsOpen}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Choose Area Modal"
-                  appElement={document.getElementById("root")}
-                  index={index}
-                >
-                  <input
-                    type="text"
-                    placeholder="Enter Location..."
-                    defaultValue={currentArea.areaName || ""}
-                    onChange={(event) => handleAreaChange(event)}
-                  />
-                  <div className="date-inputs">
-                    <label htmlFor="start-date">
-                      Start Date
-                      <input
-                        type="date"
-                        id="start-date"
-                        defaultValue={getFirstDay()}
-                        min={format(new Date(), "yyyy-MM-dd")}
-                        onChange={handleStartDateChange}
-                      />
-                    </label>
-
-                    <label htmlFor="end-date">
-                      End Date
-                      <input
-                        type="date"
-                        id="end-date"
-                        defaultValue={getLastDay()}
-                        min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
-                        onChange={handleEndDateChange}
-                      />
-                    </label>
-                  </div>
-                  <div className="modal-buttons">
-                    <button onClick={closeModal} className="outlined-button">
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleAreaSubmit}
-                      className="primary-button"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </Modal>
-                <div className="flight-location">
-                  {/* <button onClick={() => console.log((JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1)}>tst</button> */}
-                  {allShownAreasAndFlights[index + 1]?.flightName ? <div
-                    className="filled-card small-card"
-                    onClick={() => handleChooseFlight(allShownAreasAndFlights[index + 1])}
-                  >
-                    <div>
-                      <img src={JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].airline_logo} alt="" className="flight-company-img" />
-                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.id}<GrNext /></span>
-                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.id}    </span>
-                      <span>{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[0].departure_airport.time}<GrNext />{JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights[(JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1].arrival_airport.time}</span>
-                    </div>
-                  </div> :
-                    <div
-                      className="filled-card small-card"
-                      onClick={() => handleChooseFlight(false)}
-                    >
-
-                      <p> Add Flight To...</p>
-
-                    </div>
+                  alt=""
+                  className="flight-company-img"
+                />
+                <span>
+                  {
+                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
+                      .departure_airport.id
                   }
-                  <button
-                    className="primary-button icon small-card"
-                    onClick={() => handleAddLocation(index)}
-                  >
-                    <FaPlus />
-                  </button>
-                  {index > 0 && (
-                    <button
-                      className="delete-button icon small-card"
-                      onClick={() => handleRemoveLocation(index, location.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  )}
-                </div>
+                </span>
+                <GrNext />
+                <span>
+                  {
+                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
+                      JSON.parse(allShownAreasAndFlights[0].flightInfo).flights
+                        .length - 1
+                    ].arrival_airport.id
+                  }{" "}
+                </span>
               </div>
+            </div>
+          ) : (
+            <div
+              className="filled-card small-card"
+              onClick={() => handleChooseFlight(false)}
+            >
+              <p> Add Flight To...</p>
+            </div>
+          )}
+          {allShownAreasAndFlights.length > 0 &&
+            allShownAreasAndFlights.map(
+              (location, index) =>
+                (location?.areaName || location?.areaName == "") && (
+                  <div key={index} className="flight-location-container">
+                    {allShownAreasAndFlights[index].areaName == "" ? (
+                      <div
+                        className="filled-card"
+                        onClick={() => handleAreaAdd(index)}
+                      >
+                        <h2>Enter Location</h2>{" "}
+                      </div>
+                    ) : (
+                      <div
+                        className="filled-card"
+                        onClick={() => handleChooseArea(index)}
+                      >
+                        <h2>{location.areaName}</h2>
+                        <button
+                          className="outlined-button edit icon"
+                          onClick={(event) => handleAreaEdit(event, index)}
+                        >
+                          <MdEdit />
+                        </button>
+                      </div>
+                    )}
+                    <Modal
+                      isOpen={modalIsOpen}
+                      onRequestClose={closeModal}
+                      style={customStyles}
+                      contentLabel="Choose Area Modal"
+                      appElement={document.getElementById("root")}
+                      index={index}
+                    >
+                      <input
+                        type="text"
+                        placeholder="Enter Location..."
+                        defaultValue={currentArea.areaName || ""}
+                        onChange={(event) => handleAreaChange(event)}
+                      />
+                      <div className="date-inputs">
+                        <label htmlFor="start-date">
+                          Start Date
+                          <input
+                            type="date"
+                            id="start-date"
+                            defaultValue={getFirstDay()}
+                            min={format(new Date(), "yyyy-MM-dd")}
+                            onChange={handleStartDateChange}
+                          />
+                        </label>
+
+                        <label htmlFor="end-date">
+                          End Date
+                          <input
+                            type="date"
+                            id="end-date"
+                            defaultValue={getLastDay()}
+                            min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
+                            onChange={handleEndDateChange}
+                          />
+                        </label>
+                      </div>
+                      <div className="modal-buttons">
+                        <button
+                          onClick={closeModal}
+                          className="outlined-button"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleAreaSubmit}
+                          className="primary-button"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </Modal>
+                    <div className="flight-location">
+                      {/* <button onClick={() => console.log((JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1)}>tst</button> */}
+                      {allShownAreasAndFlights[index + 1]?.flightName ? (
+                        <div
+                          className="filled-card small-card"
+                          onClick={() =>
+                            handleChooseFlight(
+                              allShownAreasAndFlights[index + 1]
+                            )
+                          }
+                        >
+                          <div className="flight-preview">
+                <img
+                  src={
+                    JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights[0]
+                      .airline_logo
+                  }
+                  alt=""
+                  className="flight-company-img"
+                />
+                <span>
+                  {
+                    JSON.parse(allShownAreasAndFlights[index +1].flightInfo).flights[0]
+                      .departure_airport.id
+                  }
+                </span>
+                <GrNext />
+                <span>
+                  {
+                    JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights[
+                      JSON.parse(allShownAreasAndFlights[index+1].flightInfo).flights
+                        .length - 1
+                    ].arrival_airport.id
+                  }{" "}
+                </span>
+              </div>
+                        </div>
+                      ) : (
+                        <div
+                          className="filled-card small-card"
+                          onClick={() => handleChooseFlight(false)}
+                        >
+                          <p> Add Flight To...</p>
+                        </div>
+                      )}
+                      <button
+                        className="primary-button icon small-card"
+                        onClick={() => handleAddLocation(index)}
+                      >
+                        <FaPlus />
+                      </button>
+                      {index > 0 && (
+                        <button
+                          className="delete-button icon small-card"
+                          onClick={() =>
+                            handleRemoveLocation(index, location.id)
+                          }
+                        >
+                          <FaTrash />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )
             )}
         </div>
       </div>

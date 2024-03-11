@@ -24,10 +24,8 @@ function Flights() {
   const [showFrom, setShowFrom] = useState([]);
   const [flightOrderObj, setFlightOrderObj] = useState({});
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
   const getflights = async (v) => {
+    console.log(v);
     setIsLoading(true);
     const flights = await findFlights(v);
     console.log(flights.data);
@@ -37,6 +35,7 @@ function Flights() {
 
   useEffect(() => {
     setIsLoading(false);
+    setGoBack("/dashboard/trip-planner")
   }, []);
 
   const handleInputFrom = (e) => {
@@ -91,7 +90,6 @@ function Flights() {
 
   return (
     <div>
-      <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />
       <div>
         <div className="flight-inputs">
           <label>
@@ -141,7 +139,6 @@ function Flights() {
               }
             />
           </label>
-          {/* <button onClick={() => console.log(flightOrderObj)}>tst</button> */}
           <button
             className="primary-button"
             onClick={() => getflights(flightOrderObj)}
@@ -152,7 +149,7 @@ function Flights() {
         <div className="cards-container">
           {isLoading ? (
             <Skeleton count={3} className="flight-skeleton outlined-card" />
-          ) : flights?.flights ? (
+          ) : flights[0]?.flights ? (
             flights.map((e, i) => (
               <div key={i} className="outlined-card">
                 <div className="flights">
@@ -220,7 +217,7 @@ function Flights() {
               </div>
             ))
           ) : (
-            <p>No flights found within the given data, please try again</p>
+            <p style={{marginTop:"2rem"}}>No flights found within the given data, please try again</p>
           )}
         </div>
       </div>
