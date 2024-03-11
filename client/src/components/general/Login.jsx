@@ -22,6 +22,7 @@ function Login() {
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response.data);
+      alert("Wrong email or password")
     }
   };
 

@@ -5,6 +5,7 @@ import { eachDayOfInterval } from 'date-fns';
 axios.defaults.withCredentials = true;
 
 export const createItem = async (type, parentId, data) => {
+    console.log(type, parentId, data);
     return axios.post(`${import.meta.env.VITE_API_URL}/${type}/new/${parentId}`, data);
 };
 
@@ -22,6 +23,10 @@ export const getItem = async (type, id) => {
 
 export const deleteItem = async (type, id) => {
     return axios.delete(`${import.meta.env.VITE_API_URL}/${type}/delete/${id}`, null);
+};
+
+export const removeItem = async (type, id , removedObj) => {
+    return axios.post(`${import.meta.env.VITE_API_URL}/${type}/remove/${id}`, removedObj);
 };
 
 export const CreateDateFromMinMax = async (minDate, maxDate, tripId, data) => {

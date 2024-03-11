@@ -1,31 +1,32 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
-import { useState, useContext } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useState, useContext, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import useGeoLocation from "../../hooks/useGeoLocation";
 import { GeneralContext } from "../../context/GeneralContext";
 import hotelPNG from "../../assets/image.png";
+import { CurrentContext } from "../../context/CurrentContext";
 
 export default function Map({
   mapType,
   handleSubmit,
   setdate,
-
-  PNG,
-  PNG2,
+  allEventHotels,
 }) {
-  const today=new Date()
+  const today = new Date();
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
   const [center, setCenter] = useState({ lat: 13.084622, lng: 80.248357 });
-  const { hotels, events, setEvents, mapRef, search, setSearch } =
-    useContext(GeneralContext);
+  const {
+    hotels,
+    events,
+    setEvents,
+    mapRef,
+    search,
+    setSearch,
+    setIsLoading,
+    isLoading,
+  } = useContext(GeneralContext);
+  const { currentArea } = useContext(CurrentContext);
   const ZOOM_LEVEL = 9;
   const location = useGeoLocation();
 
@@ -41,15 +42,21 @@ export default function Map({
     }
   };
 
-  const customIcon = new L.Icon({
+  const eventIcon = new L.Icon({
     //creating a custom icon to use in Marker
-    iconUrl: PNG,
+    iconUrl: "https://img.icons8.com/3d-fluency/94/marker.png",
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
   const hotelIcon = new L.Icon({
     //creating a custom icon to use in Marker
-    iconUrl: hotelPNG,
+    iconUrl: "https://img.icons8.com/3d-fluency/94/order-delivered.png",
+    iconSize: [25, 35],
+    iconAnchor: [5, 30],
+  });
+  const mayLocationIcon = new L.Icon({
+    //creating a custom icon to use in Marker
+    iconUrl: "https://img.icons8.com/3d-fluency/94/gps-device.png",
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
@@ -60,52 +67,52 @@ export default function Map({
   }
 
   function renderIntoPopUp(event) {
-    if (event?.image) {
+    if (event) {
       return (
-        <div>
-          <h1>{event.name}</h1>
-          <span>{event.address}</span>
-          <img
-            className=" box-border bg-contain h-[20vh] w-[10vw]"
-            src={event.image}
-            alt=""
-          />
-        </div>
-      );
-    } else if (event?.website) {
-      return (
-        <div>
-          <h1>{event.name}</h1>
-          <span>{event.address}</span>
-          <iframe src={event.website} frameBorder="0"></iframe>
-        </div>
+        <>
+          <h5>{event.name}</h5>
+          <h6>{event.address}</h6>
+        </>
       );
     }
   }
 
+  //   to search for the first entered location
+  useEffect(() => {
+    if (search == "" && mapType != "overview") {
+      setIsLoading(true);
+      handleSubmit(currentArea.areaName);
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <>
-      {mapType !==
-        "overview"&&(
-          <div className="map-inputs">
+      {mapType !== "overview" && (
+        <div className="map-inputs">
+         <div>
             <input
               type="text"
               placeholder="Enter Location"
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button
-              className="primary-button"
-              onClick={() => handleSubmit(search)}
-            >
-              Submit
-            </button>
-            <button className="outlined-button" onClick={showMyLocation}>
-              Locate Me
-            </button>
+           <div>
+              <button
+                className="primary-button"
+                onClick={() => handleSubmit(search)}
+              >
+                Submit
+              </button>
+              <button className="outlined-button" onClick={showMyLocation}>
+                Locate Me
+              </button>
+           </div>
+         </div>
 
-            {mapType === "hotels" && (
-              <>
-                Check-In
+          {mapType === "hotels" && (
+            <div>
+             <label>
+                Check-in
                 <input
                   type="date"
                   onChange={(e) =>
@@ -116,7 +123,9 @@ export default function Map({
                   }
                   defaultValue={today.toISOString().substring(0, 10)}
                 />
-                Check-Out
+             </label>
+             <label>
+                Check-out
                 <input
                   type="date"
                   onChange={(e) =>
@@ -127,10 +136,11 @@ export default function Map({
                   }
                   defaultValue={today.toISOString().substring(0, 10)}
                 />
-              </>
-            )}
-          </div>
-        )}
+             </label>
+            </div>
+          )}
+        </div>
+      )}
 
       <MapContainer
         ref={mapRef}
@@ -146,7 +156,7 @@ export default function Map({
         />
         {location.loaded && !location.error && (
           <Marker
-            icon={customIcon}
+            icon={mayLocationIcon}
             position={[location.coordinates.lat, location.coordinates.lng]}
           >
             <Popup>{"my Location"}</Popup>
@@ -169,17 +179,49 @@ export default function Map({
             );
           })}
         {events &&
-        mapType === "events" &&
+          mapType === "events" &&
           events.map((event, key) => {
             return (
               event?.lat &&
               event?.long && (
                 <Marker
                   key={key}
-                  icon={customIcon}
+                  icon={hotelIcon}
                   position={[event.lat, event.long]}
                 >
                   <Popup>{event && renderIntoPopUp(event)}</Popup>
+                </Marker>
+              )
+            );
+          })}
+        {allEventHotels?.Events &&
+          mapType === "overview" &&
+          allEventHotels.Events.map((ev, index) => {
+            const parseEv = JSON.parse(ev.eventInfo);
+
+            return (
+              <Marker
+                key={index}
+                icon={eventIcon}
+                position={[parseEv.lat, parseEv.long]}
+              >
+                <Popup>{parseEv && renderIntoPopUp(parseEv)}</Popup>
+              </Marker>
+            );
+          })}
+
+        {mapType === "overview" &&
+          allEventHotels?.Hotels &&
+          allEventHotels.Hotels.map((hotel, key) => {
+            return (
+              hotel.hotelInfo.lat &&
+              hotel.hotelInfo.long && (
+                <Marker
+                  key={key}
+                  icon={hotelIcon}
+                  position={[hotel.hotelInfo.lat, hotel.hotelInfo.long]}
+                >
+                  <Popup>{hotel.hotelName}</Popup>
                 </Marker>
               )
             );

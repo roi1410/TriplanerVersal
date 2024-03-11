@@ -31,6 +31,8 @@ export const GeneralContext = createContext({
   setMyEvents: () => {},
   myFlights: [],
   setMyFlights: () => {},
+  myDays: [],
+  setMyDays: () => {},
 });
 
 export const GeneralContextProvider = ({ children }) => {
@@ -48,6 +50,7 @@ export const GeneralContextProvider = ({ children }) => {
   const [myEvents, setMyEvents] = useState([]);
   const [flights, setFlights] = useState([]);
   const [myFlights, setMyFlights] = useState([]);
+  const [myDays, setMyDays] = useState([]);
   const [areas, setAreas] = useState([{ areaName: "" }]);
   const [checkGuestUpdate, setCheckGuestUpdate] = useState(false);
   const mapRef = useRef();
@@ -68,6 +71,7 @@ export const GeneralContextProvider = ({ children }) => {
     // console.log("TRIPS ", trips);
     // console.log("AREAS ", areas);
   }, [trips, areas]);
+
 
   useEffect(() => {
     checkForGuest();
@@ -125,6 +129,8 @@ export const GeneralContextProvider = ({ children }) => {
     setFlights,
     myFlights,
     setMyFlights,
+    myDays,
+    setMyDays,
   };
   return (
     <GeneralContext.Provider value={contextValue}>

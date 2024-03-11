@@ -3,15 +3,17 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { GeneralContext } from "../../../context/GeneralContext";
 import "./trip.css"
+import { CurrentContext } from "../../../context/CurrentContext";
+import { getItemsWithFilter } from "../../../utils/CRUDService"
 
 function Area() {
-  const {isGuest ,setUser, setGoBack} = useContext(GeneralContext)
+  const {isGuest ,setUser, setGoBack ,setMyDays } = useContext(GeneralContext)
+  const {currentArea } = useContext(CurrentContext)
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
     setGoBack("/dashboard/trip-planner");
+
 }, []);
 
   return (

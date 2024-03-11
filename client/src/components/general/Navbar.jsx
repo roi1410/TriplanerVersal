@@ -1,13 +1,12 @@
 import "./general.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../context/GeneralContext";
-import { useContext, useEffect } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import { IoMdLogOut, IoMdArrowRoundBack } from "react-icons/io";
 import { logout } from "../../utils/AuthService";
-import React, { useState } from "react";
 import Modal from "react-modal";
-import lightLogo from "../../assets/tripel/secondary-secondary-light.png";
-import darkLogo from "../../assets/tripel/secondary-secondary-dark.png";
+
+import { CurrentContext } from "../../context/CurrentContext";
 
 const customStyles = {
   content: {
@@ -22,15 +21,10 @@ const customStyles = {
 
 function Navbar() {
   const { user, setUser, setGoBack, goBack } = useContext(GeneralContext);
-  const [logo, setLogo] = useState(lightLogo);
+  const {currentLogo, setCurrentLogo} = useContext(CurrentContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-    if (isDarkMode) {
-      setLogo(darkLogo);
-    }
-  }, []);
+
 
   const handleLogout = async () => {
     closeModal();
@@ -45,8 +39,9 @@ function Navbar() {
     if(goBack=="/dashboard"){
       localStorage.removeItem("currentTrip")
     }else if(goBack=="/dashboard/trip-planner"){
-      localStorage.removeItem("currenArea")
+      localStorage.removeItem("currentArea")
       localStorage.removeItem("currentFlight")
+      localStorage.removeItem("currentDay")
     }
 
     setGoBack("")
@@ -69,7 +64,7 @@ function Navbar() {
           <div className="home-button" >
             {goBack != "" && <IoMdArrowRoundBack onClick={handleGoBack} className="go-back" />}
             <NavLink to="/">
-              <img src={logo} alt="" onClick={handleLogout}/>
+              <img src={currentLogo} alt="" onClick={handleLogout}/>
             </NavLink>
           </div>
           <div className="navbar">
@@ -97,7 +92,7 @@ function Navbar() {
         <div>
           <div className="home-button" >
             <NavLink to="/">
-              <img src={logo} alt="" onClick={handleLogout}/>
+              <img src={currentLogo} alt="" onClick={handleLogout}/>
             </NavLink>
           </div>
           <div className="navbar">

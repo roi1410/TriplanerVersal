@@ -6,7 +6,9 @@ axios.defaults.withCredentials = true;
 export async function fetchPlaceLanLon(place) {
   try {
     const res = await axios.get(
+
       `https://hotels-com-provider.p.rapidapi.com/v2/regions?rapidapi-key=83b96484damsh987769eb5502bf6p125a96jsnbc262c916d57&query=${place}&domain=AE&locale=en_GB`
+
     );
 
     return {
@@ -28,7 +30,9 @@ export async function fetchNearHotels(region_id, data) {
     const checkOutB = format(checkOut, "yyyy-MM-dd");
 
     const res = await axios.get(
+
       `https://hotels-com-provider.p.rapidapi.com/v2/hotels/search?rapidapi-key=83b96484damsh987769eb5502bf6p125a96jsnbc262c916d57&checkin_date=${checkInB}&checkout_date=${checkOutB}&locale=en_US&domain=US&adults_number=1&region_id=${region_id}&sort_order=REVIEW&lodging_type=HOTEL,HOSTEL,APART_HOTEL&available_filter=SHOW_AVAILABLE_ONLY`
+
     );
     console.log(res);
     return res.data.properties.slice(0, 20).map((hotel) => {
