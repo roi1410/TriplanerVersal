@@ -9,6 +9,7 @@ import {
   createItem,
   getItemsWithFilter,
   updateItem,
+  deleteItem
 } from "../../utils/CRUDService";
 import Modal from "react-modal";
 import { CurrentContext } from "../../context/CurrentContext";
@@ -60,20 +61,17 @@ function TripPlanner() {
   }
 
   const handleChooseFlight = () => {
+
     navigate("flights");
   };
 
   const handleAreaChange = (event) => {
-    console.log(areas);
     const newAreas = [...areas];
     newAreas[areaIndex].areaName = event.target.value;
     setAreas(newAreas);
   };
 
   const handleAreaSubmit = () => {
-    console.log(startDate, endDate);
-    console.log(currentTrip);
-    console.log(currentArea);
     if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
       updateItem("area", currentArea.id, areas[areaIndex])
         .then((response) => {
@@ -121,6 +119,9 @@ function TripPlanner() {
     const newAreas = [...areas];
     newAreas.splice(index, 1);
     setAreas(newAreas);
+    deleteItem("area", (index+1))
+    console.log(areas);
+    console.log("the idnex is"+index);
   };
 
   useEffect(() => {

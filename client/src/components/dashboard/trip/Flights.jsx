@@ -17,7 +17,7 @@ import { login } from "../../../utils/AuthService";
 
 function Flights() {
   const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights , setGoBack} = useContext(GeneralContext);
-  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea,currentFlight,setCurrentFlight } =
   useContext(CurrentContext);
   const navigate = useNavigate();
   const [showFrom, setShowFrom] = useState([]);
@@ -82,6 +82,8 @@ function Flights() {
     console.log(flightId);
     await CreateDateFromMinMax(minDate,maxDate,currentTrip.id,flightId)
     setMyFlights((prev)=>[...prev, selectedFlight])
+    setCurrentFlight(flightId)
+    navigate("/dashboard/trip-planner")
   };
 
   return (

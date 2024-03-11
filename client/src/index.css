@@ -187,6 +187,7 @@ a:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   position: relative;
+
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
 }
