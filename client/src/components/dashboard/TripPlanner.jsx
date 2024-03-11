@@ -130,19 +130,18 @@ function TripPlanner() {
     //     })
     //     .catch((err) => console.log(err));
     // } else {
-      createItem("area", currentTrip.id, { areaName: realArea })
-        .then((response) => {
-          console.log(startDate, endDate, response.data.area.id);
-          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
-            areaId: response.data.area.id,
-          }).then(()=>{
-             window.location.reload();
-          })
-          closeModal();
-        })
-        .catch((err) => console.log(err));
-    }
-  
+    createItem("area", currentTrip.id, { areaName: realArea })
+      .then((response) => {
+        console.log(startDate, endDate, response.data.area.id);
+        CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+          areaId: response.data.area.id,
+        }).then(() => {
+          window.location.reload();
+        });
+        closeModal();
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleChooseArea = (location) => {
     const tempArea = location;
@@ -171,9 +170,9 @@ function TripPlanner() {
 
   useEffect(() => {
     getItemsWithFilter("trip", { id: currentTrip.id })
-    .then((response) => {
-      if (localStorage.getItem("currentTrip") == response.data[0].id) {
-        if (response.data[0].Areas.length > 0) {
+      .then((response) => {
+        if (localStorage.getItem("currentTrip") == response.data[0].id) {
+          if (response.data[0].Areas.length > 0) {
             setAreas(response.data[0].Areas);
           } else {
             // setAreas([{ areaName: "" }]);
@@ -181,7 +180,7 @@ function TripPlanner() {
           if (response.data[0].Flights.length > 0) {
             setShowenFlights(response.data[0].Flights);
           }
-          
+
           if (areas[0].tripId === currentTrip.id) {
             orderShown();
           }
@@ -193,7 +192,6 @@ function TripPlanner() {
         setIsLoading(false);
       });
   }, [currentTrip, currentArea]);
-
 
   const handleAreaEdit = (event, index) => {
     event.stopPropagation();
@@ -251,8 +249,9 @@ function TripPlanner() {
             <div
               className="filled-card small-card"
               onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
+              style={{marginLeft:"0.5rem"}}
             >
-              <div>
+              <div className="flight-preview">
                 <img
                   src={
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
@@ -266,8 +265,8 @@ function TripPlanner() {
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
                       .departure_airport.id
                   }
-                  <GrNext />
                 </span>
+                <GrNext />
                 <span>
                   {
                     JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
@@ -275,19 +274,6 @@ function TripPlanner() {
                         .length - 1
                     ].arrival_airport.id
                   }{" "}
-                </span>
-                <span>
-                  {
-                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
-                      .departure_airport.time
-                  }
-                  <GrNext />
-                  {
-                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
-                      JSON.parse(allShownAreasAndFlights[0].flightInfo).flights
-                        .length - 1
-                    ].arrival_airport.time
-                  }
                 </span>
               </div>
             </div>
@@ -303,7 +289,7 @@ function TripPlanner() {
             allShownAreasAndFlights.map(
               (location, index) =>
                 (location?.areaName || location?.areaName == "") && (
-                  <div key={index} className="flight-location-container">
+                  <div key={index} className="flight-location-container" >
                     {allShownAreasAndFlights[index].areaName == "" ? (
                       <div
                         className="filled-card"
@@ -388,7 +374,7 @@ function TripPlanner() {
                             )
                           }
                         >
-                          <div>
+                          <div className="flight-preview">
                             <img
                               src={
                                 JSON.parse(
@@ -404,8 +390,8 @@ function TripPlanner() {
                                   allShownAreasAndFlights[index + 1].flightInfo
                                 ).flights[0].departure_airport.id
                               }
-                              <GrNext />
                             </span>
+                            <GrNext />
                             <span>
                               {
                                 JSON.parse(
@@ -417,24 +403,6 @@ function TripPlanner() {
                                   ).flights.length - 1
                                 ].arrival_airport.id
                               }{" "}
-                            </span>
-                            <span>
-                              {
-                                JSON.parse(
-                                  allShownAreasAndFlights[index + 1].flightInfo
-                                ).flights[0].departure_airport.time
-                              }
-                              <GrNext />
-                              {
-                                JSON.parse(
-                                  allShownAreasAndFlights[index + 1].flightInfo
-                                ).flights[
-                                  JSON.parse(
-                                    allShownAreasAndFlights[index + 1]
-                                      .flightInfo
-                                  ).flights.length - 1
-                                ].arrival_airport.time
-                              }
                             </span>
                           </div>
                         </div>

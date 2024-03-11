@@ -51,6 +51,7 @@ function Register() {
   return (
     <div className="register-container">
       <form onSubmit={handleSubmit(onSubmit)}>
+      <h2>Register</h2>
         <div className="name-input">
           <input
             type="firstName"
