@@ -107,16 +107,20 @@ function Overview() {
                       return (
                         <div key={index} className="filled-card">
                           <h1>day {index + 1}</h1>
-                          <h4>{day.Hotel.hotelInfo.hotelName}</h4>
-                          <img src={day.Hotel.hotelInfo.image} alt="" />
-                          <span className="checkedInAndOut">
-                            Check-In: {day.Hotel.hotelInfo.checkIn}{" "}
-                            _______________ Check-Out:{" "}
-                            {day.Hotel.hotelInfo.checkOut}
-                          </span>
-                          <span className="price">
-                            Price: {day.Hotel.hotelInfo.price}
-                          </span>
+                          {day.Hotel && (
+                            <div>
+                              <h4>{day.Hotel.hotelInfo.hotelName}</h4>
+                              <img src={day.Hotel.hotelInfo.image} alt="" />
+                              <span className="checkedInAndOut">
+                                Check-In: {day.Hotel.hotelInfo.checkIn}{" "}
+                                _______________ Check-Out:{" "}
+                                {day.Hotel.hotelInfo.checkOut}
+                              </span>
+                              <span className="price">
+                                Price: {day.Hotel.hotelInfo.price}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       );
                     })}

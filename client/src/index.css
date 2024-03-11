@@ -119,12 +119,14 @@ button:focus-visible,
 }
 .disabled {
   cursor: default;
-  filter: brightness(0.5);
+  filter: brightness(1);
+  opacity: 0.5;
 }
 .disabled:hover,
 .disabled:focus {
   cursor: default;
-  filter: brightness(0.5);
+  filter: brightness(1);
+  opacity: 0.5;
 }
 .icon {
   width: fit-content;
@@ -270,6 +272,9 @@ a:focus-visible {
   border-radius: 0.5rem;
   background-color: var(--secondary-300) !important;
 }
+.smaller-skeleton{
+  width: 80%;
+}
 
 .modal-buttons {
   display: flex;
@@ -287,13 +292,14 @@ a:focus-visible {
   background-repeat: no-repeat;
   display: block;
   position: absolute;
-  /* top: -1.125ch;
-    left: 10ch; */
   top: -1.25ch;
   left: 9ch;
   aspect-ratio: 1 / 1;
   height: 5ch;
   z-index: -1;
+}
+.bold{
+  font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {

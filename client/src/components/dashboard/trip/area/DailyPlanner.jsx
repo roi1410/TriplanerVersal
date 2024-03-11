@@ -58,19 +58,15 @@ console.log(updateDay);
   };
   return (
     <div className="daily-planner-container">
-      <span>
+      <span className="day-tracker">
         {Object.keys(currentDay).length > 0 &&
         myDays.length > 0 &&
         currentDay.day === myDays[0].day ? (
-          <button className="disabled">
-            {" "}
-            <GrPrevious />
-          </button>
+          
+            <GrPrevious className="disabled"/>
         ) : (
-          <button className="" onClick={handlePreviousDay}>
-            {" "}
-            <GrPrevious />
-          </button>
+          
+            <GrPrevious className="icon" onClick={handlePreviousDay}/>
         )}
         <b>
           {currentDay.day &&
@@ -80,15 +76,11 @@ console.log(updateDay);
         {Object.keys(currentDay).length > 0 &&
         myDays.length > 0 &&
         currentDay.day === myDays[myDays.length - 1].day ? (
-          <button className="disabled">
-            {" "}
-            <GrNext />
-          </button>
+           
+            <GrNext className="disabled"/>
         ) : (
-          <button className="" onClick={handleNextDay}>
-            {" "}
-            <GrNext />
-          </button>
+            
+            <GrNext className="icon" onClick={handleNextDay}/>
         )}
       </span>
       <div className="event-day-pair">

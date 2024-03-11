@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { GeneralContext } from "../../../../context/GeneralContext";
 import Map from "../../../general/Map";
-import { FaLink } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import "./area.css";
 import {
@@ -14,6 +13,8 @@ import {
   createItem,
 } from "../../../../utils/CRUDService";
 import { CurrentContext } from "../../../../context/CurrentContext";
+import { FaCalendarDays } from "react-icons/fa6";
+import placeholderImage from "../../../../assets/placeholder.jpg";
 
 function Hotels() {
   const {
@@ -39,7 +40,7 @@ function Hotels() {
   }, []);
 
   async function handleSubmitHotels(search) {
-    setIsLoading(true)
+    setIsLoading(true);
     const res = await fetchPlaceLanLon(search);
 
     if (res.region_id && res.coordinates) {
@@ -68,21 +69,41 @@ function Hotels() {
         <div className="cards-container">
           {isLoading ? (
             // Loader
-            <Skeleton className="filled-card" count={20} />
+            <Skeleton className="outlined-card smaller-skeleton" count={20} />
           ) : hotels ? (
             hotels.map((hotel, index) => {
               return (
-                <div key={index} className="filled-card">
-                  <h4>{hotel.name}</h4>
-                  <img src={hotel.image} alt="" />
-                  <span className="checkedInAndOut">
-                    checkIn-{hotel.checkIn}_______________checkOut-
-                    {hotel.checkOut}
-                  </span>
-                  <span className="price">Price-{hotel.price}</span>
-                  <button onClick={() => addHotelToTrip(hotel)}>
-                    add to fav
-                  </button>
+                <div key={index} className="outlined-card hotel-card">
+                  {hotel.image ? (
+                    <img src={hotel.image} alt="Hotel image" />
+                  ) : (
+                    <img src={placeholderImage} alt="Hotel image" />
+                  )}
+                  <div className="info">
+                    <div>
+                      <h4 className="bold">{hotel.hotelName}</h4>
+                      <div className="dates">
+                        <span>
+                          <FaCalendarDays />
+                          {hotel.checkIn}
+                        </span>
+                        <span>
+                          <FaCalendarDays />
+                          {hotel.checkOut}
+                        </span>
+                      </div>
+
+                      <p>
+                        <b>Total Price:</b> {hotel.price}
+                      </p>
+                    </div>
+                    <button
+                      className="primary-button"
+                      onClick={() => addHotelToTrip(hotel)}
+                    >
+                      Select
+                    </button>
+                  </div>
                 </div>
               );
             })
