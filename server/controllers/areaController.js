@@ -123,15 +123,16 @@ exports.updateArea = async (req, res) => {
 //Deletes a selected area -- output => updated area
 exports.deleteArea = async (req, res) => {
   const areaId = req.params.id;
+  console.log(areaId);
   try {
-    const deletedTrip = await Trip.findByPk(areaId);
-    await deletedTrip.destroy();
+    const deletedArea = await Area.findByPk(areaId);
+    await deletedArea.destroy();
 
-    if (!deletedTrip) {
+    if (!deletedArea) {
       return res.status(404).send("area not found");
     }
 
-    res.send(deletedTrip);
+    res.send(deletedArea);
   } catch (err) {
     res.status(400).json({
       status: "fail",
