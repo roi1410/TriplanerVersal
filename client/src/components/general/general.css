@@ -2,6 +2,11 @@
 .login-container {
   position: relative;
   margin-left: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 4rem);
 }
 .login-container:after {
   content: "";
@@ -184,6 +189,7 @@ form {
   gap: 2rem;
   flex-direction: column;
   margin-top: 5rem;
+  padding: 0;
 }
 .bento-grid > * {
   list-style: none;
@@ -262,4 +268,115 @@ form {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+}
+.header {
+  position: relative;
+  font-size: 5rem;
+  text-shadow: 0 0 30px var(--primary);
+}
+.header::after {
+  content: "";
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  position: absolute;
+  top: -1.25ch;
+  left: 9ch;
+  aspect-ratio: 1 / 1;
+  height: 5ch;
+  z-index: -1;
+}
+
+@media screen and (max-width: 1135px) {
+  .hero .image-container {
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  .bento-grid {
+    width: 100%;
+    margin-right: 0;
+  }
+  .hero {
+    margin-left: 0;
+  }
+  .login-container:after {
+    content: none;
+  }
+  .login-container {
+    display: grid;
+    place-items: center;
+    margin-left: 0;
+  }
+  .login-container form {
+    width: 80%;
+  }
+  .register-container:after {
+    content: none;
+  }
+  .register-container {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 4rem);
+  }
+  .register-container form {
+    width: 80%;
+  }
+  .name-input {
+    gap: 0;
+  }
+  .map {
+    min-height: 25rem;
+    border-radius: 0.5rem;
+    position: relative;
+    top: 12rem;
+    width: 100%;
+    z-index: 0;
+  }
+  .map-inputs{
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+    top: 4.5rem;
+  }
+  .cards-container{
+    margin-top: 2rem;
+  }
+  .cards-container-center{
+    width: calc(100% - 1rem) ;
+  }
+  .cards-container-center>p{
+    width: calc(100% - 4rem) ;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .header::after {
+    top: 3.25rem;
+    left: 0;
+  }
+  .hero p {
+    margin-top: 8rem;
+    /* max-width: calc(100% - 4rem); */
+  }
+  .name-input {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 303px) {
+  .header::after {
+    left: 2ch;
+  }
 }

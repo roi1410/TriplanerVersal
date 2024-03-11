@@ -39,6 +39,9 @@
 .flight-location > * {
   width: calc(100% - 3rem) !important;
 }
+.flight-location-container{
+  padding: 1rem 0.5rem 
+}
 
 .flight-company-img{
   width: 3vw !important;
@@ -52,4 +55,23 @@
   display: flex;
     gap: 0.5rem;
     align-items: center;
+}
+
+@media screen and (max-width: 1135px) {
+ 
+}
+@media screen and (max-width: 768px) {
+  .flight-location {
+    place-items: center;
+  }
+  
+}
+
+@media screen and (max-width: 500px) {
+
+}
+
+@media screen and (max-width: 303px) {
+  
+
 }

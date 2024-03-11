@@ -93,3 +93,49 @@
     gap: 0.75rem;
     font-size: 1.8rem;
 }
+
+@media screen and (max-width: 1135px) {
+ 
+}
+@media screen and (max-width: 768px) {
+.flight-card{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50% , -50%);
+  width: calc(100% - 7rem);
+}
+.flight-inputs {
+  display: flex;
+  align-items: center;
+} 
+.flight-inputs input {
+ max-width:5rem ;
+} 
+.mini-navbar {
+ top: 40px;
+} 
+}
+
+@media screen and (max-width: 500px) {
+  .flight-inputs input {
+    max-width:2rem ;
+  } 
+  .flight-inputs label {
+    gap: 0.25rem;
+  } 
+  .flight-inputs button {
+    padding: 0.5rem 0.5rem;
+  }
+  .flights img {
+    max-width:5rem ;
+   } 
+  .flights .airline h4 {
+    font-size: 1.2rem ;
+   } 
+}
+
+@media screen and (max-width: 303px) {
+  
+
+}

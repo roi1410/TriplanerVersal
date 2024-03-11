@@ -288,24 +288,7 @@ a:focus-visible {
   display: flex;
   justify-content: space-between;
 }
-.header {
-  position: relative;
-  font-size: 5rem;
-  text-shadow: 0 0 30px var(--primary);
-}
-.header::after {
-  content: "";
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: block;
-  position: absolute;
-  top: -1.25ch;
-  left: 9ch;
-  aspect-ratio: 1 / 1;
-  height: 5ch;
-  z-index: -1;
-}
+
 .bold{
   font-weight: bold;
 }
@@ -322,6 +305,9 @@ a:focus-visible {
 @media screen and (max-width: 768px) {
   :root {
     font-size: 10px;
+  }
+  .cards-container-center > * {
+    width: 100%;
   }
 }
 @media only screen and (max-width: 480px) {

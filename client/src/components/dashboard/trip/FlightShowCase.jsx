@@ -44,7 +44,7 @@ const FlightShowCase = () => {
     return `${formattedHours}${formattedMinutes}`;
   }
   return (
-    <div className="outlined-card">
+    <div className="outlined-card flight-card">
       {myFlight.map((value, i) => <div className="flights">
         <div key={i} className="flight">
           <div className="airline">
