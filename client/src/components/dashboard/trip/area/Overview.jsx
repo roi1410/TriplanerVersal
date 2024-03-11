@@ -48,22 +48,11 @@ function Overview() {
   };
 
   return (
-    <div>
-      {/* {allShownDays.map((v) => (
-        <div>
-          <span>{v.day}</span>
-
-      {
-        allShownDays.map((day , dayIndex)=>
-        <div key={dayIndex}>
-          <span>{day.day}</span>
-
-        </div>
-      ))} */}
-      <div>
+   
+      <div className="overview-container">
         <div className="hotels-container">
           <div className="cards-container">
-            <div className="hotels-container">
+            <div >
               <div className="cards-container">
                 {isLoading ? (
                   // Loader
@@ -184,7 +173,7 @@ function Overview() {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }
 

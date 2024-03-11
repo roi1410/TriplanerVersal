@@ -435,9 +435,9 @@ function TripPlanner() {
             )}
         </div>
       </div>
-      <button className="primary-button" onClick={handlePayment}>
+      {/* <button className="primary-button" onClick={handlePayment}>
         Payment
-      </button>
+      </button> */}
     </div>
   );
 }

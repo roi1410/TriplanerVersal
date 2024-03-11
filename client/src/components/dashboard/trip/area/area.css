@@ -246,7 +246,7 @@
   margin: 1rem 0;
   position: relative;
   overflow: hidden;
-border-radius: 0.5rem;
+  border-radius: 0.5rem;
 }
 .hotel-preview .text-over-image {
   position: absolute;
@@ -278,21 +278,57 @@ border-radius: 0.5rem;
   flex-direction: column;
   gap: 0.5rem;
 }
-.hotel-preview .dates>* {
+.hotel-preview .dates > * {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-
 
 /* FLIGHT SUMMARY */
-.flight-summary{
- gap: 1rem;
- place-items: center
- ;
+.flight-summary {
+  gap: 1rem;
+  place-items: center;
 }
-.flight-summary > div > div{
+.flight-summary > div > div {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+@media screen and (max-width: 1135px) {
+}
+@media screen and (max-width: 768px) {
+  .hotels-container {
+    flex-direction: column-reverse;
+  }
+  .map-container {
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    top: 7.5rem;
+    background-color: var(--background);
+  }
+  .event-day-pair {
+    justify-items: center;
+  }
+  .event-day-pair .cards-container-center{
+    width: calc(100% - 5rem) ;
+  } 
+  .event-day-pair .add-event {
+    display: flex;
+    flex-direction: column;
+  }
+  .event-day-pair .filled-card img {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+}
+
+@media screen and (max-width: 303px) {
 }
