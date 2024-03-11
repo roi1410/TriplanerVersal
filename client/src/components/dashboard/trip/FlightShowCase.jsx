@@ -31,6 +31,7 @@ const FlightShowCase = () => {
   useEffect(()=>{
     if(load){
       navigate('/dashboard/trip-planner/flights')
+      window.location.reload();
     }
   },[load])
 
