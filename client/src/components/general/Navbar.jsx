@@ -27,7 +27,9 @@ function Navbar() {
 
 
   const handleLogout = async () => {
+    closeModal();
     await logout();
+    localStorage.clear();
     setUser({});
     navigate("/");
   };
