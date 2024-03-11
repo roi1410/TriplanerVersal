@@ -29,6 +29,9 @@ function Events() {
   useEffect(() => {
     setEvents(JSON.parse(localStorage.getItem("eventsDisplay")));
   }, []);
+  async function setItemLocalStorage() {
+    localStorage.setItem("eventsDisplay", JSON.stringify(events));
+  }
 
   async function handleSubmitEvents(search) {
     setIsLoading(true);
@@ -42,8 +45,7 @@ function Events() {
 
       if (res2) {
         setEvents(res2.filter((elm) => elm !== null));
-        console.log(res2);
-        localStorage.setItem("eventsDisplay", JSON.stringify(events));
+        setItemLocalStorage()
         setIsLoading(false);
       }
     }

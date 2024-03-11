@@ -1,11 +1,4 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { useState, useContext, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -18,9 +11,7 @@ export default function Map({
   mapType,
   handleSubmit,
   setdate,
-  allShownDays,
-  PNG,
-  PNG2,
+  allEventHotels,
 }) {
   const today = new Date();
   const iconUrl = "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png";
@@ -51,15 +42,21 @@ export default function Map({
     }
   };
 
-  const customIcon = new L.Icon({
+  const eventIcon = new L.Icon({
     //creating a custom icon to use in Marker
-    iconUrl: PNG,
+    iconUrl: "https://img.icons8.com/3d-fluency/94/marker.png",
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
   const hotelIcon = new L.Icon({
     //creating a custom icon to use in Marker
-    iconUrl: hotelPNG,
+    iconUrl: "https://img.icons8.com/3d-fluency/94/order-delivered.png",
+    iconSize: [25, 35],
+    iconAnchor: [5, 30],
+  });
+  const mayLocationIcon = new L.Icon({
+    //creating a custom icon to use in Marker
+    iconUrl: "https://img.icons8.com/3d-fluency/94/gps-device.png",
     iconSize: [25, 35],
     iconAnchor: [5, 30],
   });
@@ -70,25 +67,12 @@ export default function Map({
   }
 
   function renderIntoPopUp(event) {
-    if (event?.image) {
+    if (event) {
       return (
-        <div>
-          <h1>{event.name}</h1>
-          <span>{event.address}</span>
-          <img
-            className=" box-border bg-contain h-[20vh] w-[10vw]"
-            src={event.image}
-            alt=""
-          />
-        </div>
-      );
-    } else if (event?.website) {
-      return (
-        <div>
-          <h1>{event.name}</h1>
-          <span>{event.address}</span>
-          <iframe src={event.website} frameBorder="0"></iframe>
-        </div>
+        <>
+          <h5>{event.name}</h5>
+          <h6>{event.address}</h6>
+        </>
       );
     }
   }
@@ -164,7 +148,7 @@ export default function Map({
         />
         {location.loaded && !location.error && (
           <Marker
-            icon={customIcon}
+            icon={mayLocationIcon}
             position={[location.coordinates.lat, location.coordinates.lng]}
           >
             <Popup>{"my Location"}</Popup>
@@ -194,7 +178,7 @@ export default function Map({
               event?.long && (
                 <Marker
                   key={key}
-                  icon={customIcon}
+                  icon={hotelIcon}
                   position={[event.lat, event.long]}
                 >
                   <Popup>{event && renderIntoPopUp(event)}</Popup>
@@ -202,8 +186,38 @@ export default function Map({
               )
             );
           })}
-          {allShownDays&&mapType==="overview"&&
-          allShownDays.map((event))}
+        {allEventHotels?.Events &&
+          mapType === "overview" &&
+          allEventHotels.Events.map((ev, index) => {
+            const parseEv = JSON.parse(ev.eventInfo);
+
+            return (
+              <Marker
+                key={index}
+                icon={eventIcon}
+                position={[parseEv.lat, parseEv.long]}
+              >
+                <Popup>{parseEv && renderIntoPopUp(parseEv)}</Popup>
+              </Marker>
+            );
+          })}
+
+        {mapType === "overview" &&
+          allEventHotels?.Hotels &&
+          allEventHotels.Hotels.map((hotel, key) => {
+            return (
+              hotel.hotelInfo.lat &&
+              hotel.hotelInfo.long && (
+                <Marker
+                  key={key}
+                  icon={hotelIcon}
+                  position={[hotel.hotelInfo.lat, hotel.hotelInfo.long]}
+                >
+                  <Popup>{hotel.hotelName}</Popup>
+                </Marker>
+              )
+            );
+          })}
 
         <MapView />
       </MapContainer>

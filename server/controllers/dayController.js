@@ -46,7 +46,7 @@ Day.belongsTo(Hotel, {
 
 const addToDay = async (day, data) => {
     const area = await Area.findByPk(data.areaId)
-    if (area && day.hasArea(data.areaId)) {x    
+    if (area && day.hasArea(data.areaId)) { 
         await day.addArea(data.areaId);
     }
     const flight = await Flight.findByPk(data.flightId)
