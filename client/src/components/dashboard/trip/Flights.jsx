@@ -25,7 +25,7 @@ function Flights() {
   const [flightOrderObj, setFlightOrderObj] = useState({});
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate("/dashboard/trip-planner");
   };
   const getflights = async (v) => {
     setIsLoading(true);
@@ -37,6 +37,7 @@ function Flights() {
 
   useEffect(() => {
     setIsLoading(false);
+    setGoBack("/dashboard/trip-planner")
   }, []);
 
   const handleInputFrom = (e) => {
@@ -152,7 +153,7 @@ function Flights() {
         <div className="cards-container">
           {isLoading ? (
             <Skeleton count={3} className="flight-skeleton outlined-card" />
-          ) : flights?.flights ? (
+          ) : flights[0]?.flights ? (
             flights.map((e, i) => (
               <div key={i} className="outlined-card">
                 <div className="flights">

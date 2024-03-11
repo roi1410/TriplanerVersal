@@ -34,13 +34,16 @@ function Dashboard() {
       })
       .catch((err) => console.log(err));
   };
+  
 
   const handlePlanTrip = async(index) => {
+    console.log(index);
     if (index === -1) {
       setCurrentTrip({});
     } else {
       const tempTrip = trips[index];
-      await setCurrentTrip(tempTrip);
+      console.log(tempTrip);
+      setCurrentTrip(tempTrip);
     }
     navigate("trip-planner");
   };
