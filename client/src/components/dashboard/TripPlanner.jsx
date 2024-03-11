@@ -15,8 +15,9 @@ import Modal from "react-modal";
 import { CurrentContext } from "../../context/CurrentContext";
 import { MdEdit } from "react-icons/md";
 import "./dashboard.css";
-import { format, addDays } from "date-fns";
-// import { sortBy } from 'date-fns/fp';
+
+import { format, addDays, min, max, isAfter, isEqual } from "date-fns";
+import { GrNext } from "react-icons/gr";
 
 const customStyles = {
   content: {
@@ -30,23 +31,34 @@ const customStyles = {
 };
 
 function TripPlanner() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack } =
+
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack, flights, setFlights } =
+
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
   const [allShownDays, setAllShownDays] = useState([]);
+  const [allShownAreasAndFlights, setAllShownAreasAndFlights] = useState([]);
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
+  const [clickedFlight, setClickedFlight] = useState(false);
   const [areaIndex, setAreaIndex] = useState(-1);
   const navigate = useNavigate();
+
+  const orderShown = () => {
+    const tempAllShownArr = areas.concat(flights)
+    const arr2 = tempAllShownArr.map((v) => v = { ...v, minDate: min(v.Days.map((d) => d.day)), maxDay: max(v.Days.map((d) => d.day)) })
+    const arr3 = arr2.sort((a, b) => (isEqual(a.minDate, b.minDate) ? (isAfter(a.maxDate, b.maxDate) ? true : false) : isAfter(a.minDate, b.minDate)) ? 1 : -1)
+    setAllShownAreasAndFlights(arr3);
+    console.log(arr3);
+  }
 
   useEffect(() => {
     if (user.id) {
       setGoBack("/dashboard");
     }
-    console.log(currentArea);
   }, [user.id]);
 
   function openModal(index) {
@@ -61,8 +73,11 @@ function TripPlanner() {
   }
 
   const handleChooseFlight = () => {
-
-    navigate("flights");
+    if(clickedFlight===0){
+      navigate("flightShowCase")
+    }else{
+      navigate("flights");
+    }
   };
 
   const handleAreaChange = (event) => {
@@ -111,27 +126,37 @@ function TripPlanner() {
   };
 
   const handleAddLocation = (index) => {
-    const newAreas = [...areas];
+    const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index + 1, 0, { areaName: "" });
-    setAreas(newAreas);
+    console.log(newAreas);
+    setAllShownAreasAndFlights(newAreas);
   };
   const handleRemoveLocation = (index) => {
-    const newAreas = [...areas];
+    const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
+    setAllShownAreasAndFlights(newAreas);
     setAreas(newAreas);
     deleteItem("area", (index+1))
     console.log(areas);
-    console.log("the idnex is"+index);
+    console.log("the idnex is "+index);
   };
 
   useEffect(() => {
+
     console.log(currentTrip);
-    getItemsWithFilter("area", { tripId: currentTrip.id })
+    getItemsWithFilter("trip", { Id: currentTrip.id })
+
       .then((response) => {
-        if (response.data.length > 0) {
-          setAreas(response.data);
+        if (response.data[0].Areas.length > 0) {
+          setAreas(response.data[0].Areas);
         } else {
           setAreas([{ areaName: "" }]);
+        }
+        if (response.data[0].Flights.length > 0) {
+          setFlights(response.data[0].Flights);
+        }
+        if (areas[0].areaName !== '') {
+          orderShown()
         }
         setIsLoading(false);
       })
@@ -139,7 +164,7 @@ function TripPlanner() {
         console.log(err);
         setIsLoading(false);
       });
-      
+
   }, [currentTrip, currentArea]);
 
   const handleAreaEdit = (event, index) => {
@@ -147,7 +172,7 @@ function TripPlanner() {
     setCurrentArea(areas[index]);
     openModal(index);
   };
-  const handleAreaAdd = ( index) => {
+  const handleAreaAdd = (index) => {
     // setCurrentArea(areas[index]);
     openModal(index);
   };
@@ -169,7 +194,6 @@ function TripPlanner() {
     if (currentArea.id) {
       getItemsWithFilter("area", { Id: currentArea.id })
         .then((response) => {
-          console.log("DAYS ", response.data);
           setAllShownDays(response.data[0].Days);
         })
         .catch((err) => console.error(err));
@@ -196,17 +220,22 @@ function TripPlanner() {
     <div>
       <div className="cards-container-center">
         <div className="flight-location-container">
+          {allShownAreasAndFlights[0]?.areaName?
           <div className="filled-card small-card" onClick={handleChooseFlight}>
+
             <p>Add Flight To...</p>
-            
-          </div>
-          {areas.length > 0  &&
-            areas.map((location, index) => (
-              <div key={index} className="flight-location-container">
-                {areas[index].areaName == "" ? (
+
+          </div>:<div className="filled-card small-card" onClick={handleChooseFlight}>
+            <p>this is a flight</p>
+
+          </div>}
+          {allShownAreasAndFlights.length > 0 &&
+            allShownAreasAndFlights.map((location, index) =>
+              (location?.areaName || location?.areaName == "") && <div key={index} className="flight-location-container">
+                {allShownAreasAndFlights[index].areaName == "" ? (
                   <div
                     className="filled-card"
-                    onClick={() => handleAreaAdd( index)}
+                    onClick={() => handleAreaAdd(index)}
                   >
                     <h2>Enter Location</h2>{" "}
                   </div>
@@ -274,12 +303,21 @@ function TripPlanner() {
                   </div>
                 </Modal>
                 <div className="flight-location">
+                  {allShownAreasAndFlights[index+1]?.flightName ? <div
+                    className="filled-card small-card"
+                    onClick={() => handleChooseFlight(index)}
+                  >
+                    <p> this is a flight</p>
+                  </div>:
                   <div
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(index)}
                   >
+                    
                     <p> Add Flight To...</p>
+
                   </div>
+                  }
                   <button
                     className="primary-button icon small-card"
                     onClick={() => handleAddLocation(index)}
@@ -296,7 +334,7 @@ function TripPlanner() {
                   )}
                 </div>
               </div>
-            ))}
+            )}
         </div>
       </div>
       <button className="primary-button" onClick={handlePayment}>

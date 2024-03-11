@@ -7,6 +7,7 @@ export async function fetchPlaceLanLon(place) {
   try {
     const res = await axios.get(
       `https://hotels-com-provider.p.rapidapi.com/v2/regions?rapidapi-key=${import.meta.env.VITE_RAPID_API_KEY}&query=${place}&domain=AE&locale=en_GB`
+
     );
 
     return {
@@ -29,6 +30,7 @@ export async function fetchNearHotels(region_id, data) {
 
     const res = await axios.get(
       `https://hotels-com-provider.p.rapidapi.com/v2/hotels/search?rapidapi-key=${import.meta.env.VITE_RAPID_API_KEY}&checkin_date=${checkInB}&checkout_date=${checkOutB}&locale=en_US&domain=US&adults_number=1&region_id=${region_id}&sort_order=REVIEW&lodging_type=HOTEL,HOSTEL,APART_HOTEL&available_filter=SHOW_AVAILABLE_ONLY`
+
     );
     console.log(res);
     return res.data.properties.slice(0, 20).map((hotel) => {
