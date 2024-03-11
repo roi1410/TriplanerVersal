@@ -50,7 +50,7 @@ h3 {
   letter-spacing: -1px;
   font-weight: 700;
 }
-h4{
+h4 {
   font-size: 1.5rem;
   line-height: 1.4;
   margin: 0;
@@ -117,6 +117,15 @@ button:focus-visible,
   color: hsl(0, 83%, 40%);
   border-color: hsl(0, 83%, 40%);
 }
+.disabled {
+  cursor: default;
+  filter: brightness(0.5);
+}
+.disabled:hover,
+.disabled:focus {
+  cursor: default;
+  filter: brightness(0.5);
+}
 .icon {
   width: fit-content;
   height: fit-content;
@@ -124,7 +133,7 @@ button:focus-visible,
   transition: opacity var(--short) ease-in-out;
 }
 .icon:hover,
-.icon:focus{
+.icon:focus {
   opacity: 0.7;
 }
 
@@ -176,19 +185,18 @@ a:focus-visible {
   padding: 2rem 1.5rem;
   margin: 1rem 0;
   flex-direction: column;
-  align-items: center;
-    position: relative;
+  align-items: flex-start;
+  position: relative;
+
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
 }
-.filled-card img{
+.filled-card img {
   height: 10rem;
   width: 15rem;
-
 }
-.filled-card span{
+.filled-card span {
   font-weight: 300;
-
 }
 .dashed-card {
   cursor: pointer;
@@ -224,9 +232,9 @@ a:focus-visible {
   cursor: pointer;
   transition: filter var(--short) linear;
   filter: brightness(1);
- font-size: 1.8rem;
+  font-size: 1.8rem;
 }
-.edit{
+.edit {
   position: absolute;
   top: 50%;
   right: 1.5rem;
@@ -235,11 +243,11 @@ a:focus-visible {
   cursor: pointer;
 }
 
-.date-inputs{
-display: flex;
-gap: 2rem;
+.date-inputs {
+  display: flex;
+  gap: 2rem;
 }
-  .date-inputs>*{
+.date-inputs > * {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -257,35 +265,35 @@ gap: 2rem;
   left: 50%;
   right: auto;
   bottom: auto;
-  transform: translate(-50%,-50%);
-padding: 2rem 1.5rem;
-border-radius: 0.5rem;
-background-color: var(--secondary-300) !important;
+  transform: translate(-50%, -50%);
+  padding: 2rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-300) !important;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: space-between;
 }
-.header{
-position: relative;
-font-size: 5rem;
-text-shadow: 0 0 30px var(--primary);
+.header {
+  position: relative;
+  font-size: 5rem;
+  text-shadow: 0 0 30px var(--primary);
 }
-.header::after{
+.header::after {
   content: "";
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: block;
-    position: absolute;
-    /* top: -1.125ch;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  position: absolute;
+  /* top: -1.125ch;
     left: 10ch; */
-    top: -1.25ch;
-    left: 9ch;
-    aspect-ratio: 1 / 1;
-    height: 5ch;
-    z-index: -1;
+  top: -1.25ch;
+  left: 9ch;
+  aspect-ratio: 1 / 1;
+  height: 5ch;
+  z-index: -1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -380,8 +388,8 @@ text-shadow: 0 0 30px var(--primary);
     --accent-900: hsl(169, 100%, 10%);
     --accent-950: hsl(168, 100%, 5%);
   }
-  .header::after{
-background-image: url("./assets//tripel/primary-background-light.png");
+  .header::after {
+    background-image: url("./assets//tripel/primary-background-light.png");
   }
 }
 @media (prefers-color-scheme: dark) {
@@ -452,7 +460,7 @@ background-image: url("./assets//tripel/primary-background-light.png");
     --accent-900: hsl(169, 100%, 90%);
     --accent-950: hsl(168, 100%, 95%);
   }
-  .header::after{
+  .header::after {
     background-image: url("./assets//tripel/primary-background-dark.png");
-      }
+  }
 }

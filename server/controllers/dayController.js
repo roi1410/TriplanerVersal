@@ -46,7 +46,7 @@ Day.belongsTo(Hotel, {
 
 const addToDay = async (day, data) => {
     const area = await Area.findByPk(data.areaId)
-    if (area && day.hasArea(data.areaId)) {
+    if (area && day.hasArea(data.areaId)) {    
         await day.addArea(data.areaId);
     }
     const flight = await Flight.findByPk(data.flightId)
@@ -63,6 +63,7 @@ const addToDay = async (day, data) => {
     }
 }
 const removeFromDay = async (day, data) => {
+    
     const area = await Area.findByPk(data.areaId)
     if (area && day.hasArea(data.areaId)) {
         await day.removeArea(data.areaId);
@@ -71,6 +72,7 @@ const removeFromDay = async (day, data) => {
     if (flight && day.hasFlight(data.flightId)) {
         await day.removeFlight(data.flightId);
     }
+    console.log("__________________",data);
     if (data?.events) {
         for (const eventId of data.events) {
             const event = await Event.findByPk(eventId)
@@ -83,7 +85,6 @@ const removeFromDay = async (day, data) => {
 
 // Create a new trip and add it to the database -- output => new trip
 exports.registerDay = async (req, res) => {
-    console.log(req.body);
     try {
         const currentTrip = await Trip.findOne({ where: { id: req.params.id } });
         if (!currentTrip) {
@@ -92,6 +93,7 @@ exports.registerDay = async (req, res) => {
                 message: "trip not found",
             });
         }
+        console.log("REACHES HERE");
         const [newDay, isCreated] = await Day.findOrCreate({
             where: {
                 tripId: currentTrip.id, day: req.body?.day
@@ -100,6 +102,8 @@ exports.registerDay = async (req, res) => {
                 tripId: currentTrip.dataValues.id,
             }
         });
+        console.log("DOESN'T REACH HERE");
+
         if (isCreated) {
             await newDay.save()
         }
@@ -175,24 +179,25 @@ exports.getDayById = async (req, res) => {
 exports.updateDay = async (req, res) => {
     const dayId = req.params.id;
     const newDay = req.body;
+
     try {
         const updatedDay = await Day.findByPk(dayId);
-
         if (!updatedDay) {
             return res.status(404).send("day not found");
         }
 
         // If the email is being updated, check for duplicates
-        if (newDay.day) {
-            return res.status(401).json({
-                status: "fail",
-                message: "cannot update the date",
-            });
-        }
+        // if (newDay.day) {
+        //     return res.status(401).json({
+        //         status: "fail",
+        //         message: "cannot update the date",
+        //     });
+        // }
 
         // Update the day
         req.body?.hotelId && await updatedDay.update({ hotelId: req.body.hotelId })
-        await addToDay(updatedDay, req.body)
+
+        await addToDay(updatedDay, newDay)
         await updatedDay.save();
         res.status(200).send(updatedDay);
     } catch (err) {
@@ -209,7 +214,6 @@ exports.removeValueDay = async (req, res) => {
     const newDay = req.body;
     try {
         const updatedDay = await Day.findByPk(dayId);
-
         if (!updatedDay) {
             return res.status(404).send("day not found");
         }

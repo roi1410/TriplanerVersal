@@ -9,7 +9,7 @@ import hotelPNG from "../../../../assets/image.png";
 import Map from "../../../general/Map";
 
 function Overview() {
-  const { user, setUser, areas, setAreas, isLoading, setIsLoading,setGoBack } =
+  const { user, setUser, areas, setAreas, isLoading, setIsLoading, setGoBack } =
     useContext(GeneralContext);
   const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
     useContext(CurrentContext);
@@ -38,7 +38,6 @@ function Overview() {
     },
   ];
 
-
   const hotels = [
     {
       checkIn: "2024-03-10",
@@ -64,27 +63,25 @@ function Overview() {
 
   // setGoBack("/dashboard")
 
-
   useEffect(() => {
-    getAreaDays()
-  }, [])
-
+    const res = getAreaDays();
+    res && setIsLoading(false);
+  }, []);
 
   const getAreaDays = async () => {
-    const alldays = await getItemsWithFilter("area", { id:currentArea.id})
+    const alldays = await getItemsWithFilter("area", { id: currentArea.id });
     console.log(alldays.data[0].Days);
     console.log(alldays.data[0]);
-    setAllShownDays(alldays.data[0].Days)
-  }
+    setAllShownDays(alldays.data[0].Days);
+    return alldays;
+  };
 
-
-  useEffect(()=>{
-console.log(allShownDays);
-  },[allShownDays])
+  useEffect(() => {
+    console.log(allShownDays);
+  }, [allShownDays]);
 
   return (
     <div>
-
       {/* {allShownDays.map((v) => (
         <div>
           <span>{v.day}</span>
@@ -104,49 +101,25 @@ console.log(allShownDays);
                 {isLoading ? (
                   // Loader
                   <Skeleton className="filled-card" count={20} />
-                ) : hotels && events ? (
+                ) : allShownDays ? (
                   <>
-                    {events.map((event, index) => (
-                      <div key={index} className="filled-card">
-                        <h4>{event.name}</h4>
-                        {event.image && <img src={event.image} alt="ops" />}
-
-                        {event.website && (
-                          <a
-                            href={event.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Go to website
-                          </a>
-                        )}
-                        {event.openingHours && (
-                          <span>Opening Hours: {event.openingHours}</span>
-                        )}
-                        {event.contact && (
-                          <span>Phone Number: {event.contact}</span>
-                        )}
-                        <span>Address: {event.address}</span>
-                        <button onClick={() => eventAddToTrip(event)}>
-                          Add to trip
-                        </button>
-                      </div>
-                    ))}
-
-                    {hotels.map((hotel, index) => (
-                      <div key={index} className="filled-card">
-                        <h4>{hotel.hotelName}</h4>
-                        <img src={hotel.image} alt="" />
-                        <span className="checkedInAndOut">
-                          Check-In: {hotel.checkIn} _______________ Check-Out:{" "}
-                          {hotel.checkOut}
-                        </span>
-                        <span className="price">Price: {hotel.price}</span>
-                        <button onClick={() => addHotelToTrip(hotel)}>
-                          Add to favorites
-                        </button>
-                      </div>
-                    ))}
+                    {allShownDays.map((day, index) => {
+                      return (
+                        <div key={index} className="filled-card">
+                          <h1>day {index + 1}</h1>
+                          <h4>{day.Hotel.hotelInfo.hotelName}</h4>
+                          <img src={day.Hotel.hotelInfo.image} alt="" />
+                          <span className="checkedInAndOut">
+                            Check-In: {day.Hotel.hotelInfo.checkIn}{" "}
+                            _______________ Check-Out:{" "}
+                            {day.Hotel.hotelInfo.checkOut}
+                          </span>
+                          <span className="price">
+                            Price: {day.Hotel.hotelInfo.price}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </>
                 ) : (
                   <p>Location not found, please try again</p>
@@ -155,10 +128,7 @@ console.log(allShownDays);
             </div>
           </div>
           <div className="map-container">
-            <Map
-              mapType={"overview"}
-              PNG={hotelPNG}
-            />
+            <Map mapType={"overview"} PNG={hotelPNG} />
           </div>
         </div>
       </div>

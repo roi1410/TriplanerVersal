@@ -7,7 +7,7 @@ import flags from "../../../assets/flags.json";
 
 import { CreateDateFromMinMax, createItem, findFlights } from "../../../utils/CRUDService";
 import { FaPlaneArrival, FaPlaneDeparture, FaClock } from "react-icons/fa";
-import { GrFormNext } from "react-icons/gr";
+import { GrNext } from "react-icons/gr";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import "./trip.css";
@@ -16,8 +16,9 @@ import { login } from "../../../utils/AuthService";
 
 
 function Flights() {
-  const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights } = useContext(GeneralContext);
-  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea } =
+
+  const { setUser, isLoading, setIsLoading , flights , setFlights, myFlights, setMyFlights , setGoBack} = useContext(GeneralContext);
+  const { currentTrip, setCurrentTrip, currentArea, setCurrentArea,currentFlight,setCurrentFlight } =
   useContext(CurrentContext);
   const navigate = useNavigate();
   const [showFrom, setShowFrom] = useState([]);
@@ -84,6 +85,8 @@ function Flights() {
     console.log(flightId);
     await CreateDateFromMinMax(minDate,maxDate,currentTrip.id,flightId)
     setMyFlights((prev)=>[...prev, selectedFlight])
+    setCurrentFlight(flightId)
+    navigate("/dashboard/trip-planner")
   };
 
   return (
@@ -178,9 +181,9 @@ function Flights() {
                         <p>{v.departure_airport.name}</p>
                       </div>
                       <div className="duration">
-                        <GrFormNext />
+                        <GrNext />
                         <p>{formatMinutesToString(v.duration)}</p>
-                        <GrFormNext />
+                        <GrNext />
                       </div>
                       <div className="landing">
                         <div>
