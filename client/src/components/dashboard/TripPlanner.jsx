@@ -9,7 +9,7 @@ import {
   createItem,
   getItemsWithFilter,
   updateItem,
-  deleteItem
+  deleteItem,
 } from "../../utils/CRUDService";
 import Modal from "react-modal";
 import { CurrentContext } from "../../context/CurrentContext";
@@ -72,6 +72,8 @@ function TripPlanner() {
     setIsOpen(false);
   }
 
+
+
   const handleChooseFlight = (info) => {
     if (info) {
       console.log(info);
@@ -80,6 +82,7 @@ function TripPlanner() {
     } else {
       navigate("flights");
     }
+
   };
 
   const handleAreaChange = (event) => {
@@ -94,9 +97,9 @@ function TripPlanner() {
         .then((response) => {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: currentArea.id,
-          }).then((response) =>
-            console.log(response).catch((err) => console.error(err))
-          );
+          })
+            .then((response) => console.log(response))
+            .catch((err) => console.error(err));
           setCurrentArea(response.data);
           closeModal();
         })
@@ -136,13 +139,13 @@ function TripPlanner() {
   const handleRemoveLocation = (index, id, nextItem) => {
     const newAreas = [...allShownAreasAndFlights];
     newAreas.splice(index, 1);
+
     setAllShownAreasAndFlights(newAreas);
     deleteItem("area", (id))
     if (nextItem?.flightName) {
       deleteItem("flight", (nextItem.id))
     }
-    console.log(areas);
-    console.log("the idnex is " + index);
+   
   };
 
   useEffect(() => {
@@ -219,11 +222,12 @@ function TripPlanner() {
     }
   };
 
-
   return (
     <div>
       <div className="cards-container-center">
         <div className="flight-location-container">
+
+
         {allShownAreasAndFlights[0]?.flightName ? <div
                     className="filled-card small-card"
                     onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
@@ -248,6 +252,7 @@ function TripPlanner() {
             allShownAreasAndFlights.map((location, index) =>
               (location?.areaName || location?.areaName == "") && <div key={index} className="flight-location-container">
                 {allShownAreasAndFlights[index].areaName == "" ? (
+
                   <div
                     className="filled-card"
                     onClick={() => handleAreaAdd(index)}

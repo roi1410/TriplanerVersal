@@ -5,6 +5,7 @@ import { eachDayOfInterval } from 'date-fns';
 axios.defaults.withCredentials = true;
 
 export const createItem = async (type, parentId, data) => {
+    console.log(type, parentId, data);
     return axios.post(`${import.meta.env.VITE_API_URL}/${type}/new/${parentId}`, data);
 };
 
