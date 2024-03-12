@@ -23,7 +23,9 @@ function MyDay({ setUpdateDay, updateDay }) {
   return (
     <div className="cards-container-center">
       {isLoading ? (
-        <Skeleton count={5} className="outlined-card" />
+        <div className="skeleton-container">
+          <Skeleton count={5} className="outlined-card" style={{}} />
+        </div>
       ) : (
         currentDay &&
         currentDay.day &&

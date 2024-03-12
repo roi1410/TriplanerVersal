@@ -292,7 +292,10 @@ a:focus-visible {
 .bold{
   font-weight: bold;
 }
-
+.skeleton-container>*{
+  display: flex;
+  flex-direction: column !important;
+}
 @media (prefers-color-scheme: dark) {
   button {
     background-color: inherit;
