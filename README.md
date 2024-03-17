@@ -17,7 +17,7 @@ The name "tripel" is a pun on "trip-to", emphasizing its focus on helping users 
 To get started with Tripel, follow these steps:
 
 1. **Clone the Repository**: 
-git clone https://github.com/your-username/tripel.git
+git clone https://github.com/OmerShuvami/tripel.git
 
 2. **Install Dependencies**:
 npm install
