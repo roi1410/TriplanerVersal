@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import { GeneralContext } from "../../context/GeneralContext";
+import Skeleton from "react-loading-skeleton";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import {
@@ -31,6 +31,7 @@ const customStyles = {
 };
 
 function TripPlanner() {
+  // CONTEXT
   const {
     user,
     setUser,
@@ -42,6 +43,7 @@ function TripPlanner() {
     flights,
     setFlights,
   } = useContext(GeneralContext);
+
   const {
     currentTrip,
     setCurrentTrip,
@@ -49,21 +51,79 @@ function TripPlanner() {
     setCurrentArea,
     setCurrentFlight,
   } = useContext(CurrentContext);
+
+  // STATES
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 1));
-  const [allShownDays, setAllShownDays] = useState([]);
-  const [allShownAreasAndFlights, setAllShownAreasAndFlights] = useState([
-    { areaName: "" },
-  ]);
+  const [areaDays, setAreaDays] = useState([]);
+  const [flightsAndAreas, setFlightsAndAreas] = useState([{ areaName: "" }]);
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  const [test, setTest] = useState(false);
-  const [showenFlights, setShowenFlights] = useState([]);
   const [areaIndex, setAreaIndex] = useState(-1);
-  const [realArea, setRealArea] = useState("");
+  const [newArea, setNewArea] = useState("");
   const navigate = useNavigate();
 
-  const orderShown = () => {
-    const tempAllShownArr = areas.concat(showenFlights);
+  // USE EFFECTS
+  useEffect(() => {
+    console.log(flightsAndAreas);
+  }, [flightsAndAreas]);
+
+  useEffect(() => {
+    if (user.id) {
+      setGoBack("/dashboard");
+    }
+
+    if (currentArea.id) {
+      getItemsWithFilter("area", { Id: currentArea.id })
+        .then((response) => {
+          setAreaDays(response.data[0].Days);
+        })
+        .catch((err) => console.error(err));
+    }
+
+    setIsLoading(true);
+
+    getItemsWithFilter("trip", { id: currentTrip.id })
+      .then((response) => {
+        if (localStorage.getItem("currentTrip") == response.data[0].id) {
+          if (response.data[0].Areas.length > 0) {
+            setAreas(response.data[0].Areas);
+          }
+          if (response.data[0].Flights.length > 0) {
+            setFlights(response.data[0].Flights);
+          }
+
+          if (response.data[0].Areas[0].tripId === currentTrip.id) {
+            orderShown(response.data[0].Areas, response.data[0].Flights);
+          }
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
+      });
+  }, [currentTrip, currentArea, user.id]);
+
+  // FUNCTIONS
+  // MODAL FUNCTIONS
+  function openModal(index) {
+    setAreaIndex(index);
+    setStartDate(getFirstDay());
+    setEndDate(getLastDay());
+    setIsOpen(true);
+  }
+  function closeModal() {
+    setAreaDays([]);
+    setAreaIndex(-1);
+    setNewArea("");
+    setIsOpen(false);
+  }
+
+  // DAYS FUNCTIONS
+  const orderShown = (tempAreas, tempFlights) => {
+    const tempAllShownArr = tempAreas.concat(tempFlights);
     const arr2 = tempAllShownArr?.map(
       (v) =>
         (v = {
@@ -83,124 +143,7 @@ function TripPlanner() {
         ? 1
         : -1
     );
-    setAllShownAreasAndFlights(arr3);
-  };
-
-  useEffect(() => {
-    if (user.id) {
-      setGoBack("/dashboard");
-    }
-  }, [user.id]);
-
-  function openModal(index) {
-    setAreaIndex(index);
-    setIsOpen(true);
-  }
-  function closeModal() {
-    setAllShownDays([]);
-    setAreaIndex(-1);
-    setIsOpen(false);
-  }
-
-  const handleChooseFlight = (info) => {
-    if (info) {
-      console.log(info);
-      setCurrentFlight(info);
-      navigate("flightShowCase");
-    } else {
-      navigate("flights");
-    }
-  };
-
-  const handleAreaChange = (event) => {
-    setRealArea(event.target.value);
-  };
-
-  const handleAreaSubmit = () => {
-    // if (areas[areaIndex]?.id && areas[areaIndex].id === currentArea.id) {
-    //   updateItem("area", currentArea.id, areas[areaIndex])
-    //     .then((response) => {
-    //       CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
-    //         areaId: currentArea.id,
-    //       })
-    //         .then(() => orderShown())
-    //         .catch((err) => console.error(err));
-    //       setCurrentArea(response.data);
-    //       closeModal();
-    //     })
-    //     .catch((err) => console.log(err));
-    // } else {
-    createItem("area", currentTrip.id, { areaName: realArea })
-      .then((response) => {
-        console.log(startDate, endDate, response.data.area.id);
-        CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
-          areaId: response.data.area.id,
-        }).then(() => {
-          window.location.reload();
-        });
-        closeModal();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const handleChooseArea = (location) => {
-    const tempArea = location;
-    setCurrentArea(tempArea);
-    navigate("area/overview");
-  };
-
-  const handlePayment = () => {
-    navigate("payment");
-  };
-
-  const handleAddLocation = (index) => {
-    const newAreas = [...allShownAreasAndFlights];
-    newAreas.splice(index + 1, 0, { areaName: "" });
-    setAllShownAreasAndFlights(newAreas);
-  };
-  const handleRemoveLocation = (index, id, nextItem) => {
-    const newAreas = [...allShownAreasAndFlights];
-    newAreas.splice(index, 1);
-    setAllShownAreasAndFlights(newAreas);
-    deleteItem("area", id);
-    if (nextItem?.flightName) {
-      deleteItem("flight", nextItem.id);
-    }
-  };
-
-  useEffect(() => {
-    getItemsWithFilter("trip", { id: currentTrip.id })
-      .then((response) => {
-        if (localStorage.getItem("currentTrip") == response.data[0].id) {
-          if (response.data[0].Areas.length > 0) {
-            setAreas(response.data[0].Areas);
-          } else {
-            // setAreas([{ areaName: "" }]);
-          }
-          if (response.data[0].Flights.length > 0) {
-            setShowenFlights(response.data[0].Flights);
-          }
-
-          if (areas[0].tripId === currentTrip.id) {
-            orderShown();
-          }
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
-  }, [currentTrip, currentArea]);
-
-  const handleAreaEdit = (event, index) => {
-    event.stopPropagation();
-    setCurrentArea(areas[index]);
-    openModal(index);
-  };
-  const handleAreaAdd = (index) => {
-    // setCurrentArea(areas[index]);
-    openModal(index);
+    setFlightsAndAreas(arr3);
   };
 
   const handleStartDateChange = (event) => {
@@ -216,225 +159,343 @@ function TripPlanner() {
     setEndDate(selectedDate);
   };
 
-  useEffect(() => {
-    if (currentArea.id) {
-      getItemsWithFilter("area", { Id: currentArea.id })
-        .then((response) => {
-          setAllShownDays(response.data[0].Days);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [currentArea]);
-
   const getFirstDay = () => {
-    if (allShownDays.length > 0) {
-      return format(allShownDays[0]?.day, "yyyy-MM-dd");
+    if (areaDays?.length > 0) {
+      return areaDays[0]?.day;
     } else {
-      return format(new Date(), "yyyy-MM-dd");
+      return new Date();
     }
   };
   const getLastDay = () => {
-    if (allShownDays.length > 0) {
-      return format(allShownDays[allShownDays.length - 1]?.day, "yyyy-MM-dd");
+    if (areaDays?.length > 0) {
+      return areaDays[areaDays.length - 1]?.day;
     } else {
-      return format(addDays(new Date(), 1), "yyyy-MM-dd");
+      return addDays(new Date(), 1);
     }
+  };
+
+  // AREA FUNCTIONS
+  const handleAreaChange = (event) => {
+    const updatedFlightsAndAreas = [...flightsAndAreas];
+    updatedFlightsAndAreas[areaIndex].areaName = event.target.value;
+    setFlightsAndAreas([...updatedFlightsAndAreas]);
+    setNewArea(event.target.value);
+  };
+
+  const handleChooseArea = (location) => {
+    const tempArea = location;
+    setCurrentArea(tempArea);
+    navigate("area/overview");
+  };
+
+  const handleAreaEdit = (event, index) => {
+    event.stopPropagation();
+    setCurrentArea(flightsAndAreas[index]);
+    openModal(index);
+  };
+
+  const handleAreaAdd = (index) => {
+    // setCurrentArea(flightsAndAreas[index]);
+    openModal(index);
+  };
+
+  const handleAreaSubmit = () => {
+    if (flightsAndAreas[areaIndex].id) {
+      updateItem(
+        "area",
+        flightsAndAreas[areaIndex].id,
+        flightsAndAreas[areaIndex]
+      )
+        .then((response) => {
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+            areaId: response.data.id,
+          })
+            .then(() => {
+              // setCurrentArea(response.data.area);
+              window.location.reload();
+            })
+            .catch((err) => console.error(err));
+          closeModal();
+        })
+        .catch((err) => console.error(err));
+    } else {
+      createItem("area", currentTrip.id, { areaName: newArea })
+        .then((response) => {
+          CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
+            areaId: response.data.area.id,
+          })
+            .then(() => {
+              // setCurrentArea(response.data.area);
+              setNewArea("");
+              window.location.reload();
+            })
+            .catch((err) => console.error(err));
+          closeModal();
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  // FLIGHT FUNCTIONS
+  const handleChooseFlight = (info) => {
+    if (info) {
+      setCurrentFlight(info);
+      navigate("flightShowCase");
+    } else {
+      navigate("flights");
+    }
+  };
+
+  // LOCATION FUNCTIONS (AREAS & FLIGHTS)
+  const handleAddLocation = (index) => {
+    const newAreas = [...flightsAndAreas];
+    newAreas.splice(index + 1, 0, { areaName: "" });
+    setFlightsAndAreas(newAreas);
+  };
+
+  const handleRemoveLocation = (index, id, nextItem) => {
+    const newAreas = [...flightsAndAreas];
+    newAreas.splice(index, 1);
+    setFlightsAndAreas(newAreas);
+    deleteItem("area", id);
+    if (nextItem?.flightName) {
+      deleteItem("flight", nextItem.id);
+    }
+  };
+
+  const isNotOnlyLocation = () => {
+    if (flightsAndAreas.length > 3) {
+      return true;
+    } else if (flightsAndAreas[0]?.flightInfo) {
+      if (flightsAndAreas[2].flightInfo && flightsAndAreas.length === 3) {
+        return false;
+      } else if (flightsAndAreas.length === 2) {
+        return false;
+      }
+    } else {
+      if (flightsAndAreas[1]?.flightInfo && flightsAndAreas.length === 2) {
+        return false;
+      } else if (flightsAndAreas.length === 1) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // PAYMENT FUNCTIONS
+  const handlePayment = () => {
+    navigate("payment");
   };
 
   return (
     <div>
       <div className="cards-container-center">
-        <div className="flight-location-container">
-          {allShownAreasAndFlights[0]?.flightName ? (
-            <div
-              className="filled-card small-card"
-              onClick={() => handleChooseFlight(allShownAreasAndFlights[0])}
-              style={{marginLeft:"0.5rem"}}
-            >
-              <div className="flight-preview">
-                <img
-                  src={
-                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
-                      .airline_logo
-                  }
-                  alt=""
-                  className="flight-company-img"
-                />
-                <span>
-                  {
-                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[0]
-                      .departure_airport.id
-                  }
-                </span>
-                <GrNext />
-                <span>
-                  {
-                    JSON.parse(allShownAreasAndFlights[0].flightInfo).flights[
-                      JSON.parse(allShownAreasAndFlights[0].flightInfo).flights
-                        .length - 1
-                    ].arrival_airport.id
-                  }{" "}
-                </span>
+        {isLoading ? (
+          <div className="flight-location-container">
+            <Skeleton className="filled-card small-card flight-sk" />{" "}
+            <Skeleton className="filled-card" />
+            <Skeleton className="filled-card small-card flight-sk" />{" "}
+            <Skeleton className="filled-card" />
+            <Skeleton className="filled-card small-card flight-sk" />{" "}
+            <Skeleton className="filled-card" />
+            <Skeleton className="filled-card small-card flight-sk" />{" "}
+            <Skeleton className="filled-card" />
+            <Skeleton className="filled-card small-card flight-sk" />{" "}
+            <Skeleton className="filled-card" />
+          </div>
+        ) : (
+          <div className="flight-location-container">
+            {flightsAndAreas[0]?.flightName ? (
+              <div
+                className="filled-card small-card"
+                onClick={() => handleChooseFlight(flightsAndAreas[0])}
+                style={{ marginLeft: "0.5rem" }}
+              >
+                <div className="flight-preview">
+                  <img
+                    src={
+                      JSON.parse(flightsAndAreas[0].flightInfo).flights[0]
+                        .airline_logo
+                    }
+                    alt=""
+                    className="flight-company-img"
+                  />
+                  <span>
+                    {
+                      JSON.parse(flightsAndAreas[0].flightInfo).flights[0]
+                        .departure_airport.id
+                    }
+                  </span>
+                  <GrNext />
+                  <span>
+                    {
+                      JSON.parse(flightsAndAreas[0].flightInfo).flights[
+                        JSON.parse(flightsAndAreas[0].flightInfo).flights
+                          .length - 1
+                      ].arrival_airport.id
+                    }{" "}
+                  </span>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div
-              className="filled-card small-card"
-              onClick={() => handleChooseFlight(false)}
-            >
-              <p> Add Flight To...</p>
-            </div>
-          )}
-          {allShownAreasAndFlights.length > 0 &&
-            allShownAreasAndFlights.map(
-              (location, index) =>
-                (location?.areaName || location?.areaName == "") && (
-                  <div key={index} className="flight-location-container" >
-                    {allShownAreasAndFlights[index].areaName == "" ? (
-                      <div
-                        className="filled-card"
-                        onClick={() => handleAreaAdd(index)}
-                      >
-                        <h2>Enter Location</h2>{" "}
-                      </div>
-                    ) : (
-                      <div
-                        className="filled-card"
-                        onClick={() => handleChooseArea(location)}
-                      >
-                        <h2>{location.areaName}</h2>
-                        <button
-                          className="outlined-button edit icon"
-                          onClick={(event) => handleAreaEdit(event, index)}
-                        >
-                          <MdEdit />
-                        </button>
-                      </div>
-                    )}
-                    <Modal
-                      isOpen={modalIsOpen}
-                      onRequestClose={closeModal}
-                      style={customStyles}
-                      contentLabel="Choose Area Modal"
-                      appElement={document.getElementById("root")}
-                      index={index}
-                    >
-                      <input
-                        type="text"
-                        placeholder="Enter Location..."
-                        defaultValue={currentArea.areaName || ""}
-                        onChange={(event) => handleAreaChange(event)}
-                      />
-                      <div className="date-inputs">
-                        <label htmlFor="start-date">
-                          Start Date
-                          <input
-                            type="date"
-                            id="start-date"
-                            defaultValue={getFirstDay()}
-                            min={format(new Date(), "yyyy-MM-dd")}
-                            onChange={handleStartDateChange}
-                          />
-                        </label>
-
-                        <label htmlFor="end-date">
-                          End Date
-                          <input
-                            type="date"
-                            id="end-date"
-                            defaultValue={getLastDay()}
-                            min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
-                            onChange={handleEndDateChange}
-                          />
-                        </label>
-                      </div>
-                      <div className="modal-buttons">
-                        <button
-                          onClick={closeModal}
-                          className="outlined-button"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={handleAreaSubmit}
-                          className="primary-button"
-                        >
-                          Submit
-                        </button>
-                      </div>
-                    </Modal>
-                    <div className="flight-location">
-                      {/* <button onClick={() => console.log((JSON.parse(allShownAreasAndFlights[index + 1].flightInfo).flights).length-1)}>tst</button> */}
-                      {allShownAreasAndFlights[index + 1]?.flightName ? (
+            ) : (
+              <div
+                className="filled-card small-card"
+                onClick={() => handleChooseFlight(false)}
+              >
+                <p> Add Flight To...</p>
+              </div>
+            )}
+            {flightsAndAreas.length > 0 &&
+              flightsAndAreas.map(
+                (location, index) =>
+                  (location?.areaName || location?.areaName == "") && (
+                    <div key={index} className="flight-location-container">
+                      {flightsAndAreas[index].areaName == "" ? (
                         <div
-                          className="filled-card small-card"
-                          onClick={() =>
-                            handleChooseFlight(
-                              allShownAreasAndFlights[index + 1]
-                            )
-                          }
+                          className="filled-card"
+                          onClick={() => handleAreaAdd(index)}
                         >
-                          <div className="flight-preview">
-                            <img
-                              src={
-                                JSON.parse(
-                                  allShownAreasAndFlights[index + 1].flightInfo
-                                ).flights[0].airline_logo
-                              }
-                              alt=""
-                              className="flight-company-img"
-                            />
-                            <span>
-                              {
-                                JSON.parse(
-                                  allShownAreasAndFlights[index + 1].flightInfo
-                                ).flights[0].departure_airport.id
-                              }
-                            </span>
-                            <GrNext />
-                            <span>
-                              {
-                                JSON.parse(
-                                  allShownAreasAndFlights[index + 1].flightInfo
-                                ).flights[
-                                  JSON.parse(
-                                    allShownAreasAndFlights[index + 1]
-                                      .flightInfo
-                                  ).flights.length - 1
-                                ].arrival_airport.id
-                              }{" "}
-                            </span>
-                          </div>
+                          <h2>Enter Location</h2>{" "}
                         </div>
                       ) : (
                         <div
-                          className="filled-card small-card"
-                          onClick={() => handleChooseFlight(false)}
+                          className="filled-card"
+                          onClick={() => handleChooseArea(location)}
                         >
-                          <p> Add Flight To...</p>
+                          <h2>{location.areaName}</h2>
+                          <button
+                            className="outlined-button edit icon"
+                            onClick={(event) => handleAreaEdit(event, index)}
+                          >
+                            <MdEdit />
+                          </button>
                         </div>
                       )}
-                      <button
-                        className="primary-button icon small-card"
-                        onClick={() => handleAddLocation(index)}
-                      >
-                        <FaPlus />
-                      </button>
-                      {index > 0 && (
+
+                      <div className="flight-location">
+                        {flightsAndAreas[index + 1]?.flightName ? (
+                          <div
+                            className="filled-card small-card"
+                            onClick={() =>
+                              handleChooseFlight(flightsAndAreas[index + 1])
+                            }
+                          >
+                            <div className="flight-preview">
+                              <img
+                                src={
+                                  JSON.parse(
+                                    flightsAndAreas[index + 1].flightInfo
+                                  ).flights[0].airline_logo
+                                }
+                                alt=""
+                                className="flight-company-img"
+                              />
+                              <span>
+                                {
+                                  JSON.parse(
+                                    flightsAndAreas[index + 1].flightInfo
+                                  ).flights[0].departure_airport.id
+                                }
+                              </span>
+                              <GrNext />
+                              <span>
+                                {
+                                  JSON.parse(
+                                    flightsAndAreas[index + 1].flightInfo
+                                  ).flights[
+                                    JSON.parse(
+                                      flightsAndAreas[index + 1].flightInfo
+                                    ).flights.length - 1
+                                  ].arrival_airport.id
+                                }{" "}
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="filled-card small-card"
+                            onClick={() => handleChooseFlight(false)}
+                          >
+                            <p> Add Flight To...</p>
+                          </div>
+                        )}
                         <button
-                          className="delete-button icon small-card"
-                          onClick={() =>
-                            handleRemoveLocation(index, location.id)
-                          }
+                          className="primary-button icon small-card"
+                          onClick={() => handleAddLocation(index)}
                         >
-                          <FaTrash />
+                          <FaPlus />
                         </button>
-                      )}
+                        {isNotOnlyLocation() && (
+                          <button
+                            className="delete-button icon small-card"
+                            onClick={() =>
+                              handleRemoveLocation(index, location.id)
+                            }
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </div>
+                      {/* MODAL */}
+                      <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        style={customStyles}
+                        contentLabel="Choose Area Modal"
+                        appElement={document.getElementById("root")}
+                        index={index}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Enter Location..."
+                          defaultValue={
+                            flightsAndAreas[areaIndex]?.areaName || ""
+                          }
+                          onChange={(event) => handleAreaChange(event)}
+                        />
+                        <div className="date-inputs">
+                          <label htmlFor="start-date">
+                            Start Date
+                            <input
+                              type="date"
+                              id="start-date"
+                              defaultValue={format(getFirstDay(), "yyyy-MM-dd")}
+                              min={format(new Date(), "yyyy-MM-dd")}
+                              onChange={handleStartDateChange}
+                            />
+                          </label>
+
+                          <label htmlFor="end-date">
+                            End Date
+                            <input
+                              type="date"
+                              id="end-date"
+                              defaultValue={format(getLastDay(), "yyyy-MM-dd")}
+                              min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
+                              onChange={handleEndDateChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="modal-buttons">
+                          <button
+                            onClick={closeModal}
+                            className="outlined-button"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleAreaSubmit}
+                            className="primary-button"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </Modal>
                     </div>
-                  </div>
-                )
-            )}
-        </div>
+                  )
+              )}
+          </div>
+        )}
       </div>
       {/* <button className="primary-button" onClick={handlePayment}>
         Payment

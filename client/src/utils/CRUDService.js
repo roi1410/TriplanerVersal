@@ -31,14 +31,13 @@ export const removeItem = async (type, id , removedObj) => {
 
 export const CreateDateFromMinMax = async (minDate, maxDate, tripId, data) => {
     try {
-
         const interval = { start: minDate, end: maxDate };
         const allDates = eachDayOfInterval(interval);
-        for (const e of allDates) {
-            await createItem('day', tripId, {...data, day:e})
+        for (const date of allDates) {
+            await createItem('day', tripId, {...data, day:date})
         }
     } catch (err) {
-        console.log(err.massege);
+        console.log(err);
     }
 }
 
@@ -46,6 +45,6 @@ export const findFlights = async (data) => {
     try {
         return axios.post(`http://localhost:8001/trip-planner/getFlight/find`, data);
     } catch (err) {
-        console.log(err.massege);
+        console.log(err);
     }
 }

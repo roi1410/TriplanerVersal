@@ -12,8 +12,6 @@ import { FaClock } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import placeholderImage from "../../../../../assets/placeholder.jpg";
 
-
-
 function MyEvents({ setUpdateDay, updateDay }) {
   const { myEvents, setMyEvents, isLoading, setIsLoading, myDays, setMyDays } =
     useContext(GeneralContext);
@@ -42,55 +40,55 @@ function MyEvents({ setUpdateDay, updateDay }) {
     setUpdateDay(!updateDay);
   };
   return (
-    
-      <div className="cards-container-center">
-        {isLoading ? (
+    <div className="cards-container-center">
+      {isLoading ? (
+        <div className="skeleton-container">
           <Skeleton className="filled-card" count={5} />
-        ) : myEvents && myEvents.length > 0 ? (
-          myEvents.map((event, index) => (
-            <div
-              key={index}
-              className="filled-card add-event"
-              onClick={() => handleAssignEvent(index)}
-            >
-              {event.image ? (
-                <img src={JSON.parse(event.eventInfo).image} alt="Event image" />
-              ) : (
-                <img src={placeholderImage} alt="Event image" />
-              )}
-              <div className="info">
-                <div className="event-name">
-                  <h4 className="bold">{event.eventName}</h4>
-                  {/* {JSON.parse(event.eventInfo).website && (
+        </div>
+      ) : myEvents && myEvents.length > 0 ? (
+        myEvents.map((event, index) => (
+          <div
+            key={index}
+            className="filled-card add-event"
+            onClick={() => handleAssignEvent(index)}
+          >
+            {event.image ? (
+              <img src={JSON.parse(event.eventInfo).image} alt="Event image" />
+            ) : (
+              <img src={placeholderImage} alt="Event image" />
+            )}
+            <div className="info">
+              <div className="event-name">
+                <h4 className="bold">{event.eventName}</h4>
+                {/* {JSON.parse(event.eventInfo).website && (
                     <a href={JSON.parse(event.eventInfo).website} target="_blank">
                       <FaLink />
                     </a>
                   )} */}
-                </div>{" "}
-                {JSON.parse(event.eventInfo).openingHours && (
-            <>
+              </div>{" "}
+              {JSON.parse(event.eventInfo).openingHours && (
+                <>
+                  <div>
+                    <p>
+                      <FaClock />
+                    </p>
+                    <span>{JSON.parse(event.eventInfo).openingHours}</span>{" "}
+                  </div>
+                </>
+              )}
               <div>
                 <p>
-                  <FaClock />
+                  <FaLocationDot />
                 </p>
-                <span>{JSON.parse(event.eventInfo).openingHours}</span>{" "}
-              </div>
-            </>
-          )}
-         <div>
-            <p>
-                <FaLocationDot />
-              </p>
-              <span>{JSON.parse(event.eventInfo).address}</span>{" "}
-         </div>
+                <span>{JSON.parse(event.eventInfo).address}</span>{" "}
               </div>
             </div>
-          ))
-        ) : (
-          <p>You haven't added any events to schedule on your trip</p>
-        )}
-      </div>
-    
+          </div>
+        ))
+      ) : (
+        <p>You haven't added any events to schedule on your trip</p>
+      )}
+    </div>
   );
 }
 
