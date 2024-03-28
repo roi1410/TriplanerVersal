@@ -189,7 +189,6 @@ a:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-
   transition: scale var(--short) ease-in-out,
     box-shadow var(--short) ease-in-out;
 }
@@ -200,7 +199,7 @@ a:focus-visible {
 .filled-card span {
   font-weight: 300;
 }
-.no-click{
+.no-click {
   cursor: default;
 }
 .dashed-card {
@@ -280,22 +279,30 @@ a:focus-visible {
   border-radius: 0.5rem;
   background-color: var(--secondary-300) !important;
 }
-.smaller-skeleton{
-  width: 80%;
-}
 
 .modal-buttons {
   display: flex;
   justify-content: space-between;
 }
 
-.bold{
+.bold {
   font-weight: bold;
 }
-.skeleton-container>*{
+.skeleton-container > * {
   display: flex;
   flex-direction: column !important;
 }
+.react-loading-skeleton {
+  width: auto;
+  max-width: 100%;
+}
+.flight-sk {
+  width: calc(60% - 4rem) ;
+}
+.smaller-skeleton {
+  width: 80%;
+}
+
 @media (prefers-color-scheme: dark) {
   button {
     background-color: inherit;

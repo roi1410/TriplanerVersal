@@ -87,6 +87,7 @@ exports.getAreaById = async (req, res) => {
 exports.updateArea = async (req, res) => {
   const areaId = req.params.id;
   const newArea = req.body;
+  console.log("___________________",req.body);
   try {
     const existingArea = await Area.findByPk(areaId);
 
@@ -94,18 +95,19 @@ exports.updateArea = async (req, res) => {
       return res.status(404).send("area not found");
     }
 
+    // DO NOT TURN ON! PREVENTS UPDATES TO EXISTING AREA NAMES IN OTHER TRIPS
     // If the email is being updated, check for duplicates
-    if (newArea.areaName && newArea.areaName !== existingArea.areaName) {
-      const areaExists = await Area.findOne({
-        where: { areaName: newArea.areaName },
-      });
-      if (areaExists) {
-        return res.status(401).json({
-          status: "fail",
-          message: "area name already exists",
-        });
-      }
-    }
+    // if (newArea.areaName && newArea.areaName !== existingArea.areaName) {
+    //   const areaExists = await Area.findOne({
+    //     where: { areaName: newArea.areaName },
+    //   });
+    //   if (areaExists) {
+    //     return res.status(401).json({
+    //       status: "fail",
+    //       message: "area name already exists",
+    //     });
+    //   }
+    // }
 
     // Update the area
     await existingArea.update({ ...newArea });
