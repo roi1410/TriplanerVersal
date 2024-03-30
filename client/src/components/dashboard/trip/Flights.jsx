@@ -151,7 +151,7 @@ function Flights() {
             className="primary-button"
             onClick={() => getflights(flightOrderObj)}
           >
-            Sumbit
+            Submit
           </button>
         </div>
         <div className="cards-container">

@@ -94,6 +94,7 @@ export default function Map({
             <input
               type="text"
               placeholder="Enter Location"
+              defaultValue={search == "" ? currentArea?.areaName || "" : search }
               onChange={(e) => setSearch(e.target.value)}
             />
            <div>

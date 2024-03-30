@@ -11,6 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import { FaClock } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import placeholderImage from "../../../../../assets/placeholder.jpg";
+import "./day.css";
 
 function MyEvents({ setUpdateDay, updateDay }) {
   const { myEvents, setMyEvents, isLoading, setIsLoading, myDays, setMyDays } =
@@ -43,7 +44,7 @@ function MyEvents({ setUpdateDay, updateDay }) {
     <div className="cards-container-center">
       {isLoading ? (
         <div className="skeleton-container">
-          <Skeleton className="filled-card" count={5} />
+          <Skeleton className="filled-card my-day-sk" count={5} />
         </div>
       ) : myEvents && myEvents.length > 0 ? (
         myEvents.map((event, index) => (

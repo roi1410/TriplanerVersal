@@ -1,10 +1,12 @@
 const Trip = require("../models/tripModel");
 const Area = require("../models/areaModel");
+const Day = require("../models/dayModel");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secret = process.env.SECRET_KEY;
+const { Op } = require("sequelize");
 
 Trip.hasMany(Area, {
   foreignKey: "tripId",
@@ -26,7 +28,7 @@ exports.registerArea = async (req, res) => {
     if (areaExists) {
       return res.status(400).json({
         status: "fail",
-        mesage: "Trip already exists",
+        message: "Trip already exists",
       });
     }
     const newArea = await Area.create({
@@ -48,15 +50,25 @@ exports.registerArea = async (req, res) => {
 exports.getAreas = async (req, res) => {
   try {
     const filter = req.body;
-    const areas = await Area.findAll({include:[{
-      association: "Days",
-      include:["Hotel",
-      {
-          association: 'Flights',
-      }, {
-          association: 'Events',
-      }]
-    },"Hotels","Events"], where: filter });
+    const areas = await Area.findAll({
+      include: [
+        {
+          association: "Days",
+          include: [
+            "Hotel",
+            {
+              association: "Flights",
+            },
+            {
+              association: "Events",
+            },
+          ],
+        },
+        "Hotels",
+        "Events",
+      ],
+      where: filter,
+    });
     res.send(areas);
   } catch (error) {
     console.error(error);
@@ -87,7 +99,6 @@ exports.getAreaById = async (req, res) => {
 exports.updateArea = async (req, res) => {
   const areaId = req.params.id;
   const newArea = req.body;
-  console.log("___________________",req.body);
   try {
     const existingArea = await Area.findByPk(areaId);
 
@@ -141,4 +152,39 @@ exports.deleteArea = async (req, res) => {
       message: err,
     });
   }
+};
+
+
+// Empties all of the previous days from an area (before entering new ones) -- output => updated area
+exports.removeDaysFromArea = async (req, res) => {
+  const areaId = req.params.id;
+  try {
+    // Find the area by its ID and include the associated days
+    const area = await Area.findByPk(areaId, {
+      include: [{
+        model: Day,
+        through: { attributes: [] } // Exclude the join table attributes in the response
+      }]
+    });
+    if (!area) {
+      return res.status(404).send("Area not found");
+    }
+      // Check if the area has any days associated with it
+      // DO NOT CHANGE THE STATUS FROM 200!
+      if (area?.Days.length === 0) {
+        return res.status(200).send({ message: "The area has no days associated with it." });
+      }
+    // Delete each day and remove its association with the area
+    for (const day of area.Days) { // Access the included days through the association
+      await day.destroy(); // This will also remove the association from the dayArea table
+    }
+
+    res.status(200).send({ message: "All days associated with the area have been deleted." });
+ } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+ }
 };

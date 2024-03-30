@@ -267,7 +267,7 @@ function TripPlanner() {
     if (flightsAndAreas.length > 3) {
       return true;
     } else if (flightsAndAreas[0]?.flightInfo) {
-      if (flightsAndAreas[2].flightInfo && flightsAndAreas.length === 3) {
+      if (flightsAndAreas[2]?.flightInfo && flightsAndAreas.length === 3) {
         return false;
       } else if (flightsAndAreas.length === 2) {
         return false;
