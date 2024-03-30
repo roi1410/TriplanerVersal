@@ -5,6 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import { removeItem } from "../../../../../utils/CRUDService";
 import { FaClock } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import "./day.css"
 
 function MyDay({ setUpdateDay, updateDay }) {
   const { currentArea, currentDay, setCurrentDay } = useContext(CurrentContext);
@@ -24,7 +25,7 @@ function MyDay({ setUpdateDay, updateDay }) {
     <div className="cards-container-center">
       {isLoading ? (
         <div className="skeleton-container">
-          <Skeleton count={5} className="outlined-card" style={{}} />
+          <Skeleton count={5} className="outlined-card my-day-sk" style={{}} />
         </div>
       ) : (
         currentDay &&
