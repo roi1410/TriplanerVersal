@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../context/GeneralContext";
 import Skeleton from "react-loading-skeleton";
@@ -61,6 +61,9 @@ function TripPlanner() {
   const [areaIndex, setAreaIndex] = useState(-1);
   const [newArea, setNewArea] = useState("");
   const navigate = useNavigate();
+  const areaNameRef = useRef();
+  const areaStartRef = useRef();
+  const areaEndRef = useRef();
 
   // USE EFFECTS
   useEffect(() => {
@@ -117,7 +120,6 @@ function TripPlanner() {
   function closeModal() {
     setAreaDays([]);
     setAreaIndex(-1);
-    setNewArea("");
     setIsOpen(false);
   }
 
@@ -146,7 +148,8 @@ function TripPlanner() {
     setFlightsAndAreas(arr3);
   };
 
-  const handleStartDateChange = (event) => {
+  const handleDate = (event) => {
+    event.preventDefault()
     const selectedDate = new Date(event.target.value);
     setStartDate(selectedDate);
     if (selectedDate > endDate) {
@@ -196,10 +199,19 @@ function TripPlanner() {
 
   const handleAreaAdd = (index) => {
     // setCurrentArea(flightsAndAreas[index]);
+    
     openModal(index);
   };
 
-  const handleAreaSubmit = () => {
+  const handleAreaSubmit = (event) => {
+    event.preventDefault()
+    const areaName=areaNameRef.current.value
+    const startDate=new Date(areaEndRef.current.value)
+    const endDate=new Date(areaStartRef.current.value)
+    setNewArea(areaName)
+  
+    
+
     if (flightsAndAreas[areaIndex].id) {
       updateItem(
         "area",
@@ -218,16 +230,17 @@ function TripPlanner() {
           closeModal();
         })
         .catch((err) => console.error(err));
-    } else {
-      createItem("area", currentTrip.id, { areaName: newArea })
+    }
+     else {
+      createItem("area", currentTrip.id, { areaName: areaName })
         .then((response) => {
           CreateDateFromMinMax(startDate, endDate, currentTrip.id, {
             areaId: response.data.area.id,
           })
             .then(() => {
               // setCurrentArea(response.data.area);
-              setNewArea("");
-              window.location.reload();
+              window.location.reload()
+             
             })
             .catch((err) => console.error(err));
           closeModal();
@@ -345,6 +358,7 @@ function TripPlanner() {
                 <p> Add Flight To...</p>
               </div>
             )}
+            
             {flightsAndAreas.length > 0 &&
               flightsAndAreas.map(
                 (location, index) =>
@@ -355,7 +369,7 @@ function TripPlanner() {
                           className="filled-card"
                           onClick={() => handleAreaAdd(index)}
                         >
-                          <h2>Enter Location</h2>{" "}
+                          <h2>{newArea!==""?newArea: "Enter Location"}</h2>{" "}
                         </div>
                       ) : (
                         <div
@@ -445,51 +459,63 @@ function TripPlanner() {
                         appElement={document.getElementById("root")}
                         index={index}
                       >
-                        <input
-                          type="text"
-                          placeholder="Enter Location..."
-                          defaultValue={
-                            flightsAndAreas[areaIndex]?.areaName || ""
-                          }
-                          onChange={(event) => handleAreaChange(event)}
-                        />
-                        <div className="date-inputs">
-                          <label htmlFor="start-date">
-                            Start Date
-                            <input
-                              type="date"
-                              id="start-date"
-                              defaultValue={format(getFirstDay(), "yyyy-MM-dd")}
-                              min={format(new Date(), "yyyy-MM-dd")}
-                              onChange={handleStartDateChange}
-                            />
-                          </label>
+                        <form onSubmit={handleDate}>
+                          <input
+                          ref={areaNameRef}
+                            type="text"
+                            placeholder="Enter Location..."
+                            defaultValue={
+                              flightsAndAreas[areaIndex]?.areaName || ""
+                            }
+                          />
+                          <div className="date-inputs">
+                            <label htmlFor="start-date">
+                              Start Date
+                              <input
+                                ref={areaStartRef}
+                                type="date"
+                                id="start-date"
+                                defaultValue={format(
+                                  getFirstDay(),
+                                  "yyyy-MM-dd"
+                                )}
+                                min={format(new Date(), "yyyy-MM-dd")}
+                              />
+                            </label>
 
-                          <label htmlFor="end-date">
-                            End Date
-                            <input
-                              type="date"
-                              id="end-date"
-                              defaultValue={format(getLastDay(), "yyyy-MM-dd")}
-                              min={format(addDays(new Date(), 1), "yyyy-MM-dd")}
-                              onChange={handleEndDateChange}
-                            />
-                          </label>
-                        </div>
-                        <div className="modal-buttons">
-                          <button
-                            onClick={closeModal}
-                            className="outlined-button"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={handleAreaSubmit}
-                            className="primary-button"
-                          >
-                            Submit
-                          </button>
-                        </div>
+                            <label htmlFor="end-date">
+                              End Date
+                              <input
+                                ref={areaEndRef}
+                                type="date"
+                                id="end-date"
+                                defaultValue={format(
+                                  getLastDay(),
+                                  "yyyy-MM-dd"
+                                )}
+                                min={format(
+                                  addDays(new Date(), 1),
+                                  "yyyy-MM-dd"
+                                )}
+                                onChange={handleEndDateChange}
+                              />
+                            </label>
+                          </div>
+                          <div className="modal-buttons">
+                            <button
+                              onClick={closeModal}
+                              className="outlined-button"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={handleAreaSubmit}
+                              className="primary-button"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </form>
                       </Modal>
                     </div>
                   )
