@@ -17,16 +17,31 @@ The name "tripel" is a pun on "trip-to", emphasizing its focus on helping users 
 To get started with Tripel, follow these steps:
 
 1. **Clone the Repository**: 
-git clone https://github.com/OmerShuvami/tripel.git
+`git clone https://github.com/OmerShuvami/tripel.git`
 
 2. **Install Dependencies**:
-npm install
+`npm install`
 
-3. **Run the Server**:
-nodemon server.js
+3. **Go to the follwoing websites and register and get your own api keys**:
+[Geoapify](https://www.geoapify.com/)
+[RapidAPI.](https://rapidapi.com/tipsters/api/hotels-com-provider/)
+[SerpApi.](https://serpapi.com/google-flights-api)
 
-4. **Run the Application**:
-npm run dev
+5. **In the client folder add and .env file and within it add the following**:
+`RAPID_API_KEY : "RapidApiKeyHere` 
+`VITE_GEOAPIFY_API_KEY : "GeoapifyApiKeyHere`
+`VITE_API_URL = "http://your_domain_name/trip-planner"`
+
+6. **In the server folder add and .env file and within it add the following**:
+`FLIGHTS_API_KEY : "AerpApiKeyHere` 
+`SECRET_KEY : "RandomSecretKeyHere`
+`PORT = PortNumberOfYourChoice`
+
+7. **Run the Server**:
+`nodemon server.js`
+
+8. **Run the Application**:
+`npm run dev`
 
 ## Contributing
 
