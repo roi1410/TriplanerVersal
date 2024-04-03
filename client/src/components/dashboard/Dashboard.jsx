@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../context/GeneralContext";
 import Skeleton from "react-loading-skeleton";
@@ -20,14 +20,20 @@ const customStyles = {
 function Dashboard() {
   const { user, setUser, trips, setTrips, isLoading, setIsLoading } =
     useContext(GeneralContext);
+    const tripInputName=useRef()
+    const tripInputBudget=useRef()
   const { currentTrip, setCurrentTrip } = useContext(CurrentContext);
   const [tripData, setTripData] = useState({});
 
   const navigate = useNavigate();
 
-  const handleCreateTrip = () => {
+  const handleCreateTrip = (e) => {
+    e.preventDefault()
     console.log(tripData);
-    createItem("trip", user.id, tripData)
+   console.log(tripInputBudget.current.value +"   "+tripInputName.current.value);
+   const tripName=tripInputName.current.value
+   const Budget=tripInputBudget.current.value
+    createItem("trip", user.id, {tripName,Budget})
       .then((response) => {
         setCurrentTrip(response.data);
         navigate("trip-planner");
@@ -80,24 +86,26 @@ function Dashboard() {
         contentLabel="Choose Trip Data Modal"
         appElement={document.getElementById("root")}
       >
+        <form onSubmit={handleCreateTrip} >
+
         <input
           type="text"
           placeholder="Enter Trip Name..."
-          onChange={(e) =>
-            setTripData({ ...tripData, tripName: e.target.value })
-          }
-        />
+          ref={tripInputName}
+         
+          />
         <input
           type="number"
           placeholder="Enter Budget..."
-          onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
-        />
+          ref={tripInputBudget}
+          />
+          <button type="submit"  className="primary-button">
+            Submit
+          </button>
+          </form>
         <div className="modal-buttons">
           <button onClick={closeModal} className="outlined-button">
             Cancel
-          </button>
-          <button onClick={() => handleCreateTrip()} className="primary-button">
-            Submit
           </button>
         </div>
       </Modal>

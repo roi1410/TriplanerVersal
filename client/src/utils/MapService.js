@@ -5,12 +5,12 @@ axios.defaults.withCredentials = true;
 
 export async function fetchPlaceLanLon(place) {
   try {
-
+    console.log(place);
+   
     const res = await axios.get(
-      
-
-      `https://hotels-com-provider.p.rapidapi.com/v2/regions?rapidapi-key=${import.meta.env.VITE_RAPID_API_KEY}&query=${place}&domain=AE&locale=en_GB`
-
+      `https://hotels-com-provider.p.rapidapi.com/v2/regions?rapidapi-key=${
+        import.meta.env.VITE_RAPID_API_KEY
+      }&query=${place}&domain=AE&locale=en_GB`
     );
     console.log(res.data);
 
@@ -33,9 +33,9 @@ export async function fetchNearHotels(region_id, data) {
     const checkOutB = format(checkOut, "yyyy-MM-dd");
 
     const res = await axios.get(
-
-      `https://hotels-com-provider.p.rapidapi.com/v2/hotels/search?rapidapi-key=${import.meta.env.VITE_RAPID_API_KEY}&checkin_date=${checkInB}&checkout_date=${checkOutB}&locale=en_US&domain=US&adults_number=1&region_id=${region_id}&sort_order=REVIEW&lodging_type=HOTEL,HOSTEL,APART_HOTEL&available_filter=SHOW_AVAILABLE_ONLY`
-
+      `https://hotels-com-provider.p.rapidapi.com/v2/hotels/search?rapidapi-key=${
+        import.meta.env.VITE_RAPID_API_KEY
+      }&checkin_date=${checkInB}&checkout_date=${checkOutB}&locale=en_US&domain=US&adults_number=1&region_id=${region_id}&sort_order=REVIEW&lodging_type=HOTEL,HOSTEL,APART_HOTEL&available_filter=SHOW_AVAILABLE_ONLY`
     );
     console.log(res);
     return res.data.properties.slice(0, 20).map((hotel) => {
@@ -101,9 +101,9 @@ export async function fetchPlace({ lat, long }) {
             long: place.properties.lon,
             name: place.properties.name,
             openingHours: place.properties.opening_hours,
-            image: place.properties.wiki_and_media?.image||null,
+            image: place.properties.wiki_and_media?.image || null,
             address: place.properties.formatted,
-            contact:place.properties.contact?.phone||null
+            contact: place.properties.contact?.phone || null,
           };
 
         case "catering":
@@ -115,7 +115,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             website: place.properties.website,
             address: place.properties.formatted,
-            contact:place.properties.contact?.phone||null
+            contact: place.properties.contact?.phone || null,
           };
 
         case "entertainment":
@@ -127,7 +127,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             address: place.properties.formatted,
             website: place.properties.website,
-            contact:place.properties.contact?.phone||null
+            contact: place.properties.contact?.phone || null,
           };
         case "leisure":
           return {
@@ -138,7 +138,7 @@ export async function fetchPlace({ lat, long }) {
             openingHours: place.properties.opening_hours,
             address: place.properties.formatted,
             image: place.properties.wiki_and_media?.image,
-            contact:place.properties.contact?.phone||null
+            contact: place.properties.contact?.phone || null,
           };
 
         case "tourism":
@@ -149,7 +149,7 @@ export async function fetchPlace({ lat, long }) {
             name: place.properties.name,
             image: place.properties.wiki_and_media?.image,
             address: place.properties.formatted,
-            contact:place.properties.contact?.phone||null
+            contact: place.properties.contact?.phone || null,
           };
 
         default:
@@ -158,12 +158,11 @@ export async function fetchPlace({ lat, long }) {
             lat: place.properties.lat,
             long: place.properties.lon,
             name: place.properties.name,
-            openingHours: place.properties.opening_hours||null,
-            address: place.properties.formatted||null,
-            website: place.properties.website||null,
-            image: place.properties.wiki_and_media?.image||null,
-            contact:place.properties.contact?.phone||null
-
+            openingHours: place.properties.opening_hours || null,
+            address: place.properties.formatted || null,
+            website: place.properties.website || null,
+            image: place.properties.wiki_and_media?.image || null,
+            contact: place.properties.contact?.phone || null,
           };
 
           break;
