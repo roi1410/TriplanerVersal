@@ -14,5 +14,18 @@
     "serpapi": "^2.0.0",
     "sqlite3": "^5.1.7",
     "vercel": "^34.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "engines": {
+    "node": "20.X"
   }
 }
