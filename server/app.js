@@ -33,5 +33,6 @@ app.use('/trip-planner/flight', flightRoutes)
 app.use('/trip-planner/event', eventRoutes)
 app.use('/trip-planner/hotel', hotelRoutes)
 app.use('/trip-planner/day', dayRoutes)
+app.use('',()=>"gii")
 
 module.exports = app;
